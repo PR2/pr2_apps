@@ -1,0 +1,96 @@
+/**
+\mainpage
+
+\htmlinclude manifest.html
+
+\b teleop_pr2 teleoperation of a PR2 from keyboard and joystick. Teleops base, head, spine. No arm teleoperation currently.
+
+Both nodes, teleop_pr2 and teleop_pr2_keyboard, are designed for limited control of a PR-2, like moving it from place to place and transport. This is not designed for immersive control of a PR-2.
+
+\section rosapi ROS API
+
+The two nodes, teleop_pr2 and teleop_pr2_keyboard, are designed primarily to drive the base of the PR-2. Teleop_pr2 can also able to drive the spine and head.
+
+List of nodes:
+- \b teleop_pr2
+- \b teleop_pr2_keyboard
+
+<hr>
+
+\subsection teleop_pr2_keyboard teleop_pr2_keyboard
+
+\b teleop_pr2_keyboard teleoperates a PR-2 base using keyboard commands. 
+WASD controls X/Y, QE controls yaw. Shift to go faster.
+
+\subsubsection usage Usage
+\verbatim
+$ teleop_pr2_keyboard [standard ROS args]
+\endverbatim
+
+Key mappings are printed to screen on startup. 
+
+\subsubsection topic ROS topics
+
+Subscribes to (name / type):
+- None
+
+Publishes to (name / type):
+- \b "cmd_vel/Twist" : velocity to the pr2 base; sent on every keypress.
+
+\subsubsection parameters ROS parameters
+
+- \b "walk_vel" : \b double Maximum (walking) velocity
+- \b "run_vel" : \b double Maximum (runing) velocity
+- \b "yaw_rate" : \b double Maximum (walking) yaw rate
+- \b "yaw_run_rate" : \b double Maximum (running) yaw rate
+
+<hr>
+
+\subsection teleop_pr2 teleop_pr2
+
+\b teleop_pr2 teleoperate a PR-2 using a joystick. 
+
+X - Forward
+Y - Left
+Angle Z - Yaw Rate CCW
+
+\subsubsection usage Usage
+\verbatim
+$ teleop_pr2 --deadman_no_publish [standard ROS args]
+\endverbatim
+
+"--deadman_no_publish" is optional. If set, the node will only publish if the deadman is depressed.
+
+\subsubsection topic ROS topics
+
+Subscribes to (name / type):
+- \b "joy/Joy" : ROS joystick topic
+
+Publishes to (name / type):
+- \b "cmd_vel/Twist" : velocity to the pr2 base, sent on every keypress.
+- \b "torso_lift_controller/set_command / Float64" : Velocity to PR2 torso (publishes only if torso_button param set)
+- \b "head_controller/command / JointStates" : Position commands to PR-2 head (publishes only if head_button param set)
+
+\subsubsection parameters ROS parameters
+- \b "max_vx" : \b double Maximum (walking) X velocity
+- \b "max_vy" : \b double Maximum (walking) Y velocity
+- \b "max_vw" : \b double Maximum (walking) Z angular velocity
+
+- \b "max_vx_run" : \b double Maximum (running) X velocity
+- \b "max_vy_run" : \b double Maximum (running) Y velocity
+- \b "max_vw_run" : \b double Maximum (running) Z angular velocity
+
+- \b "max_pan" : \b double Maximum head pan command (min is -1 * max)
+- \b "max_tilt" : \b double Maximum head tilt command 
+- \b "min_tilt" : \b double Minimum head tilt command 
+
+- \b "tilt_step" : \b double Head tilt command increment. Position command is tilt_step * tilt_axis
+- \b "pan_step" : \b double Head pan command increment. Position command is pan_step * pan_axis
+
+- \b "deadman_button" : \b int Button that enables joystick commands. No commands will work without deadman button depressed
+- \b "run_button" : \b int Base moves at maximum of "run" velocities when depressed.
+- \b "torso_dn_button" : \b int Depress to command torso down
+- \b "torso_up_button" : \b int Depress to command torso up
+- \b "head_button" : \b int Depress to command head
+
+*/

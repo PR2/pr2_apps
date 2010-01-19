@@ -1,0 +1,13 @@
+<stack>
+  <description brief="PR2 applications">Basic applications for the PR2 robot</description>
+  <author>Maintained by Wim Meeussen</author>
+  <license>BSD</license>  
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_apps</url>
+  <depend stack="common_msgs" /> <!-- sensor_msgs, geometry_msgs -->
+  <depend stack="joystick_drivers" /> <!-- joy -->
+  <depend stack="pr2_controllers" /> <!-- trajectory_msgs, pr2_controllers_msgs -->
+  <depend stack="pr2_mechanism" /> <!-- pr2_controller_manager, pr2_mechanism_msgs -->
+  <depend stack="ros" /> <!-- std_msgs, rospy, roscpp -->
+
+</stack>

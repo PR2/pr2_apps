@@ -1,0 +1,30 @@
+<launch>
+
+  <!--  Left Arm Mannequin Mode -->
+  <group ns="l_arm_controller_loose">
+   <node type="trajectory_lock.py"
+         pkg="pr2_mannequin_mode"
+         name="traj_lock"
+         output="log"
+         args=".02 .02 .02 .02 .02 .06 .06" />
+  </group>
+
+  <!--  Right Arm Mannequin Mode -->
+  <group ns="r_arm_controller_loose">
+   <node type="trajectory_lock.py"
+         pkg="pr2_mannequin_mode"
+         name="traj_lock"
+         output="log"
+         args=".02 .02 .02 .02 .02 .06 .06" />
+  </group>
+
+  <!--  Head Mannequin Mode -->
+  <group ns="head_traj_controller_loose">
+   <node type="trajectory_lock.py"
+         pkg="pr2_mannequin_mode"
+         name="traj_lock"
+         output="log"
+         args=".08 .08" />
+  </group>
+
+</launch>

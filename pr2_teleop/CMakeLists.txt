@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.4.6)
+include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+rosbuild_init()
+rosbuild_add_executable(bin/teleop_pr2_keyboard src/teleop_pr2_keyboard.cpp)
+rosbuild_add_executable(bin/teleop_pr2 src/teleop_pr2.cpp)
+rosbuild_add_executable(bin/teleop_gripper src/teleop_gripper.cpp)

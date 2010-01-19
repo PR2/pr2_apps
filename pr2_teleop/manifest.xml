@@ -1,0 +1,16 @@
+<package>
+  <description brief="Teleoperated the PR2">
+  Teleop PR2 moves the PR2 from joystick commands.
+  Teleop PR2 Keyboard moves using keyboard commands.
+  </description>
+  <author>Kevin Watts</author>
+  <license>BSD</license>
+  <url>http://ros.org/wiki/pr2_teleop</url>
+  <review status="na" notes="" />
+  <depend package="joy" />
+  <depend package="std_msgs" />
+  <depend package="geometry_msgs" />
+  <depend package="sensor_msgs" />
+  <depend package="pr2_controllers_msgs" />
+  <depend package="roscpp" />
+</package>
