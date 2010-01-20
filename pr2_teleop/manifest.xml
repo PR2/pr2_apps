@@ -1,7 +1,7 @@
 <package>
   <description brief="Teleoperated the PR2">
-  Teleop PR2 moves the PR2 from joystick commands.
-  Teleop PR2 Keyboard moves using keyboard commands.
+  This package contains launch files for starting joystick or
+  keyboard-based teleoperation (remote control) of the PR2.
   </description>
   <author>Kevin Watts</author>
   <license>BSD</license>
