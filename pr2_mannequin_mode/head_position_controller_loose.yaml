@@ -29,7 +29,7 @@ head_traj_controller_loose:
       d: 0.75
       i_clamp: 0.5 
     head_tilt_joint:
-      p: 9.3
+      p: 50
       i: 1.5
-      d: 0.35
+      d: 2
       i_clamp: 0.1 
