@@ -1,5 +1,17 @@
 <launch>
 
+  <node type="teleop_gripper" pkg="pr2_teleop" name="teleop_gripper_right" output="screen">
+    <param name="open_button" type="int" value="13" />
+    <param name="close_button" type="int" value="15" />
+    <remap from="command" to="r_gripper_controller/command" />
+  </node>
+
+  <node type="teleop_gripper" pkg="pr2_teleop" name="teleop_gripper_left" output="screen">
+    <param name="open_button" type="int" value="5" />
+    <param name="close_button" type="int" value="7" />
+    <remap from="command" to="l_gripper_controller/command" />
+  </node>
+
   <node pkg="pr2_teleop" type="teleop_pr2" name="pr2_teleop" output="screen">
     <remap from="cmd_vel" to="base_controller/command" />
 
