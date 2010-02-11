@@ -128,7 +128,7 @@ class TeleopPR2
         n_private_.param("head_button", head_button, 0);
 
 	double joy_msg_timeout;
-        n_private_.param("joy_msg_timeout", joy_msg_timeout, -1.0); //default to no timeout
+        n_private_.param("joy_msg_timeout", joy_msg_timeout, 0.5); //default to no timeout
 	if (joy_msg_timeout <= 0)
 	  {
 	    joy_msg_timeout_ = ros::Duration().fromSec(9999999);//DURATION_MAX;
