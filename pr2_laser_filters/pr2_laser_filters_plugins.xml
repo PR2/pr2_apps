@@ -1,0 +1,19 @@
+<class_libraries>
+  <library path="lib/libpr2_laser_scan_filters">
+    <class name="PR2LaserScanFootprintFilter" type="pr2_laser_filters::PR2LaserScanFootprintFilter" 
+	    base_class_type="filters::FilterBase<sensor_msgs::LaserScan>">
+      <description>
+	This is a median filter which filters points out of a laser scan which are 
+inside the inscribed radius.  
+      </description>
+    </class>
+  </library>
+  <library path="lib/libpr2_point_cloud_filters">
+    <class name="PR2PointCloudFootprintFilter" type="pr2_laser_filters::PR2PointCloudFootprintFilter" 
+	    base_class_type="filters::FilterBase<sensor_msgs::PointCloud>">
+      <description>
+	Remove points from the pointcloud inside the robot base. 
+      </description>
+    </class>
+  </library>
+</class_libraries>

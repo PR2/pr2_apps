@@ -1,0 +1,5 @@
+filter_chain:
+- name: pr2_footprint_filter
+  type: PR2LaserScanFootprintFilter
+  params:
+    inscribed_radius: 0.325
