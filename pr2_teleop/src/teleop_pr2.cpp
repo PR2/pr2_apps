@@ -42,6 +42,8 @@
 #include "sensor_msgs/JointState.h"
 #include "trajectory_msgs/JointTrajectory.h"
 #include "pr2_controllers_msgs/JointTrajectoryControllerState.h"
+#include "topic_tools/MuxSelect.h"
+#include "std_msgs/String.h"
 
 #include "std_msgs/Float64.h"
 
@@ -67,6 +69,8 @@ class TeleopPR2
   bool deadman_no_publish_, torso_publish, head_publish;
 
   bool deadman_, cmd_head;
+  bool use_mux_, last_deadman_;
+  std::string last_selected_topic_;
 
   ros::Time last_recieved_joy_message_time_;
   ros::Duration joy_msg_timeout_;
@@ -77,13 +81,15 @@ class TeleopPR2
   ros::Publisher torso_pub_;
   ros::Subscriber joy_sub_;
   ros::Subscriber torso_state_sub_;
+  ros::ServiceClient mux_client_;
 
   TeleopPR2(bool deadman_no_publish = false) :
     max_vx(0.6), max_vy(0.6), max_vw(0.8),
     max_vx_run(0.6), max_vy_run(0.6), max_vw_run(0.8),
     max_pan(2.7), max_tilt(1.4), min_tilt(-0.4),
     pan_step(0.02), tilt_step(0.015),
-    deadman_no_publish_(deadman_no_publish), deadman_(false), cmd_head(false),
+    deadman_no_publish_(deadman_no_publish), deadman_(false), cmd_head(false), 
+    use_mux_(false), last_deadman_(false),
     n_private_("~")
   { }
 
@@ -93,6 +99,10 @@ class TeleopPR2
         req_pan = req_tilt = 0;
         req_torso = 0.0;
         req_torso_vel = 0.0;
+
+        //parameters for interaction with a mux on cmd_vel topics
+        n_private_.param("use_mux", use_mux_, false);
+
         n_private_.param("max_vx", max_vx, max_vx);
         n_private_.param("max_vy", max_vy, max_vy);
         n_private_.param("max_vw", max_vw, max_vw);
@@ -174,10 +184,15 @@ class TeleopPR2
 
         joy_sub_ = n_.subscribe("joy", 10, &TeleopPR2::joy_cb, this);
         torso_state_sub_ = n_.subscribe("torso_controller/state", 1, &TeleopPR2::torsoCB, this);
+
+        //if we're going to use the mux, then we'll subscribe to state changes on the mux
+        if(use_mux_){
+          ros::NodeHandle mux_nh("mux");
+          mux_client_ = mux_nh.serviceClient<topic_tools::MuxSelect>("select");
+        }
       }
 
   ~TeleopPR2() { }
-
 
   /** Callback for joy topic **/
   void joy_cb(const joy::Joy::ConstPtr& joy_msg)
@@ -252,6 +267,19 @@ class TeleopPR2
     if(deadman_  &&
        last_recieved_joy_message_time_ + joy_msg_timeout_ > ros::Time::now())
     {
+      //check if we need to switch the mux to our topic for teleop
+      if(use_mux_ && !last_deadman_){
+        topic_tools::MuxSelect select_srv;
+        select_srv.request.topic = vel_pub_.getTopic();
+        if(mux_client_.call(select_srv)){
+          last_selected_topic_ = select_srv.response.prev_topic;
+          ROS_DEBUG("Setting mux to %s for teleop", select_srv.request.topic.c_str());
+        }
+        else{
+          ROS_ERROR("Failed to call select service on mux. Are you sure that it is up and connected correctly to the teleop node?");
+        }
+      }
+
       // Base
       cmd.linear.x = req_vx;
       cmd.linear.y = req_vy;
@@ -311,6 +339,18 @@ class TeleopPR2
     }
     else
     {
+      //make sure to set the mux back to whatever topic it was on when we grabbed it if the deadman has just toggled
+      if(use_mux_ && last_deadman_){
+        topic_tools::MuxSelect select_srv;
+        select_srv.request.topic = last_selected_topic_;
+        if(mux_client_.call(select_srv)){
+          ROS_DEBUG("Setting mux back to %s", last_selected_topic_.c_str());
+        }
+        else{
+          ROS_ERROR("Failed to call select service on mux. Are you sure that it is up and connected correctly to the teleop node?");
+        }
+      }
+
       // Publish zero commands iff deadman_no_publish is false
       cmd.linear.x = cmd.linear.y = cmd.angular.z = 0;
       if (!deadman_no_publish_)
@@ -319,6 +359,9 @@ class TeleopPR2
         vel_pub_.publish(cmd);
       }
     }
+
+    //make sure we store the state of our last deadman
+    last_deadman_ = deadman_;
   }
 
   void torsoCB(const pr2_controllers_msgs::JointTrajectoryControllerState::ConstPtr &msg)
