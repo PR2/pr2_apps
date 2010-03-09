@@ -276,7 +276,7 @@ class TeleopPR2
           ROS_DEBUG("Setting mux to %s for teleop", select_srv.request.topic.c_str());
         }
         else{
-          ROS_ERROR("Failed to call select service on mux. Are you sure that it is up and connected correctly to the teleop node?");
+          ROS_ERROR("Failed to call select service %s on mux. Are you sure that it is up and connected correctly to the teleop node?", mux_client_.getService().c_str());
         }
       }
 
@@ -347,7 +347,7 @@ class TeleopPR2
           ROS_DEBUG("Setting mux back to %s", last_selected_topic_.c_str());
         }
         else{
-          ROS_ERROR("Failed to call select service on mux. Are you sure that it is up and connected correctly to the teleop node?");
+          ROS_ERROR("Failed to call select service %s on mux. Are you sure that it is up and connected correctly to the teleop node?", mux_client_.getService().c_str());
         }
       }
 
