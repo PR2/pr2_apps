@@ -9,7 +9,7 @@ r_arm_controller_loose:
     - r_wrist_flex_joint
     - r_wrist_roll_joint
   gains:
-    r_shoulder_pan_joint: {p: 140.0, d: 30.0}
+    r_shoulder_pan_joint: {p: 140.0, d: 20.0}
     r_shoulder_lift_joint: {p: 170.0, d: 30.0}
     r_upper_arm_roll_joint: {p: 300.0, d: 7.0}
     r_elbow_flex_joint: {p: 100.0, d: 5.0}
@@ -28,7 +28,7 @@ l_arm_controller_loose:
     - l_wrist_flex_joint
     - l_wrist_roll_joint
   gains:
-    l_shoulder_pan_joint: {p: 140.0, d: 30.0}
+    l_shoulder_pan_joint: {p: 140.0, d: 20.0}
     l_shoulder_lift_joint: {p: 170.0, d: 30.0}
     l_upper_arm_roll_joint: {p: 300.0, d: 7.0}
     l_elbow_flex_joint: {p: 100.0, d: 5.0}
