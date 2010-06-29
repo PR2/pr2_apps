@@ -1,9 +1,9 @@
 head_controller:
-  type: HeadPositionController
+  type: pr2_mechanism_controllers/HeadPositionController
   pan_link_name: head_pan_link
   tilt_link_name: head_tilt_link
   tilt_controller:
-    type: JointPositionController
+    type: robot_mechanism_controllers/JointPositionController
     joint: head_tilt_joint
     pid:
       p: 1.24
@@ -11,7 +11,7 @@ head_controller:
       d: 0.04
       i_clamp: 0.1 
   pan_controller:
-    type: JointPositionController
+    type: robot_mechanism_controllers/JointPositionController
     joint: head_pan_joint
     pid:
       p: 10.0
@@ -20,7 +20,7 @@ head_controller:
       i_clamp: 0.5 
 
 head_traj_controller_loose:
-  type: JointSplineTrajectoryController
+  type: robot_mechanism_controllers/JointSplineTrajectoryController
   joints: ['head_pan_joint', 'head_tilt_joint']
   gains:
     head_pan_joint:
