@@ -111,7 +111,7 @@ def go(side, positions):
 
 
 if __name__ == '__main__':
-  rospy.warn('This version of tuckarm in pr2_tuckarm is deprecated. Use pr2_tuck_arm_action instead')
+  rospy.err('This version of tuckarm is deprecated. Use tuck_arms.py instead. See the wiki at <http://www.ros.org/wiki/pr2_tuckarm>')
 
   if len(sys.argv) < 2:
     print USAGE
