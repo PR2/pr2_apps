@@ -84,16 +84,23 @@ public:
 
     n_local.param("wrist_velocity",wrist_velocity_, 4.5);
     
-    std::string arm_controller_name;
-    n_local.param("arm_controller_name", arm_controller_name, std::string("arm_controller"));
-
-    bool use_prosilica;
-    n_local.param("use_prosilica", use_prosilica, true);
+    n_local.param("control_prosilica", control_prosilica, true);
     
+    n_local.param("control_body", control_body, true);
+
+    n_local.param("control_larm", control_larm, true);
+
+    n_local.param("control_rarm", control_rarm, true);
+
+    n_local.param("control_head", control_head, true);
+
+    gc = new GeneralCommander(control_body, 
+                              control_head, 
+                              control_rarm,
+                              control_larm,
+                              control_prosilica);
     head_init_ = false;
     torso_init_ = false;
-
-    gc = new GeneralCommander(arm_controller_name, use_prosilica);
   }
 
   void sendHeadCommand(double pan_diff, double tilt_diff) {
@@ -164,6 +171,12 @@ public:
   double arm_z_scale_;
 
   double wrist_velocity_;
+
+  bool control_body;
+  bool control_head;
+  bool control_larm;
+  bool control_rarm;
+  bool control_prosilica;
 };
 
 void spin_function() {
@@ -207,11 +220,21 @@ int main(int argc, char** argv)
   {
     puts("Reading from keyboard");
     puts("---------------------------");
-    puts("Use 'h' for head commands");
-    puts("Use 'b' for body commands");
-    puts("Use 'l' for left arm commands");
-    puts("Use 'r' for right arm commands");
-    puts("Use 'a' for both arm commands");
+    if(generalkey->control_head) {
+      puts("Use 'h' for head commands");
+    }
+    if(generalkey->control_body) {
+      puts("Use 'b' for body commands");
+    }
+    if(generalkey->control_larm) {
+      puts("Use 'l' for left arm commands");
+    }
+    if(generalkey->control_rarm) {
+      puts("Use 'r' for right arm commands");
+    }
+    if(generalkey->control_larm && generalkey->control_rarm) {
+      puts("Use 'a' for both arm commands");
+    }
     puts("Use 'q' to quit");
       
     // get the next event from the keyboard
@@ -225,13 +248,17 @@ int main(int argc, char** argv)
     {
     case 'h':
       {
+        if(!generalkey->control_head) {
+          ROS_INFO("No head control enabled");
+          break;
+        }
         puts("---------------------------");
         puts("Use 'z' for projector on");
         puts("Use 'x' for projector off");
         puts("Use 's' for laser slow tilt");
         puts("Use 'f' for laser fast tilt");
         puts("Use 'g' for laser tilt off");
-        puts("Use 'm' for to right hand with mannequin");
+        puts("Use 'm' to set head mannequin mode");
         puts("Use 'y' to set to keyboard head control");
         puts("Use 'i/j/k/l' in keyboard head control mode to move head");
         puts("Use 'q' to quit head mode and return to main menu");
@@ -297,6 +324,10 @@ int main(int argc, char** argv)
       break;
     case 'b':
       {
+        if(!generalkey->control_body) {
+          ROS_INFO("No head control enabled");
+          break;
+        }
         puts("---------------------------");
         puts("Use 'u' for torso up");
         puts("Use 'd' for torso down");
@@ -349,6 +380,18 @@ int main(int argc, char** argv)
       break;
     case 'l': case 'r': case 'a':
       {
+        if(c == 'l' && !generalkey->control_larm) {
+          ROS_INFO("No left arm control enabled");
+          break;
+        }
+        if(c == 'r' && !generalkey->control_rarm) {
+          ROS_INFO("No right arm control enabled");
+          break;
+        }
+        if(c == 'a' && (!generalkey->control_larm || !generalkey->control_rarm)) {
+          ROS_INFO("Both arms not enabled");
+          break;
+        }
         GeneralCommander::WhichArm arm;
         if(c == 'l') {
           arm = GeneralCommander::ARMS_LEFT;

@@ -85,7 +85,11 @@ public:
 
 public:
 
-  GeneralCommander(std::string arm_controller_name, bool use_prosilica);
+  GeneralCommander(bool control_body,
+                   bool control_head,
+                   bool control_rarm,
+                   bool control_larm,
+                   bool control_prosilica); 
 
   ~GeneralCommander();
   
@@ -173,6 +177,12 @@ private:
   void unnormalizeTrajectory(trajectory_msgs::JointTrajectory& traj) const;
 
   ros::NodeHandle n_;
+
+  bool control_body_;
+  bool control_head_;
+  bool control_rarm_;
+  bool control_larm_;
+  bool control_prosilica_;
   
   double laser_slow_period_;
   double laser_slow_amplitude_;
@@ -229,7 +239,6 @@ private:
   bool robot_model_initialized_;
 
   bool status_projector_on;
-  bool use_prosilica_;
   LaserControlMode laser_control_mode_;
   HeadControlMode head_control_mode_;
   ArmControlMode right_arm_control_mode_;

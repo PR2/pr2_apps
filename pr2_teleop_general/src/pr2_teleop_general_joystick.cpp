@@ -143,20 +143,31 @@ public:
 
     n_local.param("prosilica_namespace", prosilica_namespace_, std::string("prosilica_polled"));
 
-    bool use_prosilica;
+    bool control_prosilica;
+    n_local.param("control_prosilica", control_prosilica, true);
     
-    n_local.param("use_prosilica", use_prosilica, true);
-    
-    std::string arm_controller_name;
-    n_local.param("arm_controller_name", arm_controller_name, std::string("arm_controller"));
+    bool control_body;
+    n_local.param("control_body", control_body, true);
+
+    bool control_larm;
+    n_local.param("control_larm", control_larm, true);
+
+    bool control_rarm;
+    n_local.param("control_rarm", control_rarm, true);
+
+    bool control_head;
+    n_local.param("control_head", control_head, true);
 
     ROS_DEBUG("tilt scale: %.3f rad\n", tilt_scale_);
     ROS_DEBUG("pan scale: %.3f rad\n", pan_scale_);
     
     ROS_INFO("Initing general commander");
 
-    gc = new GeneralCommander(arm_controller_name, use_prosilica);
-
+    gc = new GeneralCommander(control_body, 
+                              control_head, 
+                              control_rarm,
+                              control_larm,
+                              control_prosilica);
     first_callback_ = true;
     
     head_init_ = false;

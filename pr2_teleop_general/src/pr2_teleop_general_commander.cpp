@@ -62,13 +62,20 @@ static const std::string HEAD_POSITION_CONTROLLER = "head_traj_controller";
 
 static const unsigned int WALK_BUFFER = 10;
 
-GeneralCommander::GeneralCommander(std::string arm_controller_name, bool use_prosilica) : n_(), 
-                                   head_control_mode_(HEAD_JOYSTICK)                                                                   
+GeneralCommander::GeneralCommander(bool control_body,
+                                   bool control_head,
+                                   bool control_rarm,
+                                   bool control_larm,
+                                   bool control_prosilica) 
+  : n_(),
+    control_body_(control_body),
+    control_head_(control_head),
+    control_rarm_(control_rarm),
+    control_larm_(control_larm),
+    control_prosilica_(control_prosilica)                                                        
 {
-  use_prosilica_ = use_prosilica;
 
-  r_arm_controller_name_ = "r_"+arm_controller_name;
-  l_arm_controller_name_ = "l_"+arm_controller_name;
+  head_control_mode_ = HEAD_JOYSTICK;      
 
   std::string urdf_xml,full_urdf_xml;
   n_.param("urdf_xml", urdf_xml, std::string("robot_description"));
@@ -83,62 +90,85 @@ GeneralCommander::GeneralCommander(std::string arm_controller_name, bool use_pro
     robot_model_initialized_ = true;
   }
 
-  tilt_laser_service_ = n_.serviceClient<pr2_msgs::SetPeriodicCmd>("laser_tilt_controller/set_periodic_cmd");
+  //universal
   switch_controllers_service_ = n_.serviceClient<pr2_mechanism_msgs::SwitchController>("pr2_controller_manager/switch_controller");
   joint_state_sub_ = n_.subscribe("joint_states", 1, &GeneralCommander::jointStateCallback, this);
-  head_pub_ = n_.advertise<trajectory_msgs::JointTrajectory>("head_traj_controller/command", 1);  
-  torso_pub_ = n_.advertise<trajectory_msgs::JointTrajectory>("torso_controller/command", 1);
-  base_pub_ = n_.advertise<geometry_msgs::Twist>("base_controller/command", 1);
-  head_track_hand_client_ = new actionlib::SimpleActionClient<pr2_controllers_msgs::PointHeadAction>("/head_traj_controller/point_head_action", true);
-  right_gripper_client_ = new actionlib::SimpleActionClient<pr2_controllers_msgs::Pr2GripperCommandAction>("r_gripper_controller/gripper_action", true);
-  left_gripper_client_ = new actionlib::SimpleActionClient<pr2_controllers_msgs::Pr2GripperCommandAction>("l_gripper_controller/gripper_action", true);
-  right_arm_trajectory_client_ = new actionlib::SimpleActionClient<pr2_controllers_msgs::JointTrajectoryAction>(r_arm_controller_name_+"/joint_trajectory_action", true);
-  right_arm_traj_pub_ = n_.advertise<trajectory_msgs::JointTrajectory>(r_arm_controller_name_+"/command", 1);
-  left_arm_trajectory_client_ = new actionlib::SimpleActionClient<pr2_controllers_msgs::JointTrajectoryAction>(l_arm_controller_name_+"/joint_trajectory_action", true);
-  left_arm_traj_pub_ = n_.advertise<trajectory_msgs::JointTrajectory>(l_arm_controller_name_+"/command", 1);
   power_board_sub_ = n_.subscribe<pr2_msgs::PowerBoardState>("power_board/state", 1, &GeneralCommander::powerBoardCallback, this);
+
+  if(control_head_) {
+    tilt_laser_service_ = n_.serviceClient<pr2_msgs::SetPeriodicCmd>("laser_tilt_controller/set_periodic_cmd");
+    head_pub_ = n_.advertise<trajectory_msgs::JointTrajectory>("head_traj_controller/command", 1);  
+    head_track_hand_client_ = new actionlib::SimpleActionClient<pr2_controllers_msgs::PointHeadAction>("/head_traj_controller/point_head_action", true);
+    while(!head_track_hand_client_->waitForServer(ros::Duration(5.0))){
+      ROS_INFO("Waiting for the point_head_action server to come up");
+    }
+    //just in case there's an existing goal
+    head_track_hand_client_->cancelAllGoals();
+  } else {
+    head_track_hand_client_ = NULL;
+  }
+  if(control_body_) {
+    torso_pub_ = n_.advertise<trajectory_msgs::JointTrajectory>("torso_controller/command", 1);
+    base_pub_ = n_.advertise<geometry_msgs::Twist>("base_controller/command", 1);
+  }
+  if(control_rarm_) {
+    right_gripper_client_ = new actionlib::SimpleActionClient<pr2_controllers_msgs::Pr2GripperCommandAction>("r_gripper_controller/gripper_action", true);
+    right_arm_trajectory_client_ = new actionlib::SimpleActionClient<pr2_controllers_msgs::JointTrajectoryAction>("r_arm_controller/joint_trajectory_action", true);
+    right_arm_traj_pub_ = n_.advertise<trajectory_msgs::JointTrajectory>("r_arm_controller/command", 1);
+    while(!right_gripper_client_->waitForServer(ros::Duration(5.0))){
+      ROS_INFO("Waiting for the right gripper action server to come up");
+    }  
+    while(!right_arm_trajectory_client_->waitForServer(ros::Duration(5.0))){
+      ROS_INFO_STREAM("Waiting for the right arm trajectory action server to come up");
+    }
+  } else {
+    right_gripper_client_ = NULL;
+    right_arm_trajectory_client_ = NULL;
+  }
+  if(control_larm_) {
+    left_gripper_client_ = new actionlib::SimpleActionClient<pr2_controllers_msgs::Pr2GripperCommandAction>("l_gripper_controller/gripper_action", true);
+    left_arm_trajectory_client_ = new actionlib::SimpleActionClient<pr2_controllers_msgs::JointTrajectoryAction>("l_arm_controller/joint_trajectory_action", true);
+    left_arm_traj_pub_ = n_.advertise<trajectory_msgs::JointTrajectory>("l_arm_controller/command", 1);
+    while(!left_gripper_client_->waitForServer(ros::Duration(5.0))){
+      ROS_INFO("Waiting for the right gripper action server to come up");
+    }
+    while(!left_arm_trajectory_client_->waitForServer(ros::Duration(5.0))){
+      ROS_INFO_STREAM("Waiting for the left arm trajectory action server to come up");
+    }
+  } else {
+    left_gripper_client_ = NULL;
+    left_arm_trajectory_client_ = NULL;
+  }
+  if(control_larm_ || control_rarm_) {
+    tuck_arms_client_ = new actionlib::SimpleActionClient<pr2_common_action_msgs::TuckArmsAction>("tuck_arms", true);
+  } else {
+    tuck_arms_client_ = NULL;
+  }
+
+  if(control_rarm_) {
+    ROS_INFO("Waiting for right arm kinematics servers");
+    ros::service::waitForService("pr2_right_arm_kinematics/get_fk_solver_info");
+    ros::service::waitForService("pr2_right_arm_kinematics/get_fk");
+    ros::service::waitForService("pr2_right_arm_kinematics/get_ik");
+    right_arm_kinematics_solver_client_ = n_.serviceClient<kinematics_msgs::GetKinematicSolverInfo>("pr2_right_arm_kinematics/get_fk_solver_info", true);
+    right_arm_kinematics_forward_client_ = n_.serviceClient<kinematics_msgs::GetPositionFK>("pr2_right_arm_kinematics/get_fk", true);
+    right_arm_kinematics_inverse_client_ = n_.serviceClient<kinematics_msgs::GetPositionIK>("pr2_right_arm_kinematics/get_ik", true);
+  }
+
+  if(control_larm_) {
+    ROS_INFO("Waiting for left arm kinematics servers");
+    ros::service::waitForService("pr2_left_arm_kinematics/get_fk");
+    ros::service::waitForService("pr2_left_arm_kinematics/get_fk_solver_info");
+    ros::service::waitForService("pr2_left_arm_kinematics/get_ik");
+    left_arm_kinematics_solver_client_ = n_.serviceClient<kinematics_msgs::GetKinematicSolverInfo>("pr2_left_arm_kinematics/get_fk_solver_info", true);
+    left_arm_kinematics_forward_client_ = n_.serviceClient<kinematics_msgs::GetPositionFK>("pr2_left_arm_kinematics/get_fk", true);
+    left_arm_kinematics_inverse_client_ = n_.serviceClient<kinematics_msgs::GetPositionIK>("pr2_left_arm_kinematics/get_ik", true);
+  }
   
-  tuck_arms_client_ = new actionlib::SimpleActionClient<pr2_common_action_msgs::TuckArmsAction>("tuck_arms", true);
 
-  ROS_INFO("Waiting for servers");
-
-  ros::service::waitForService("pr2_right_arm_kinematics/get_fk_solver_info");
-  ros::service::waitForService("pr2_left_arm_kinematics/get_fk_solver_info");
-  ros::service::waitForService("pr2_right_arm_kinematics/get_fk");
-  ros::service::waitForService("pr2_left_arm_kinematics/get_fk");
-  ros::service::waitForService("pr2_right_arm_kinematics/get_ik");
-  ros::service::waitForService("pr2_left_arm_kinematics/get_ik");
-  if(use_prosilica_) {
+  if(control_prosilica_) {
     ros::service::waitForService("prosilica/request_image");
-  }
-  ROS_INFO("Done waiting for servers");
-  right_arm_kinematics_solver_client_ = n_.serviceClient<kinematics_msgs::GetKinematicSolverInfo>("pr2_right_arm_kinematics/get_fk_solver_info", true);
-  left_arm_kinematics_solver_client_ = n_.serviceClient<kinematics_msgs::GetKinematicSolverInfo>("pr2_left_arm_kinematics/get_fk_solver_info", true);
-  right_arm_kinematics_forward_client_ = n_.serviceClient<kinematics_msgs::GetPositionFK>("pr2_right_arm_kinematics/get_fk", true);
-  left_arm_kinematics_forward_client_ = n_.serviceClient<kinematics_msgs::GetPositionFK>("pr2_left_arm_kinematics/get_fk", true);
-  right_arm_kinematics_inverse_client_ = n_.serviceClient<kinematics_msgs::GetPositionIK>("pr2_right_arm_kinematics/get_ik", true);
-  left_arm_kinematics_inverse_client_ = n_.serviceClient<kinematics_msgs::GetPositionIK>("pr2_left_arm_kinematics/get_ik", true);
-
-  if(use_prosilica_) {
     prosilica_polling_client_ = n_.serviceClient<polled_camera::GetPolledImage>("prosilica/request_image", true);
-  }
-
-  while(!head_track_hand_client_->waitForServer(ros::Duration(5.0))){
-    ROS_INFO("Waiting for the point_head_action server to come up");
-  }
-  //just in case there's an existing goal
-  head_track_hand_client_->cancelAllGoals();
-  while(!right_gripper_client_->waitForServer(ros::Duration(5.0))){
-    ROS_INFO("Waiting for the right gripper action server to come up");
-  }
-  while(!left_gripper_client_->waitForServer(ros::Duration(5.0))){
-    ROS_INFO("Waiting for the right gripper action server to come up");
-  }
-  while(!right_arm_trajectory_client_->waitForServer(ros::Duration(5.0))){
-    ROS_INFO_STREAM("Waiting for the right arm trajectory action server to come up: " << r_arm_controller_name_+"/joint_trajectory_action");
-  }
-  while(!left_arm_trajectory_client_->waitForServer(ros::Duration(5.0))){
-    ROS_INFO_STREAM("Waiting for the left arm trajectory action server to come up" << l_arm_controller_name_+"/joint_trajectory_action" );
   }
 
   right_walk_along_pose_.push_back(.049);
@@ -204,11 +234,12 @@ GeneralCommander::GeneralCommander(std::string arm_controller_name, bool use_pro
   left_arm_control_mode_ = ARM_MANNEQUIN_MODE;
   setArmMode(ARMS_BOTH, ARM_POSITION_CONTROL);
   head_control_mode_ = HEAD_MANNEQUIN;
-  setHeadMode(HEAD_JOYSTICK);
-
-  laser_control_mode_ = LASER_TILT_SLOW;
-  setLaserMode(LASER_TILT_OFF);
-
+  if(control_head_) {
+    setHeadMode(HEAD_JOYSTICK);
+    laser_control_mode_ = LASER_TILT_SLOW;
+    setLaserMode(LASER_TILT_OFF);
+  }
+    
   //cribbed from motion planning laser settings
   laser_slow_period_ = 10;
   laser_slow_amplitude_ = .75;
@@ -227,10 +258,25 @@ GeneralCommander::GeneralCommander(std::string arm_controller_name, bool use_pro
 }
 
 GeneralCommander::~GeneralCommander() {
-  head_track_hand_client_->cancelAllGoals();
-  delete head_track_hand_client_;
-  delete right_gripper_client_;
-  delete left_gripper_client_;
+  if(head_track_hand_client_) {
+    head_track_hand_client_->cancelAllGoals();
+    delete head_track_hand_client_;
+  } 
+  if(right_gripper_client_) {
+    delete right_gripper_client_;
+  }
+  if(left_gripper_client_) {
+    delete left_gripper_client_;
+  }
+  if(right_arm_trajectory_client_) {
+    delete right_arm_trajectory_client_;
+  }
+  if(left_arm_trajectory_client_) {
+    delete left_arm_trajectory_client_;
+  }
+  if(tuck_arms_client_) {
+    delete tuck_arms_client_;
+  }
 }
 
 void GeneralCommander::jointStateCallback(const sensor_msgs::JointStateConstPtr &jointState)
@@ -278,6 +324,8 @@ GeneralCommander::ArmControlMode GeneralCommander::getArmMode(WhichArm arm) {
 
 void GeneralCommander::sendProjectorStartStop(bool start) {
   
+  if(!control_head_) return;
+
   if(start) {
     int ok = system("rosrun dynamic_reconfigure dynparam set camera_synchronizer_node narrow_stereo_trig_mode 3"); 
     ROS_DEBUG("Trying to send projector on");
@@ -294,6 +342,8 @@ void GeneralCommander::sendProjectorStartStop(bool start) {
 }
 
 void GeneralCommander::setLaserMode(LaserControlMode mode) {
+  if(!control_head_) return;
+
   if(laser_control_mode_ == mode) return;
 
   pr2_msgs::SetPeriodicCmd::Request req;
@@ -326,6 +376,7 @@ void GeneralCommander::setLaserMode(LaserControlMode mode) {
 }
 
 void GeneralCommander::setHeadMode(HeadControlMode mode) {
+  if(!control_head_) return;
   if(mode == head_control_mode_) return;
   if(mode == HEAD_TRACK_LEFT_HAND) {
     ROS_DEBUG("Setting head to track left hand");
@@ -348,6 +399,10 @@ void GeneralCommander::setHeadMode(HeadControlMode mode) {
 }
 
 void GeneralCommander::setArmMode(WhichArm arm, ArmControlMode mode) {
+  if(!control_rarm_ && !control_larm_) return;
+  if(!control_rarm_ && arm == ARMS_RIGHT) return;
+  if(!control_larm_ && arm == ARMS_LEFT) return;
+
   if(arm == ARMS_LEFT) {
     if(mode == left_arm_control_mode_) return;
   } else if(arm == ARMS_RIGHT) {
@@ -418,6 +473,7 @@ void GeneralCommander::setArmMode(WhichArm arm, ArmControlMode mode) {
 }
 
 void GeneralCommander::sendHeadCommand(double req_pan, double req_tilt) {
+  if(!control_head_) return;
   if(head_control_mode_ != HEAD_JOYSTICK) {
     return;
   }
@@ -437,7 +493,7 @@ void GeneralCommander::sendHeadCommand(double req_pan, double req_tilt) {
 }
 
 void GeneralCommander::sendHeadTrackCommand() {
-
+  if(!control_head_) return;
   if(head_control_mode_ != HEAD_TRACK_LEFT_HAND &&
      head_control_mode_ != HEAD_TRACK_RIGHT_HAND) {
     return;
@@ -476,6 +532,9 @@ void GeneralCommander::sendHeadTrackCommand() {
 }
 
 void GeneralCommander::sendGripperCommand(WhichArm which, bool close) {
+  if(!control_rarm_ && !control_larm_) return;
+  if(!control_rarm_ && which == ARMS_RIGHT) return;
+  if(!control_larm_ && which == ARMS_LEFT) return;
   if(which == ARMS_RIGHT || which == ARMS_BOTH) {
     pr2_controllers_msgs::Pr2GripperCommandGoal com;
     if(close) {
@@ -512,6 +571,7 @@ void GeneralCommander::sendGripperCommand(WhichArm which, bool close) {
 }
 
 void GeneralCommander::sendTorsoCommand(double pos, double vel) {
+  if(!control_body_) return;
   //only do this if we are commanding some velocity and not transitioning
   if(fabs(vel) < .0001 && fabs(last_torso_vel_ < .0001)) {
     //return;
@@ -529,6 +589,7 @@ void GeneralCommander::sendTorsoCommand(double pos, double vel) {
 }
 
 void GeneralCommander::sendBaseCommand(double vx, double vy, double vw) {
+  if(!control_body_) return;
   geometry_msgs::Twist cmd;
 
   cmd.linear.x = vx;
@@ -562,31 +623,35 @@ void GeneralCommander::switchControllers(const std::vector<std::string>& start_c
 }
 
 void GeneralCommander::sendWristVelCommands(double right_wrist_vel, double left_wrist_vel, double hz) {
-
+  
   clampDesiredArmPositionsToActual(.05);
-
-  if(abs(right_wrist_vel) > .01) {
-    if((ros::Time::now()-last_right_wrist_goal_stamp_).toSec() > .5) {
-      clampDesiredArmPositionsToActual(0.0);
+  
+  if(control_rarm_) {
+    if(abs(right_wrist_vel) > .01) {
+      if((ros::Time::now()-last_right_wrist_goal_stamp_).toSec() > .5) {
+        clampDesiredArmPositionsToActual(0.0);
+      }
+      last_right_wrist_goal_stamp_ = ros::Time::now();
+      
+      //our goal variable
+      pr2_controllers_msgs::JointTrajectoryGoal right_goal;
+      composeWristRotGoal("r", right_goal, right_des_joint_states_ ,right_wrist_vel, hz);
+      right_arm_traj_pub_.publish(right_goal.trajectory);
+      //right_arm_trajectory_client_->sendGoal(right_goal);
     }
-    last_right_wrist_goal_stamp_ = ros::Time::now();
-
-    //our goal variable
-    pr2_controllers_msgs::JointTrajectoryGoal right_goal;
-    composeWristRotGoal("r", right_goal, right_des_joint_states_ ,right_wrist_vel, hz);
-    right_arm_traj_pub_.publish(right_goal.trajectory);
-    //right_arm_trajectory_client_->sendGoal(right_goal);
   }
-  if(abs(left_wrist_vel) > .01) {
-    if((ros::Time::now()-last_left_wrist_goal_stamp_).toSec() > .5) {
-      clampDesiredArmPositionsToActual(0.0);
+  if(control_larm_) {
+    if(abs(left_wrist_vel) > .01) {
+      if((ros::Time::now()-last_left_wrist_goal_stamp_).toSec() > .5) {
+        clampDesiredArmPositionsToActual(0.0);
+      }
+      last_left_wrist_goal_stamp_ = ros::Time::now();
+      //our goal variable
+      pr2_controllers_msgs::JointTrajectoryGoal left_goal;
+      composeWristRotGoal("l", left_goal, left_des_joint_states_, left_wrist_vel, hz);
+      left_arm_traj_pub_.publish(left_goal.trajectory);
+      //left_arm_trajectory_client_->sendGoal(left_goal);
     }
-    last_left_wrist_goal_stamp_ = ros::Time::now();
-    //our goal variable
-    pr2_controllers_msgs::JointTrajectoryGoal left_goal;
-    composeWristRotGoal("l", left_goal, left_des_joint_states_, left_wrist_vel, hz);
-    left_arm_traj_pub_.publish(left_goal.trajectory);
-    //left_arm_trajectory_client_->sendGoal(left_goal);
   }
 }
 
@@ -626,120 +691,135 @@ void GeneralCommander::composeWristRotGoal(const std::string pref, pr2_controlle
 }
 
 void GeneralCommander::updateCurrentWristPositions() {
-  
-  kinematics_msgs::GetKinematicSolverInfo::Request right_request, left_request;
-  kinematics_msgs::GetKinematicSolverInfo::Response right_response, left_response;
-  
-  right_arm_kinematics_solver_client_.call(right_request, right_response);
-  left_arm_kinematics_solver_client_.call(left_request, left_response);
-  
-  kinematics_msgs::GetPositionFK::Request right_fk_request, left_fk_request;
-  kinematics_msgs::GetPositionFK::Response right_fk_response, left_fk_response;
- 
-  right_fk_request.header.frame_id = "base_link";
-  right_fk_request.fk_link_names.push_back("r_wrist_roll_link");
-  right_fk_request.robot_state.joint_state.position.resize(right_response.kinematic_solver_info.joint_names.size());
-  right_fk_request.robot_state.joint_state.name = right_response.kinematic_solver_info.joint_names;
-  for(unsigned int i = 0; i < right_fk_request.robot_state.joint_state.name.size(); i++) {
-    bool ok = getJointPosition(right_fk_request.robot_state.joint_state.name[i],  right_fk_request.robot_state.joint_state.position[i]);
-    if(!ok) {
-      ROS_WARN_STREAM("No joint state yet for " << right_fk_request.robot_state.joint_state.name[i]); 
-      return;
+
+  if(control_rarm_) {
+    kinematics_msgs::GetKinematicSolverInfo::Request right_request;
+    kinematics_msgs::GetKinematicSolverInfo::Response right_response;
+    
+    kinematics_msgs::GetPositionFK::Request right_fk_request;
+    kinematics_msgs::GetPositionFK::Response right_fk_response;
+    
+    right_arm_kinematics_solver_client_.call(right_request, right_response);
+    
+    right_fk_request.header.frame_id = "base_link";
+    right_fk_request.fk_link_names.push_back("r_wrist_roll_link");
+    right_fk_request.robot_state.joint_state.position.resize(right_response.kinematic_solver_info.joint_names.size());
+    right_fk_request.robot_state.joint_state.name = right_response.kinematic_solver_info.joint_names;
+    for(unsigned int i = 0; i < right_fk_request.robot_state.joint_state.name.size(); i++) {
+      bool ok = getJointPosition(right_fk_request.robot_state.joint_state.name[i],  right_fk_request.robot_state.joint_state.position[i]);
+      if(!ok) {
+        ROS_WARN_STREAM("No joint state yet for " << right_fk_request.robot_state.joint_state.name[i]); 
+        return;
+      }
     }
-  }
-  if(right_arm_kinematics_forward_client_.call(right_fk_request, right_fk_response)) {
-    if(right_fk_response.error_code.val == right_fk_response.error_code.SUCCESS) {
-      right_wrist_roll_pose_ = right_fk_response.pose_stamped[0].pose;
+    if(right_arm_kinematics_forward_client_.call(right_fk_request, right_fk_response)) {
+      if(right_fk_response.error_code.val == right_fk_response.error_code.SUCCESS) {
+        right_wrist_roll_pose_ = right_fk_response.pose_stamped[0].pose;
+      } else {
+        ROS_DEBUG("Right fk not a success");
+      }
     } else {
-      ROS_DEBUG("Right fk not a success");
-    }
-  } else {
-    ROS_WARN("Right fk call failed all together");
-  }
-
-
-  left_fk_request.header.frame_id = "base_link";
-  left_fk_request.fk_link_names.push_back("l_wrist_roll_link");
-  left_fk_request.robot_state.joint_state.position.resize(left_response.kinematic_solver_info.joint_names.size());
-  left_fk_request.robot_state.joint_state.name = left_response.kinematic_solver_info.joint_names;
-  for(unsigned int i = 0; i < left_fk_request.robot_state.joint_state.name.size(); i++) {
-    bool ok = getJointPosition(left_fk_request.robot_state.joint_state.name[i],  left_fk_request.robot_state.joint_state.position[i]);
-    if(!ok) {
-      ROS_WARN_STREAM("No joint state yet for " << left_fk_request.robot_state.joint_state.name[i]); 
-      return;
+      ROS_WARN("Right fk call failed all together");
     }
   }
-  if(left_arm_kinematics_forward_client_.call(left_fk_request, left_fk_response)) {
-    if(left_fk_response.error_code.val == left_fk_response.error_code.SUCCESS) {
-      left_wrist_roll_pose_ = left_fk_response.pose_stamped[0].pose;
+
+  if(control_larm_) {
+    kinematics_msgs::GetKinematicSolverInfo::Request left_request;
+    kinematics_msgs::GetKinematicSolverInfo::Response left_response;
+    
+    kinematics_msgs::GetPositionFK::Request left_fk_request;
+    kinematics_msgs::GetPositionFK::Response left_fk_response;
+
+    left_arm_kinematics_solver_client_.call(left_request, left_response);
+    
+    left_fk_request.header.frame_id = "base_link";
+    left_fk_request.fk_link_names.push_back("l_wrist_roll_link");
+    left_fk_request.robot_state.joint_state.position.resize(left_response.kinematic_solver_info.joint_names.size());
+    left_fk_request.robot_state.joint_state.name = left_response.kinematic_solver_info.joint_names;
+    for(unsigned int i = 0; i < left_fk_request.robot_state.joint_state.name.size(); i++) {
+      bool ok = getJointPosition(left_fk_request.robot_state.joint_state.name[i],  left_fk_request.robot_state.joint_state.position[i]);
+      if(!ok) {
+        ROS_WARN_STREAM("No joint state yet for " << left_fk_request.robot_state.joint_state.name[i]); 
+        return;
+      }
+    }
+    if(left_arm_kinematics_forward_client_.call(left_fk_request, left_fk_response)) {
+      if(left_fk_response.error_code.val == left_fk_response.error_code.SUCCESS) {
+        left_wrist_roll_pose_ = left_fk_response.pose_stamped[0].pose;
+      } else {
+        ROS_DEBUG("Left fk not a success");
+      }
     } else {
-      ROS_DEBUG("Left fk not a success");
+      ROS_WARN("Left fk call failed all together");
     }
-  } else {
-    ROS_WARN("Left fk call failed all together");
-  }
-
-  //ROS_INFO_STREAM("Current x " << left_wrist_roll_pose_.position.x << " y " << left_wrist_roll_pose_.position.y << " z " << left_wrist_roll_pose_.position.z); 
+    
+    //ROS_INFO_STREAM("Current x " << left_wrist_roll_pose_.position.x << " y " << left_wrist_roll_pose_.position.y << " z " << left_wrist_roll_pose_.position.z);
+  } 
 }
 
 void GeneralCommander::clampDesiredArmPositionsToActual(double max_dist)  {
   
   updateCurrentWristPositions();
 
-  double tot_distance = sqrt(pow(des_r_wrist_roll_pose_.position.x-right_wrist_roll_pose_.position.x,2.0)+
-                             pow(des_r_wrist_roll_pose_.position.y-right_wrist_roll_pose_.position.y,2.0)+
-                             pow(des_r_wrist_roll_pose_.position.z-right_wrist_roll_pose_.position.z,2.0));
-
-  //ROS_INFO_STREAM("Cur " << right_wrist_roll_pose_.position.x << " " << right_wrist_roll_pose_.position.y << " " << right_wrist_roll_pose_.position.z
-  //                << " des " << des_r_wrist_roll_pose_.position.x << " " << des_r_wrist_roll_pose_.position.y << " " << des_r_wrist_roll_pose_.position.z);
-
-  //ROS_INFO_STREAM("Total distance " << tot_distance);
-
-  if(tot_distance > max_dist) {
-    des_r_wrist_roll_pose_ = right_wrist_roll_pose_;
-
-    std::vector<std::string> joint_names;
-    std::string pref = "r";
-    // First, the joint names, which apply to all waypoints
-    joint_names.push_back(pref+"_"+"shoulder_pan_joint");
-    joint_names.push_back(pref+"_"+"shoulder_lift_joint");
-    joint_names.push_back(pref+"_"+"upper_arm_roll_joint");
-    joint_names.push_back(pref+"_"+"elbow_flex_joint");
-    joint_names.push_back(pref+"_"+"forearm_roll_joint");
-    joint_names.push_back(pref+"_"+"wrist_flex_joint");
-    joint_names.push_back(pref+"_"+"wrist_roll_joint");
-    right_des_joint_states_.clear();
-    for(unsigned int i = 0; i < joint_names.size(); i++) {
-      double cur_pos;
-      getJointPosition(joint_names[i], cur_pos);
-      right_des_joint_states_.push_back(cur_pos);
+  double tot_distance;
+  if(control_rarm_) {
+    tot_distance = sqrt(pow(des_r_wrist_roll_pose_.position.x-right_wrist_roll_pose_.position.x,2.0)+
+                        pow(des_r_wrist_roll_pose_.position.y-right_wrist_roll_pose_.position.y,2.0)+
+                        pow(des_r_wrist_roll_pose_.position.z-right_wrist_roll_pose_.position.z,2.0));
+    
+    //ROS_INFO_STREAM("Cur " << right_wrist_roll_pose_.position.x << " " << right_wrist_roll_pose_.position.y << " " << right_wrist_roll_pose_.position.z
+    //                << " des " << des_r_wrist_roll_pose_.position.x << " " << des_r_wrist_roll_pose_.position.y << " " << des_r_wrist_roll_pose_.position.z);
+    
+    //ROS_INFO_STREAM("Total distance " << tot_distance);
+    
+    if(tot_distance > max_dist) {
+      des_r_wrist_roll_pose_ = right_wrist_roll_pose_;
+      
+      std::vector<std::string> joint_names;
+      std::string pref = "r";
+      // First, the joint names, which apply to all waypoints
+      joint_names.push_back(pref+"_"+"shoulder_pan_joint");
+      joint_names.push_back(pref+"_"+"shoulder_lift_joint");
+      joint_names.push_back(pref+"_"+"upper_arm_roll_joint");
+      joint_names.push_back(pref+"_"+"elbow_flex_joint");
+      joint_names.push_back(pref+"_"+"forearm_roll_joint");
+      joint_names.push_back(pref+"_"+"wrist_flex_joint");
+      joint_names.push_back(pref+"_"+"wrist_roll_joint");
+      right_des_joint_states_.clear();
+      for(unsigned int i = 0; i < joint_names.size(); i++) {
+        double cur_pos;
+        getJointPosition(joint_names[i], cur_pos);
+        right_des_joint_states_.push_back(cur_pos);
+      }
+      //ROS_INFO("Clamping right");
     }
-    //ROS_INFO("Clamping right");
   }
 
-  tot_distance = sqrt(pow(des_l_wrist_roll_pose_.position.x-left_wrist_roll_pose_.position.x,2.0)+
-                      pow(des_l_wrist_roll_pose_.position.y-left_wrist_roll_pose_.position.y,2.0)+
-                      pow(des_l_wrist_roll_pose_.position.z-left_wrist_roll_pose_.position.z,2.0));
-  
-  if(tot_distance > max_dist) {
-    des_l_wrist_roll_pose_ = left_wrist_roll_pose_;
-    std::vector<std::string> joint_names;
-    std::string pref = "l";
-    // First, the joint names, which apply to all waypoints
-    joint_names.push_back(pref+"_"+"shoulder_pan_joint");
-    joint_names.push_back(pref+"_"+"shoulder_lift_joint");
-    joint_names.push_back(pref+"_"+"upper_arm_roll_joint");
-    joint_names.push_back(pref+"_"+"elbow_flex_joint");
-    joint_names.push_back(pref+"_"+"forearm_roll_joint");
-    joint_names.push_back(pref+"_"+"wrist_flex_joint");
-    joint_names.push_back(pref+"_"+"wrist_roll_joint");
-    left_des_joint_states_.clear();
-    for(unsigned int i = 0; i < joint_names.size(); i++) {
-      double cur_pos;
-      getJointPosition(joint_names[i], cur_pos);
-      left_des_joint_states_.push_back(cur_pos);
+  if(control_larm_) {
+    tot_distance = sqrt(pow(des_l_wrist_roll_pose_.position.x-left_wrist_roll_pose_.position.x,2.0)+
+                        pow(des_l_wrist_roll_pose_.position.y-left_wrist_roll_pose_.position.y,2.0)+
+                        pow(des_l_wrist_roll_pose_.position.z-left_wrist_roll_pose_.position.z,2.0));
+    
+    if(tot_distance > max_dist) {
+      des_l_wrist_roll_pose_ = left_wrist_roll_pose_;
+      std::vector<std::string> joint_names;
+      std::string pref = "l";
+      // First, the joint names, which apply to all waypoints
+      joint_names.push_back(pref+"_"+"shoulder_pan_joint");
+      joint_names.push_back(pref+"_"+"shoulder_lift_joint");
+      joint_names.push_back(pref+"_"+"upper_arm_roll_joint");
+      joint_names.push_back(pref+"_"+"elbow_flex_joint");
+      joint_names.push_back(pref+"_"+"forearm_roll_joint");
+      joint_names.push_back(pref+"_"+"wrist_flex_joint");
+      joint_names.push_back(pref+"_"+"wrist_roll_joint");
+      left_des_joint_states_.clear();
+      for(unsigned int i = 0; i < joint_names.size(); i++) {
+        double cur_pos;
+        getJointPosition(joint_names[i], cur_pos);
+        left_des_joint_states_.push_back(cur_pos);
+      }
+      //ROS_INFO("Clamping left");
     }
-    //ROS_INFO("Clamping left");
   }
 }
 
@@ -810,193 +890,201 @@ void GeneralCommander::sendArmVelCommands(double r_x_vel, double r_y_vel, double
 
   clampDesiredArmPositionsToActual(.1);
 
-  if(fabs(r_x_vel) > .001 || fabs(r_y_vel) > .001 || fabs(r_z_vel) > .001) {
-
-    geometry_msgs::Pose right_trajectory_endpoint = des_r_wrist_roll_pose_;
-
-    kinematics_msgs::GetKinematicSolverInfo::Request right_request;
-    kinematics_msgs::GetKinematicSolverInfo::Response right_response;
+  if(control_rarm_) {
     
-    right_arm_kinematics_solver_client_.call(right_request, right_response);
-
-    double pos_diff_x = r_x_vel*(1.0/hz);//*look_ahead;
-    double pos_diff_y = r_y_vel*(1.0/hz);//*look_ahead;
-    double pos_diff_z = r_z_vel*(1.0/hz);//*look_ahead;
-    //double pos_diff_yaw = r_yaw_vel;//*(1.0/hz);//*look_ahead;
-    
-    right_trajectory_endpoint.position.x += r_x_vel*trajectory_duration;
-    right_trajectory_endpoint.position.y += r_y_vel*trajectory_duration;
-    right_trajectory_endpoint.position.z += r_z_vel*trajectory_duration;
-
-    des_r_wrist_roll_pose_.position.x += pos_diff_x;
-    des_r_wrist_roll_pose_.position.y += pos_diff_y;
-    des_r_wrist_roll_pose_.position.z += pos_diff_z;
-
-    //ROS_INFO_STREAM("Desired " << des_r_wrist_roll_pose_.position.x << " " << des_r_wrist_roll_pose_.position.y << " " << des_r_wrist_roll_pose_.position.z);
-
-    //todo - figure out yaw
-
-    //now call ik
-    
-    kinematics_msgs::GetPositionIK::Request  ik_req;
-    kinematics_msgs::GetPositionIK::Response ik_res;
-    
-    ik_req.timeout = ros::Duration(0.05);
-    ik_req.ik_request.ik_link_name = "r_wrist_roll_link";
-    ik_req.ik_request.pose_stamped.header.frame_id = "base_link";
-    ik_req.ik_request.pose_stamped.header.stamp = ros::Time::now();
-    ik_req.ik_request.pose_stamped.pose = right_trajectory_endpoint;
-
-    ik_req.ik_request.ik_seed_state.joint_state.position.resize(right_response.kinematic_solver_info.joint_names.size());
-    ik_req.ik_request.ik_seed_state.joint_state.name = right_response.kinematic_solver_info.joint_names;
-    for(unsigned int i = 0; i < ik_req.ik_request.ik_seed_state.joint_state.name.size(); i++) {
-      bool ok = getJointPosition(ik_req.ik_request.ik_seed_state.joint_state.name[i], ik_req.ik_request.ik_seed_state.joint_state.position[i]);
-      if(!ok) {
-        ROS_WARN_STREAM("No joint state yet for " << ik_req.ik_request.ik_seed_state.joint_state.name[i]); 
-        return;
+    if(fabs(r_x_vel) > .001 || fabs(r_y_vel) > .001 || fabs(r_z_vel) > .001) {
+      
+      geometry_msgs::Pose right_trajectory_endpoint = des_r_wrist_roll_pose_;
+      
+      kinematics_msgs::GetKinematicSolverInfo::Request right_request;
+      kinematics_msgs::GetKinematicSolverInfo::Response right_response;
+      
+      right_arm_kinematics_solver_client_.call(right_request, right_response);
+      
+      double pos_diff_x = r_x_vel*(1.0/hz);//*look_ahead;
+      double pos_diff_y = r_y_vel*(1.0/hz);//*look_ahead;
+      double pos_diff_z = r_z_vel*(1.0/hz);//*look_ahead;
+      //double pos_diff_yaw = r_yaw_vel;//*(1.0/hz);//*look_ahead;
+      
+      right_trajectory_endpoint.position.x += r_x_vel*trajectory_duration;
+      right_trajectory_endpoint.position.y += r_y_vel*trajectory_duration;
+      right_trajectory_endpoint.position.z += r_z_vel*trajectory_duration;
+      
+      des_r_wrist_roll_pose_.position.x += pos_diff_x;
+      des_r_wrist_roll_pose_.position.y += pos_diff_y;
+      des_r_wrist_roll_pose_.position.z += pos_diff_z;
+      
+      //ROS_INFO_STREAM("Desired " << des_r_wrist_roll_pose_.position.x << " " << des_r_wrist_roll_pose_.position.y << " " << des_r_wrist_roll_pose_.position.z);
+      
+      //todo - figure out yaw
+      
+      //now call ik
+      
+      kinematics_msgs::GetPositionIK::Request  ik_req;
+      kinematics_msgs::GetPositionIK::Response ik_res;
+      
+      ik_req.timeout = ros::Duration(0.05);
+      ik_req.ik_request.ik_link_name = "r_wrist_roll_link";
+      ik_req.ik_request.pose_stamped.header.frame_id = "base_link";
+      ik_req.ik_request.pose_stamped.header.stamp = ros::Time::now();
+      ik_req.ik_request.pose_stamped.pose = right_trajectory_endpoint;
+      
+      ik_req.ik_request.ik_seed_state.joint_state.position.resize(right_response.kinematic_solver_info.joint_names.size());
+      ik_req.ik_request.ik_seed_state.joint_state.name = right_response.kinematic_solver_info.joint_names;
+      for(unsigned int i = 0; i < ik_req.ik_request.ik_seed_state.joint_state.name.size(); i++) {
+        bool ok = getJointPosition(ik_req.ik_request.ik_seed_state.joint_state.name[i], ik_req.ik_request.ik_seed_state.joint_state.position[i]);
+        if(!ok) {
+          ROS_WARN_STREAM("No joint state yet for " << ik_req.ik_request.ik_seed_state.joint_state.name[i]); 
+          return;
+        } else {
+          //ROS_INFO_STREAM("Setting position " << ik_req.ik_request.ik_seed_state.joint_state.position[i] << " For name " 
+          //                << ik_req.ik_request.ik_seed_state.joint_state.name[i]);
+        }
+      }
+      
+      
+      //otherwise not a lot to be done
+      if(right_arm_kinematics_inverse_client_.call(ik_req, ik_res) && ik_res.error_code.val == ik_res.error_code.SUCCESS) {
+        //ROS_INFO("Ik succeeded");
+        pr2_controllers_msgs::JointTrajectoryGoal goal;
+        
+        std::vector<std::string> joint_names;
+        std::string pref = "r";
+        
+        // First, the joint names, which apply to all waypoints
+        joint_names.push_back(pref+"_"+"shoulder_pan_joint");
+        joint_names.push_back(pref+"_"+"shoulder_lift_joint");
+        joint_names.push_back(pref+"_"+"upper_arm_roll_joint");
+        joint_names.push_back(pref+"_"+"elbow_flex_joint");
+        joint_names.push_back(pref+"_"+"forearm_roll_joint");
+        joint_names.push_back(pref+"_"+"wrist_flex_joint");
+        joint_names.push_back(pref+"_"+"wrist_roll_joint");
+        
+        goal.trajectory.joint_names = joint_names;
+        
+        // We will have two waypoints in this goal trajectory
+        goal.trajectory.points.resize(1);
+        
+        for(unsigned int i = 0; i < goal.trajectory.joint_names.size(); i++) {
+          goal.trajectory.points[0].positions.push_back(ik_res.solution.joint_state.position[i]);
+          goal.trajectory.points[0].velocities.push_back(0.0);
+        }      
+        goal.trajectory.header.stamp = ros::Time::now()+ros::Duration(0.200);
+        goal.trajectory.points[0].time_from_start = ros::Duration(trajectory_duration);
+        
+        unnormalizeTrajectory(goal.trajectory);
+        right_arm_traj_pub_.publish(goal.trajectory);
       } else {
-        //ROS_INFO_STREAM("Setting position " << ik_req.ik_request.ik_seed_state.joint_state.position[i] << " For name " 
-        //                << ik_req.ik_request.ik_seed_state.joint_state.name[i]);
+        ROS_DEBUG_STREAM("Ik failed with response " << ik_res.error_code.val);
       }
     }
     
-    
-    //otherwise not a lot to be done
-    if(right_arm_kinematics_inverse_client_.call(ik_req, ik_res) && ik_res.error_code.val == ik_res.error_code.SUCCESS) {
-      //ROS_INFO("Ik succeeded");
-      pr2_controllers_msgs::JointTrajectoryGoal goal;
-      
-      std::vector<std::string> joint_names;
-      std::string pref = "r";
-      
-      // First, the joint names, which apply to all waypoints
-      joint_names.push_back(pref+"_"+"shoulder_pan_joint");
-      joint_names.push_back(pref+"_"+"shoulder_lift_joint");
-      joint_names.push_back(pref+"_"+"upper_arm_roll_joint");
-      joint_names.push_back(pref+"_"+"elbow_flex_joint");
-      joint_names.push_back(pref+"_"+"forearm_roll_joint");
-      joint_names.push_back(pref+"_"+"wrist_flex_joint");
-      joint_names.push_back(pref+"_"+"wrist_roll_joint");
-      
-      goal.trajectory.joint_names = joint_names;
-
-      // We will have two waypoints in this goal trajectory
-      goal.trajectory.points.resize(1);
-      
-      for(unsigned int i = 0; i < goal.trajectory.joint_names.size(); i++) {
-        goal.trajectory.points[0].positions.push_back(ik_res.solution.joint_state.position[i]);
-        goal.trajectory.points[0].velocities.push_back(0.0);
-      }      
-      goal.trajectory.header.stamp = ros::Time::now()+ros::Duration(0.200);
-      goal.trajectory.points[0].time_from_start = ros::Duration(trajectory_duration);
-
-      unnormalizeTrajectory(goal.trajectory);
-      right_arm_traj_pub_.publish(goal.trajectory);
-    } else {
-      ROS_DEBUG_STREAM("Ik failed with response " << ik_res.error_code.val);
-    }
+    ros::Time afterCall = ros::Time::now();
   }
+  if(control_larm_) {
+    if(fabs(l_x_vel) > .001 || fabs(l_y_vel) > .001 || fabs(l_z_vel) > .001) {
 
-  ros::Time afterCall = ros::Time::now();
+      geometry_msgs::Pose left_trajectory_endpoint = des_l_wrist_roll_pose_;
 
-
-  if(fabs(l_x_vel) > .001 || fabs(l_y_vel) > .001 || fabs(l_z_vel) > .001) {
-
-    geometry_msgs::Pose left_trajectory_endpoint = des_l_wrist_roll_pose_;
-
-    kinematics_msgs::GetKinematicSolverInfo::Request left_request;
-    kinematics_msgs::GetKinematicSolverInfo::Response left_response;
+      kinematics_msgs::GetKinematicSolverInfo::Request left_request;
+      kinematics_msgs::GetKinematicSolverInfo::Response left_response;
     
-    left_arm_kinematics_solver_client_.call(left_request, left_response);
+      left_arm_kinematics_solver_client_.call(left_request, left_response);
 
-    double pos_diff_x = l_x_vel*(1.0/hz);
-    double pos_diff_y = l_y_vel*(1.0/hz);
-    double pos_diff_z = l_z_vel*(1.0/hz);
-    //double pos_diff_yaw = l_yaw_vel*(1.0/hz);
+      double pos_diff_x = l_x_vel*(1.0/hz);
+      double pos_diff_y = l_y_vel*(1.0/hz);
+      double pos_diff_z = l_z_vel*(1.0/hz);
+      //double pos_diff_yaw = l_yaw_vel*(1.0/hz);
     
-    left_trajectory_endpoint.position.x += l_x_vel*trajectory_duration;
-    left_trajectory_endpoint.position.y += l_y_vel*trajectory_duration;
-    left_trajectory_endpoint.position.z += l_z_vel*trajectory_duration;
+      left_trajectory_endpoint.position.x += l_x_vel*trajectory_duration;
+      left_trajectory_endpoint.position.y += l_y_vel*trajectory_duration;
+      left_trajectory_endpoint.position.z += l_z_vel*trajectory_duration;
 
-    des_l_wrist_roll_pose_.position.x += pos_diff_x;
-    des_l_wrist_roll_pose_.position.y += pos_diff_y;
-    des_l_wrist_roll_pose_.position.z += pos_diff_z;
-    //todo - figure out yaw
+      des_l_wrist_roll_pose_.position.x += pos_diff_x;
+      des_l_wrist_roll_pose_.position.y += pos_diff_y;
+      des_l_wrist_roll_pose_.position.z += pos_diff_z;
+      //todo - figure out yaw
 
-    //now call ik
+      //now call ik
     
-    kinematics_msgs::GetPositionIK::Request  ik_req;
-    kinematics_msgs::GetPositionIK::Response ik_res;
+      kinematics_msgs::GetPositionIK::Request  ik_req;
+      kinematics_msgs::GetPositionIK::Response ik_res;
     
-    ik_req.timeout = ros::Duration(0.05);
-    ik_req.ik_request.ik_link_name = "l_wrist_roll_link";
-    ik_req.ik_request.pose_stamped.header.frame_id = "base_link";
-    ik_req.ik_request.pose_stamped.header.stamp = ros::Time::now();
-    ik_req.ik_request.pose_stamped.pose = left_trajectory_endpoint;
+      ik_req.timeout = ros::Duration(0.05);
+      ik_req.ik_request.ik_link_name = "l_wrist_roll_link";
+      ik_req.ik_request.pose_stamped.header.frame_id = "base_link";
+      ik_req.ik_request.pose_stamped.header.stamp = ros::Time::now();
+      ik_req.ik_request.pose_stamped.pose = left_trajectory_endpoint;
 
-    ik_req.ik_request.ik_seed_state.joint_state.position.resize(left_response.kinematic_solver_info.joint_names.size());
-    ik_req.ik_request.ik_seed_state.joint_state.name = left_response.kinematic_solver_info.joint_names;
-    for(unsigned int i = 0; i < ik_req.ik_request.ik_seed_state.joint_state.name.size(); i++) {
-      bool ok = getJointPosition(ik_req.ik_request.ik_seed_state.joint_state.name[i], ik_req.ik_request.ik_seed_state.joint_state.position[i]);
-      if(!ok) {
-        ROS_WARN_STREAM("No joint state yet for " << ik_req.ik_request.ik_seed_state.joint_state.name[i]); 
-        return;
-      } else {
-        //ROS_INFO_STREAM("Setting position " << ik_req.ik_request.ik_seed_state.joint_state.position[i] << " For name " 
-        //                << ik_req.ik_request.ik_seed_state.joint_state.name[i]);
+      ik_req.ik_request.ik_seed_state.joint_state.position.resize(left_response.kinematic_solver_info.joint_names.size());
+      ik_req.ik_request.ik_seed_state.joint_state.name = left_response.kinematic_solver_info.joint_names;
+      for(unsigned int i = 0; i < ik_req.ik_request.ik_seed_state.joint_state.name.size(); i++) {
+        bool ok = getJointPosition(ik_req.ik_request.ik_seed_state.joint_state.name[i], ik_req.ik_request.ik_seed_state.joint_state.position[i]);
+        if(!ok) {
+          ROS_WARN_STREAM("No joint state yet for " << ik_req.ik_request.ik_seed_state.joint_state.name[i]); 
+          return;
+        } else {
+          //ROS_INFO_STREAM("Setting position " << ik_req.ik_request.ik_seed_state.joint_state.position[i] << " For name " 
+          //                << ik_req.ik_request.ik_seed_state.joint_state.name[i]);
+        }
       }
-    }
     
     
-    //otherwise not a lot to be done
-    if(left_arm_kinematics_inverse_client_.call(ik_req, ik_res) && ik_res.error_code.val == ik_res.error_code.SUCCESS) {
-      //ROS_INFO("Ik succeeded");
-      pr2_controllers_msgs::JointTrajectoryGoal goal;
+      //otherwise not a lot to be done
+      if(left_arm_kinematics_inverse_client_.call(ik_req, ik_res) && ik_res.error_code.val == ik_res.error_code.SUCCESS) {
+        //ROS_INFO("Ik succeeded");
+        pr2_controllers_msgs::JointTrajectoryGoal goal;
       
-      std::vector<std::string> joint_names;
-      std::string pref = "l";
+        std::vector<std::string> joint_names;
+        std::string pref = "l";
       
-      // First, the joint names, which apply to all waypoints
-      joint_names.push_back(pref+"_"+"shoulder_pan_joint");
-      joint_names.push_back(pref+"_"+"shoulder_lift_joint");
-      joint_names.push_back(pref+"_"+"upper_arm_roll_joint");
-      joint_names.push_back(pref+"_"+"elbow_flex_joint");
-      joint_names.push_back(pref+"_"+"forearm_roll_joint");
-      joint_names.push_back(pref+"_"+"wrist_flex_joint");
-      joint_names.push_back(pref+"_"+"wrist_roll_joint");
+        // First, the joint names, which apply to all waypoints
+        joint_names.push_back(pref+"_"+"shoulder_pan_joint");
+        joint_names.push_back(pref+"_"+"shoulder_lift_joint");
+        joint_names.push_back(pref+"_"+"upper_arm_roll_joint");
+        joint_names.push_back(pref+"_"+"elbow_flex_joint");
+        joint_names.push_back(pref+"_"+"forearm_roll_joint");
+        joint_names.push_back(pref+"_"+"wrist_flex_joint");
+        joint_names.push_back(pref+"_"+"wrist_roll_joint");
       
-      goal.trajectory.joint_names = joint_names;
+        goal.trajectory.joint_names = joint_names;
 
-      // We will have one waypoint in this goal trajectory
-      goal.trajectory.points.resize(1);
+        // We will have one waypoint in this goal trajectory
+        goal.trajectory.points.resize(1);
       
-      for(unsigned int i = 0; i < goal.trajectory.joint_names.size(); i++) {
-        goal.trajectory.points[0].positions.push_back(ik_res.solution.joint_state.position[i]);
-        goal.trajectory.points[0].velocities.push_back(0.0);
-      }      
-      goal.trajectory.header.stamp = ros::Time::now()+ros::Duration(0.200);
-      goal.trajectory.points[0].time_from_start = ros::Duration(trajectory_duration);
+        for(unsigned int i = 0; i < goal.trajectory.joint_names.size(); i++) {
+          goal.trajectory.points[0].positions.push_back(ik_res.solution.joint_state.position[i]);
+          goal.trajectory.points[0].velocities.push_back(0.0);
+        }      
+        goal.trajectory.header.stamp = ros::Time::now()+ros::Duration(0.200);
+        goal.trajectory.points[0].time_from_start = ros::Duration(trajectory_duration);
 
-      unnormalizeTrajectory(goal.trajectory);
-      left_arm_traj_pub_.publish(goal.trajectory);
-    } else {
-      ROS_DEBUG_STREAM("Ik failed with response " << ik_res.error_code.val);
+        unnormalizeTrajectory(goal.trajectory);
+        left_arm_traj_pub_.publish(goal.trajectory);
+      } else {
+        ROS_DEBUG_STREAM("Ik failed with response " << ik_res.error_code.val);
+      }
     }
   }
 }
 
 bool GeneralCommander::moveToWalkAlongArmPose() {
-  setArmMode(ARMS_BOTH, ARM_POSITION_CONTROL);
+  
+  //not implementing for one-armed robots
+  if(!control_rarm_ || !control_larm_) {
+    return false;
+  } 
 
   updateCurrentWristPositions();
 
   ROS_DEBUG("Attempting to set arms to walk along pose");
 
   std::vector<std::string> joint_names;
-  std::string pref = "r";
-  
+  std::string pref;
   pr2_controllers_msgs::JointTrajectoryGoal goal;
 
+  pref = "r";
+  
   // First, the joint names, which apply to all waypoints
   joint_names.push_back(pref+"_"+"shoulder_pan_joint");
   joint_names.push_back(pref+"_"+"shoulder_lift_joint");
@@ -1129,6 +1217,12 @@ bool GeneralCommander::moveToWalkAlongArmPose() {
 }
 
 bool GeneralCommander::initWalkAlong() {
+
+  //not implementing for one-armed robots
+  if(!control_rarm_ || !control_larm_) {
+    return false;
+  }  
+
   updateCurrentWristPositions();
 
   std::vector<std::string> joint_names;
@@ -1186,6 +1280,11 @@ bool GeneralCommander::initWalkAlong() {
 }
 
 void GeneralCommander::updateWalkAlongAverages() {
+
+  //not implementing for one-armed robots
+  if(!control_rarm_ || !control_larm_) {
+    return;
+  } 
   
   if(walk_rdx_vals_.size() > WALK_BUFFER) {
     walk_rdx_vals_.pop_front();
@@ -1224,6 +1323,11 @@ void GeneralCommander::sendWalkAlongCommand(double thresh,
                                           double x_dist_max, double x_speed_scale,
                                           double y_dist_max, double y_speed_scale,
                                           double rot_speed_scale) {
+  //not implementing for one-armed robots
+  if(!control_rarm_ || !control_larm_) {
+    return;
+  } 
+  
   if(!walk_along_ok_) {
     return;
   }
@@ -1331,6 +1435,8 @@ geometry_msgs::Pose GeneralCommander::getPositionFromJointsPose(ros::ServiceClie
 
 void GeneralCommander::sendHeadSequence(HeadSequence seq) {
 
+  if(!control_head_) return;
+
   setHeadMode(HEAD_JOYSTICK);
 
   trajectory_msgs::JointTrajectory traj;
@@ -1354,7 +1460,7 @@ void GeneralCommander::powerBoardCallback(const pr2_msgs::PowerBoardStateConstPt
 }
 
 void GeneralCommander::requestProsilicaImage(std::string ns) {
-  if(!use_prosilica_) return;
+  if(!control_prosilica_) return;
   polled_camera::GetPolledImage::Request gpi_req;
   polled_camera::GetPolledImage::Response gpi_res;
   gpi_req.response_namespace = ns;
@@ -1364,6 +1470,11 @@ void GeneralCommander::requestProsilicaImage(std::string ns) {
 }
 
 void GeneralCommander::tuckArms(WhichArm arm) {
+  
+  //can't tuck just one arm for now
+  if(!control_rarm_ || !control_larm_) {
+    return;
+  }
 
   setArmMode(arm, ARM_POSITION_CONTROL);
 
@@ -1382,6 +1493,11 @@ void GeneralCommander::tuckArms(WhichArm arm) {
 }
 
 void GeneralCommander::untuckArms(WhichArm arm) {
+
+  //can't tuck just one arm for now
+  if(!control_rarm_ || !control_larm_) {
+    return;
+  }
 
   setArmMode(arm, ARM_POSITION_CONTROL);
 
