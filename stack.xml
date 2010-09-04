@@ -9,5 +9,7 @@
   <depend stack="pr2_controllers" /> <!-- trajectory_msgs, pr2_controllers_msgs -->
   <depend stack="pr2_mechanism" /> <!-- pr2_controller_manager, pr2_mechanism_msgs -->
   <depend stack="ros" /> <!-- std_msgs, topic_tools, rospy, roscpp -->
+  <depend stack="kinematics" /> <!-- kinematics_msgs -->
+  <depend stack="pr2_common_actions" /> <!-- pr2_common_action_msgs, pr2_tuck_arms_action -->
 
 </stack>
