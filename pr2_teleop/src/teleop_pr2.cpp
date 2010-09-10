@@ -66,7 +66,7 @@ class TeleopPR2
   double max_pan, max_tilt, min_tilt, pan_step, tilt_step;
   int axis_vx, axis_vy, axis_vw, axis_pan, axis_tilt;
   int deadman_button, run_button, torso_dn_button, torso_up_button, head_button;
-  bool deadman_no_publish_, torso_publish, head_publish;
+  bool deadman_no_publish_, torso_publish_, head_publish_;
 
   bool deadman_, cmd_head;
   bool use_mux_, last_deadman_;
@@ -88,7 +88,9 @@ class TeleopPR2
     max_vx_run(0.6), max_vy_run(0.6), max_vw_run(0.8),
     max_pan(2.7), max_tilt(1.4), min_tilt(-0.4),
     pan_step(0.02), tilt_step(0.015),
-    deadman_no_publish_(deadman_no_publish), deadman_(false), cmd_head(false), 
+    deadman_no_publish_(deadman_no_publish), 
+    torso_publish_(false), head_publish_(false),
+    deadman_(false), cmd_head(false), 
     use_mux_(false), last_deadman_(false),
     n_private_("~")
   { }
@@ -174,11 +176,17 @@ class TeleopPR2
         ROS_DEBUG("head_button: %d\n", head_button);
         ROS_DEBUG("joy_msg_timeout: %f\n", joy_msg_timeout);
 
-        if (torso_dn_button != 0)
+        if (torso_dn_button != 0 && torso_up_button != 0)
+        {
+          torso_publish_ = true;
           torso_pub_ = n_.advertise<trajectory_msgs::JointTrajectory>(TORSO_TOPIC, 1);
+        }
 
         if (head_button != 0)
+        {
           head_pub_ = n_.advertise<trajectory_msgs::JointTrajectory>(HEAD_TOPIC, 1);
+          head_publish_ = true;
+        }
 
         vel_pub_ = n_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
 
@@ -205,7 +213,7 @@ class TeleopPR2
     if (!deadman_)
       return;
 
-    cmd_head = (((unsigned int)head_button < joy_msg->get_buttons_size()) && joy_msg->buttons[head_button]);
+    cmd_head = (((unsigned int)head_button < joy_msg->get_buttons_size()) && joy_msg->buttons[head_button] && head_publish_);
 
     // Base
     bool running = (((unsigned int)run_button < joy_msg->get_buttons_size()) && joy_msg->buttons[run_button]);
@@ -287,6 +295,7 @@ class TeleopPR2
       vel_pub_.publish(cmd);
 
       // Torso
+      if (torso_publish_)
       {
         double dt = 1.0/double(PUBLISH_FREQ);
         double horizon = 5.0 * dt;
@@ -306,7 +315,7 @@ class TeleopPR2
       }
 
       // Head
-      if (cmd_head)
+      if (cmd_head && head_publish_)
       {
         double dt = 1.0/double(PUBLISH_FREQ);
         double horizon = 3.0 * dt;
