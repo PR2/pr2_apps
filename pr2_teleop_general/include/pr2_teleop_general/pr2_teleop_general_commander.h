@@ -49,6 +49,8 @@
 #include <pr2_common_action_msgs/TuckArmsAction.h>
 #include <pr2_msgs/PowerBoardState.h>
 
+static const std::string default_arm_controller_name="_arm_controller";
+
 class GeneralCommander {
 
 public:
@@ -89,7 +91,8 @@ public:
                    bool control_head,
                    bool control_rarm,
                    bool control_larm,
-                   bool control_prosilica); 
+                   bool control_prosilica,
+                   std::string arm_controller_name=default_arm_controller_name); 
 
   ~GeneralCommander();
   

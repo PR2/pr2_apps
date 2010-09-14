@@ -94,11 +94,24 @@ public:
 
     n_local.param("control_head", control_head, true);
 
-    gc = new GeneralCommander(control_body, 
-                              control_head, 
-                              control_rarm,
-                              control_larm,
-                              control_prosilica);
+    std::string arm_controller_name;
+    n_local.param("arm_controller_name", arm_controller_name,std::string(""));
+    
+    if(arm_controller_name.empty()) {
+      gc = new GeneralCommander(control_body, 
+                                control_head, 
+                                control_rarm,
+                                control_larm,
+                                control_prosilica);
+    } else {
+      gc = new GeneralCommander(control_body, 
+                                control_head, 
+                                control_rarm,
+                                control_larm,
+                                control_prosilica,
+                                arm_controller_name);
+    }
+
     head_init_ = false;
     torso_init_ = false;
   }

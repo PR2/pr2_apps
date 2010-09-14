@@ -158,16 +158,28 @@ public:
     bool control_head;
     n_local.param("control_head", control_head, true);
 
+    std::string arm_controller_name;
+    n_local.param("arm_controller_name", arm_controller_name,std::string(""));
+
     ROS_DEBUG("tilt scale: %.3f rad\n", tilt_scale_);
     ROS_DEBUG("pan scale: %.3f rad\n", pan_scale_);
     
     ROS_INFO("Initing general commander");
 
-    gc = new GeneralCommander(control_body, 
-                              control_head, 
-                              control_rarm,
-                              control_larm,
-                              control_prosilica);
+    if(arm_controller_name.empty()) {
+      gc = new GeneralCommander(control_body, 
+                                control_head, 
+                                control_rarm,
+                                control_larm,
+                                control_prosilica);
+    } else {
+      gc = new GeneralCommander(control_body, 
+                                control_head, 
+                                control_rarm,
+                                control_larm,
+                                control_prosilica,
+                                arm_controller_name);
+    }
     first_callback_ = true;
     
     head_init_ = false;

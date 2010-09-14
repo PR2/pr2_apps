@@ -66,7 +66,8 @@ GeneralCommander::GeneralCommander(bool control_body,
                                    bool control_head,
                                    bool control_rarm,
                                    bool control_larm,
-                                   bool control_prosilica) 
+                                   bool control_prosilica,
+                                   std::string arm_controller_name) 
   : n_(),
     control_body_(control_body),
     control_head_(control_head),
@@ -74,6 +75,9 @@ GeneralCommander::GeneralCommander(bool control_body,
     control_larm_(control_larm),
     control_prosilica_(control_prosilica)                                                        
 {
+
+  r_arm_controller_name_ = "r_"+arm_controller_name;
+  l_arm_controller_name_ = "l_"+arm_controller_name;
 
   head_control_mode_ = HEAD_JOYSTICK;      
 
@@ -113,8 +117,8 @@ GeneralCommander::GeneralCommander(bool control_body,
   }
   if(control_rarm_) {
     right_gripper_client_ = new actionlib::SimpleActionClient<pr2_controllers_msgs::Pr2GripperCommandAction>("r_gripper_controller/gripper_action", true);
-    right_arm_trajectory_client_ = new actionlib::SimpleActionClient<pr2_controllers_msgs::JointTrajectoryAction>("r_arm_controller/joint_trajectory_action", true);
-    right_arm_traj_pub_ = n_.advertise<trajectory_msgs::JointTrajectory>("r_arm_controller/command", 1);
+    right_arm_trajectory_client_ = new actionlib::SimpleActionClient<pr2_controllers_msgs::JointTrajectoryAction>(r_arm_controller_name_+"/joint_trajectory_action", true);
+    right_arm_traj_pub_ = n_.advertise<trajectory_msgs::JointTrajectory>(r_arm_controller_name_+"/command", 1);
     while(!right_gripper_client_->waitForServer(ros::Duration(5.0))){
       ROS_INFO("Waiting for the right gripper action server to come up");
     }  
@@ -127,8 +131,8 @@ GeneralCommander::GeneralCommander(bool control_body,
   }
   if(control_larm_) {
     left_gripper_client_ = new actionlib::SimpleActionClient<pr2_controllers_msgs::Pr2GripperCommandAction>("l_gripper_controller/gripper_action", true);
-    left_arm_trajectory_client_ = new actionlib::SimpleActionClient<pr2_controllers_msgs::JointTrajectoryAction>("l_arm_controller/joint_trajectory_action", true);
-    left_arm_traj_pub_ = n_.advertise<trajectory_msgs::JointTrajectory>("l_arm_controller/command", 1);
+    left_arm_trajectory_client_ = new actionlib::SimpleActionClient<pr2_controllers_msgs::JointTrajectoryAction>(l_arm_controller_name_+"/joint_trajectory_action", true);
+    left_arm_traj_pub_ = n_.advertise<trajectory_msgs::JointTrajectory>(l_arm_controller_name_+"/command", 1);
     while(!left_gripper_client_->waitForServer(ros::Duration(5.0))){
       ROS_INFO("Waiting for the right gripper action server to come up");
     }
