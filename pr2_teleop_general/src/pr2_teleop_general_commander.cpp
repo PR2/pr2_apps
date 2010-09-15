@@ -123,7 +123,7 @@ GeneralCommander::GeneralCommander(bool control_body,
       ROS_INFO("Waiting for the right gripper action server to come up");
     }  
     while(!right_arm_trajectory_client_->waitForServer(ros::Duration(5.0))){
-      ROS_INFO_STREAM("Waiting for the right arm trajectory action server to come up");
+      ROS_INFO_STREAM("Waiting for the right arm trajectory action server to come up" << r_arm_controller_name_+"/joint_trajectory_action");
     }
   } else {
     right_gripper_client_ = NULL;

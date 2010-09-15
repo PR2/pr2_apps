@@ -49,7 +49,7 @@
 #include <pr2_common_action_msgs/TuckArmsAction.h>
 #include <pr2_msgs/PowerBoardState.h>
 
-static const std::string default_arm_controller_name="_arm_controller";
+static const std::string default_arm_controller_name="arm_controller";
 
 class GeneralCommander {
 
