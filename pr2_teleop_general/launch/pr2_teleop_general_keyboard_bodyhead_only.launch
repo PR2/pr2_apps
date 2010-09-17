@@ -1,0 +1,17 @@
+<launch>
+
+  <node pkg="pr2_teleop_general" type="pr2_teleop_general_keyboard" name="pr2_teleop_general_keyboard" output="screen">
+  	<param name="control_body" type="bool" value="true"/>
+  	<param name="control_head" type="bool" value="true"/>
+  	<param name="control_larm" type="bool" value="false"/>
+  	<param name="control_rarm" type="bool" value="false"/>
+  	<param name="control_prosilica" type="bool" value="false"/>
+	<param name="tilt_diff" type="double" value=".05" />
+	<param name="pan_diff" type="double" value=".05" />
+	<param name="torso_step" type="double" value=".01" />
+	<param name="arm_x_scale" type="double" value=".10" />
+	<param name="arm_y_scale" type="double" value=".10" />
+	<param name="arm_z_scale" type="double" value=".10" />
+  </node>
+
+</launch>
