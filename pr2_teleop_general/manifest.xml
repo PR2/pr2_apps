@@ -25,7 +25,7 @@
   <depend package="polled_camera" />
 
   <export>
-    <cpp cflags="-I${prefix}/include"/>
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib"/>
   </export>
 
   <platform os="ubuntu" version="9.04"/>
