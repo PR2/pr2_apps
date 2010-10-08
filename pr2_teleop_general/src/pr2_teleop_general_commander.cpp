@@ -240,8 +240,7 @@ GeneralCommander::GeneralCommander(bool control_body,
   head_control_mode_ = HEAD_MANNEQUIN;
   if(control_head_) {
     setHeadMode(HEAD_JOYSTICK);
-    laser_control_mode_ = LASER_TILT_SLOW;
-    setLaserMode(LASER_TILT_OFF);
+    laser_control_mode_ = LASER_TILT_OFF;
   }
     
   //cribbed from motion planning laser settings
