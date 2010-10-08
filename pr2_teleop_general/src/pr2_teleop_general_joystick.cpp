@@ -446,45 +446,56 @@ public:
       }
 
       if(buttonOkAndOn(ARM_TUCK_BUTTON, joy_msg) && !sameValueAsLast(ARM_TUCK_BUTTON, joy_msg, last_joy_)) {
+        if(in_walk_along) {
+	  gc->turnOffWalkAlong();
+          ROS_INFO("Turning off walk along");
+	}
         gc->tuckArms(GeneralCommander::ARMS_RIGHT);        
       } else if(buttonOkAndOn(ARM_UNTUCK_BUTTON, joy_msg) && !sameValueAsLast(ARM_UNTUCK_BUTTON, joy_msg, last_joy_)) {
+        if(in_walk_along) {
+	  gc->turnOffWalkAlong();
+          ROS_INFO("Turning off walk along");
+	}
         gc->untuckArms(GeneralCommander::ARMS_RIGHT);
       } 
 
-      bool lookAnalog = false;
-      bool rotClock = buttonOkAndOn(WRIST_CLOCKWISE_BUTTON, joy_msg);
-      bool rotCounter = buttonOkAndOn(WRIST_COUNTER_BUTTON, joy_msg);
-      if(rotClock && !rotCounter) {
-        des_right_wrist_vel_ = wrist_velocity_;
-      } else if(!rotClock && rotCounter) {
-        des_right_wrist_vel_ = -wrist_velocity_;
-      } else {
-        des_right_wrist_vel_ = 0.0;
-        lookAnalog = true;
-      }
+      if(!in_walk_along) {
 
-      if(lookAnalog) {
-        //look at analog sticks if we aren't supposed to wrist rotate
-        if(axisOk(ARM_X_AXIS, joy_msg)) {
-          right_arm_vx_ = joy_msg->axes[ARM_X_AXIS]*arm_x_scale_;
+        bool lookAnalog = false;
+        bool rotClock = buttonOkAndOn(WRIST_CLOCKWISE_BUTTON, joy_msg);
+        bool rotCounter = buttonOkAndOn(WRIST_COUNTER_BUTTON, joy_msg);
+        if(rotClock && !rotCounter) {
+          des_right_wrist_vel_ = wrist_velocity_;
+        } else if(!rotClock && rotCounter) {
+          des_right_wrist_vel_ = -wrist_velocity_;
+        } else {
+          des_right_wrist_vel_ = 0.0;
+          lookAnalog = true;
+        }
+        
+        if(lookAnalog) {
+          //look at analog sticks if we aren't supposed to wrist rotate
+          if(axisOk(ARM_X_AXIS, joy_msg)) {
+            right_arm_vx_ = joy_msg->axes[ARM_X_AXIS]*arm_x_scale_;
+          } else {
+            right_arm_vx_ = 0.0;
+          }
+          if(axisOk(ARM_Y_AXIS, joy_msg)) {
+            right_arm_vy_ = joy_msg->axes[ARM_Y_AXIS]*arm_y_scale_;
+          } else {
+            right_arm_vy_ = 0.0;
+          }
+          if(axisOk(ARM_Z_AXIS, joy_msg)) {
+            right_arm_vz_ = joy_msg->axes[ARM_Z_AXIS]*arm_z_scale_;
+          } else {
+            right_arm_vz_ = 0.0;
+          }
+          //ROS_INFO_STREAM("Setting vx " << right_arm_vx_ << " " << right_arm_vy_ << " " << right_arm_vz_);
         } else {
           right_arm_vx_ = 0.0;
-        }
-        if(axisOk(ARM_Y_AXIS, joy_msg)) {
-          right_arm_vy_ = joy_msg->axes[ARM_Y_AXIS]*arm_y_scale_;
-        } else {
           right_arm_vy_ = 0.0;
-        }
-        if(axisOk(ARM_Z_AXIS, joy_msg)) {
-          right_arm_vz_ = joy_msg->axes[ARM_Z_AXIS]*arm_z_scale_;
-        } else {
           right_arm_vz_ = 0.0;
         }
-        //ROS_INFO_STREAM("Setting vx " << right_arm_vx_ << " " << right_arm_vy_ << " " << right_arm_vz_);
-      } else {
-        right_arm_vx_ = 0.0;
-        right_arm_vy_ = 0.0;
-        right_arm_vz_ = 0.0;
       }
     } else if (layout != LAYOUT_BOTH_ARMS) {
       des_right_wrist_vel_ = 0.0;
@@ -508,45 +519,55 @@ public:
       }
 
       if(buttonOkAndOn(ARM_TUCK_BUTTON, joy_msg) && !sameValueAsLast(ARM_TUCK_BUTTON, joy_msg, last_joy_)) {
+        if(in_walk_along) {
+	  gc->turnOffWalkAlong();
+          ROS_INFO("Turning off walk along");
+	}
         gc->tuckArms(GeneralCommander::ARMS_LEFT);        
       } else if(buttonOkAndOn(ARM_UNTUCK_BUTTON, joy_msg) && !sameValueAsLast(ARM_UNTUCK_BUTTON, joy_msg, last_joy_)) {
+        if(in_walk_along) {
+	  gc->turnOffWalkAlong();
+          ROS_INFO("Turning off walk along");
+	}
         gc->untuckArms(GeneralCommander::ARMS_LEFT);
       } 
 
-      bool lookAnalog = false;
-      bool rotClock = buttonOkAndOn(WRIST_CLOCKWISE_BUTTON, joy_msg);
-      bool rotCounter = buttonOkAndOn(WRIST_COUNTER_BUTTON, joy_msg);
-      if(rotClock && !rotCounter) {
-        des_left_wrist_vel_ = wrist_velocity_;
-      } else if(!rotClock && rotCounter) {
-        des_left_wrist_vel_ = -wrist_velocity_;
-      } else {
-        des_left_wrist_vel_ = 0.0;
-        lookAnalog = true;
-      }
-
-      if(lookAnalog) {
-        //look at analog sticks if we aren't supposed to wrist rotate
-        if(axisOk(ARM_X_AXIS, joy_msg)) {
-          left_arm_vx_ = joy_msg->axes[ARM_X_AXIS]*arm_x_scale_;
+      if(!in_walk_along) {
+        bool lookAnalog = false;
+        bool rotClock = buttonOkAndOn(WRIST_CLOCKWISE_BUTTON, joy_msg);
+        bool rotCounter = buttonOkAndOn(WRIST_COUNTER_BUTTON, joy_msg);
+        if(rotClock && !rotCounter) {
+          des_left_wrist_vel_ = wrist_velocity_;
+        } else if(!rotClock && rotCounter) {
+          des_left_wrist_vel_ = -wrist_velocity_;
+        } else {
+          des_left_wrist_vel_ = 0.0;
+          lookAnalog = true;
+        }
+        
+        if(lookAnalog) {
+          //look at analog sticks if we aren't supposed to wrist rotate
+          if(axisOk(ARM_X_AXIS, joy_msg)) {
+            left_arm_vx_ = joy_msg->axes[ARM_X_AXIS]*arm_x_scale_;
+          } else {
+            left_arm_vx_ = 0.0;
+          }
+          if(axisOk(ARM_Y_AXIS, joy_msg)) {
+            left_arm_vy_ = joy_msg->axes[ARM_Y_AXIS]*arm_y_scale_;
+          } else {
+            left_arm_vy_ = 0.0;
+          }
+          if(axisOk(ARM_Z_AXIS, joy_msg)) {
+            left_arm_vz_ = joy_msg->axes[ARM_Z_AXIS]*arm_z_scale_;
+          } else {
+            left_arm_vz_ = 0.0;
+          }
+          //ROS_INFO_STREAM("Setting vx " << left_arm_vx_ << " " << left_arm_vy_ << " " << left_arm_vz_);
         } else {
           left_arm_vx_ = 0.0;
-        }
-        if(axisOk(ARM_Y_AXIS, joy_msg)) {
-          left_arm_vy_ = joy_msg->axes[ARM_Y_AXIS]*arm_y_scale_;
-        } else {
           left_arm_vy_ = 0.0;
-        }
-        if(axisOk(ARM_Z_AXIS, joy_msg)) {
-          left_arm_vz_ = joy_msg->axes[ARM_Z_AXIS]*arm_z_scale_;
-        } else {
           left_arm_vz_ = 0.0;
         }
-        //ROS_INFO_STREAM("Setting vx " << left_arm_vx_ << " " << left_arm_vy_ << " " << left_arm_vz_);
-      } else {
-        left_arm_vx_ = 0.0;
-        left_arm_vy_ = 0.0;
-        left_arm_vz_ = 0.0;
       }
     } else if (layout != LAYOUT_BOTH_ARMS) {
       des_left_wrist_vel_ = 0.0;
@@ -574,57 +595,67 @@ public:
       }
 
       if(buttonOkAndOn(ARM_TUCK_BUTTON, joy_msg) && !sameValueAsLast(ARM_TUCK_BUTTON, joy_msg, last_joy_)) {
+        if(in_walk_along) {
+          gc->turnOffWalkAlong();
+          ROS_INFO("Turning off walk along");
+        }
         gc->tuckArms(GeneralCommander::ARMS_BOTH);        
       } else if(buttonOkAndOn(ARM_UNTUCK_BUTTON, joy_msg) && !sameValueAsLast(ARM_UNTUCK_BUTTON, joy_msg, last_joy_)) {
+        if(in_walk_along) {
+          gc->turnOffWalkAlong();
+          ROS_INFO("Turning off walk along");
+        }
         gc->untuckArms(GeneralCommander::ARMS_BOTH);
       } 
 
-      bool lookAnalog = false;
-      bool rotClock = buttonOkAndOn(WRIST_CLOCKWISE_BUTTON, joy_msg);
-      bool rotCounter = buttonOkAndOn(WRIST_COUNTER_BUTTON, joy_msg);
-      if(rotClock && !rotCounter) {
-        des_left_wrist_vel_ = wrist_velocity_;
-        des_right_wrist_vel_ = wrist_velocity_;
-      } else if(!rotClock && rotCounter) {
-        des_left_wrist_vel_ = -wrist_velocity_;
-        des_right_wrist_vel_ = -wrist_velocity_;
-      } else {
-        des_left_wrist_vel_ = 0.0;
-        des_right_wrist_vel_ = 0.0;
-        lookAnalog = true;
-      }
-
-      if(lookAnalog) {
-        //look at analog sticks if we aren't supposed to wrist rotate
-        if(axisOk(ARM_X_AXIS, joy_msg)) {
-          left_arm_vx_ = joy_msg->axes[ARM_X_AXIS]*arm_x_scale_;
-          right_arm_vx_ = joy_msg->axes[ARM_X_AXIS]*arm_x_scale_;
+      if(!in_walk_along) {
+        bool lookAnalog = false;
+        bool rotClock = buttonOkAndOn(WRIST_CLOCKWISE_BUTTON, joy_msg);
+        bool rotCounter = buttonOkAndOn(WRIST_COUNTER_BUTTON, joy_msg);
+        if(rotClock && !rotCounter) {
+          des_left_wrist_vel_ = wrist_velocity_;
+          des_right_wrist_vel_ = wrist_velocity_;
+        } else if(!rotClock && rotCounter) {
+          des_left_wrist_vel_ = -wrist_velocity_;
+          des_right_wrist_vel_ = -wrist_velocity_;
+        } else {
+          des_left_wrist_vel_ = 0.0;
+          des_right_wrist_vel_ = 0.0;
+          lookAnalog = true;
+        }
+        
+        if(lookAnalog) {
+          //look at analog sticks if we aren't supposed to wrist rotate
+          if(axisOk(ARM_X_AXIS, joy_msg)) {
+            left_arm_vx_ = joy_msg->axes[ARM_X_AXIS]*arm_x_scale_;
+            right_arm_vx_ = joy_msg->axes[ARM_X_AXIS]*arm_x_scale_;
+          } else {
+            left_arm_vx_ = 0.0;
+            right_arm_vz_ = 0.0;
+          }
+          if(axisOk(ARM_Y_AXIS, joy_msg)) {
+            left_arm_vy_ = joy_msg->axes[ARM_Y_AXIS]*arm_y_scale_;
+            right_arm_vy_ = joy_msg->axes[ARM_Y_AXIS]*arm_y_scale_;
+          } else {
+            left_arm_vy_ = 0.0;
+            right_arm_vz_ = 0.0;
+          }
+          if(axisOk(ARM_Z_AXIS, joy_msg)) {
+            left_arm_vz_ = joy_msg->axes[ARM_Z_AXIS]*arm_z_scale_;
+            right_arm_vz_ = joy_msg->axes[ARM_Z_AXIS]*arm_z_scale_;
+          } else {
+            left_arm_vz_ = 0.0;
+            right_arm_vz_ = 0.0;
+          }
+        //ROS_INFO_STREAM("Setting vx " << left_arm_vx_ << " " << left_arm_vy_ << " " << left_arm_vz_);
         } else {
           left_arm_vx_ = 0.0;
-          right_arm_vz_ = 0.0;
-        }
-        if(axisOk(ARM_Y_AXIS, joy_msg)) {
-          left_arm_vy_ = joy_msg->axes[ARM_Y_AXIS]*arm_y_scale_;
-          right_arm_vy_ = joy_msg->axes[ARM_Y_AXIS]*arm_y_scale_;
-        } else {
           left_arm_vy_ = 0.0;
-          right_arm_vz_ = 0.0;
-        }
-        if(axisOk(ARM_Z_AXIS, joy_msg)) {
-          left_arm_vz_ = joy_msg->axes[ARM_Z_AXIS]*arm_z_scale_;
-          right_arm_vz_ = joy_msg->axes[ARM_Z_AXIS]*arm_z_scale_;
-        } else {
           left_arm_vz_ = 0.0;
+          right_arm_vx_ = 0.0;
+          right_arm_vy_ = 0.0;
           right_arm_vz_ = 0.0;
         }
-        //ROS_INFO_STREAM("Setting vx " << left_arm_vx_ << " " << left_arm_vy_ << " " << left_arm_vz_);
-      } else {
-        left_arm_vx_ = 0.0;
-        left_arm_vy_ = 0.0;
-        left_arm_vz_ = 0.0;
-        right_arm_vx_ = 0.0;
-        right_arm_vy_ = 0.0;
-        right_arm_vz_ = 0.0;
       }
     } else if (layout != LAYOUT_RIGHT_ARM && layout != LAYOUT_LEFT_ARM) {
       des_right_wrist_vel_ = 0.0;
