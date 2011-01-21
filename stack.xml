@@ -6,8 +6,9 @@
   <url>http://ros.org/wiki/pr2_apps</url>
   <depend stack="common_msgs" /> <!-- sensor_msgs, geometry_msgs -->
   <depend stack="joystick_drivers" /> <!-- joy -->
+  <depend stack="pr2_common_actions" /> <!-- pr2_tuck_arms_action -->
   <depend stack="pr2_controllers" /> <!-- trajectory_msgs, pr2_controllers_msgs -->
-  <depend stack="pr2_mechanism" /> <!-- pr2_controller_manager, pr2_mechanism_msgs -->
+  <depend stack="pr2_mechanism" /> <!-- pr2_mechanism_msgs, pr2_controller_manager -->
   <depend stack="ros" /> <!-- std_msgs, topic_tools, rospy, roscpp -->
 
 </stack>
