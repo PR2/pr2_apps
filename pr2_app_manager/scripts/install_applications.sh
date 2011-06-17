@@ -23,8 +23,8 @@ cat > install_applications.rosinstall  <<EOF
 - svn:
     uri: https://code.ros.org/svn/ros/stacks/multimaster_experimental/trunk
     local-name: multimaster_experimental
-- svn:
-    uri: https://code.ros.org/svn/wg-ros-pkg/stacks/pr2_apps/trunk
+- hg:
+    uri: https://kforge.ros.org/pr2apps/pr2_apps
     local-name: pr2_apps
 EOF
 
