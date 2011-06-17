@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ "x`whoami`" != "xroot" ] ; then
+    echo "Need to run as root"
+    exit 1
+fi
+
 if [ -d ~applications ] ; then
     echo "User already exists"
 else
@@ -15,7 +20,7 @@ mkdir -p ros
 
 echo "Create ROS Install"
 
-cat > install_applications.rosinstall  <<EOF
+cat > ~applications/install_applications.rosinstall  <<EOF
 - other:
     local-name: /opt/ros/diamondback/ros
 - other:
@@ -28,37 +33,33 @@ cat > install_applications.rosinstall  <<EOF
     local-name: pr2_apps
 EOF
 
-rosinstall ~applications/ros ~applications/install_applications.rosinstall
+sudo -u applications rosinstall ~applications/ros --nobuild ~applications/install_applications.rosinstall
 
-source ~applications/ros/setup.bash
-rosmake app_manager
+chown -R applications ~applications/*
 
-#FIXME: install control.py
-#FIXME: need to put this script, and this launch file, in the pr2_apps stack.
-#FIXME: set robot name correctly
+#FIXME: get rid of the hard-coded path
+cp ~applications/ros/pr2_apps/pr2_app_manager/scripts/control.py /usr/lib/cgi-bin
+chown www-data /usr/lib/cgi-bin/control.py
+chmod a+x /usr/lib/cgi-bin/control.py
 
-cat > ~applications/app_man.launch <<EOF
-<launch>
-  <rosparam>
-robot:
-  name: pri1
-  type: pr2
-  </rosparam>
+#FIXME: set robot name correctly in the launch file.
 
-  <node pkg="app_manager" type="appmaster" name="appmaster" args="-p 11312"/>
-
-  <node pkg="app_manager" type="app_manager" name="app_manager" args="--applist \$(find app_manager_tutorial)/applist" output="screen">
-        <param name="interface_master" value="http://localhost:11312"/>
-  </node>
-</launch>
-EOF
-
-cat > ~applications/run.sh <<EOF
+cat >/dev/null 2> ~applications/run.sh <<EOF
 #!/bin/bash
 roslaunch ~applications/app_man.launch
 EOF
-chmod a+x ~applications/run.sh
+#chmod a+x ~applications/run.sh
 
+
+chown -R applications ~applications/*
+
+#FIXME: need to implement this somehow.
+echo "Installation is now completed, except for rosmake"
+echo "Please enter the following:"
+echo "sudo su applications"
+echo "source ~/ros/setup.bash"
+echo "rosmake FOOO"
+echo "exit"
 
 
 
