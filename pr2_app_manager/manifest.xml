@@ -1,0 +1,12 @@
+<package>
+  <description brief="Scripts and tools for the app manager">
+    Scripts and tools for running the application manager on the PR2.
+  </description>
+  <author>Vijay Pradeep</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/application_manager</url>
+
+</package>
+
+
