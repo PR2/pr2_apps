@@ -33,6 +33,8 @@ cat > ~applications/install_applications.rosinstall  <<EOF
     local-name: pr2_apps
 EOF
 
+chown -R applications ~applications/*
+
 sudo -u applications rosinstall ~applications/ros --nobuild ~applications/install_applications.rosinstall
 
 chown -R applications ~applications/*
@@ -42,14 +44,9 @@ cp ~applications/ros/pr2_apps/pr2_app_manager/scripts/control.py /usr/lib/cgi-bi
 chown www-data /usr/lib/cgi-bin/control.py
 chmod a+x /usr/lib/cgi-bin/control.py
 
+rm ~applications/install_applications.rosinstall
+
 #FIXME: set robot name correctly in the launch file.
-
-cat >/dev/null 2> ~applications/run.sh <<EOF
-#!/bin/bash
-roslaunch ~applications/app_man.launch
-EOF
-#chmod a+x ~applications/run.sh
-
 
 chown -R applications ~applications/*
 
@@ -58,7 +55,7 @@ echo "Installation is now completed, except for rosmake"
 echo "Please enter the following:"
 echo "sudo su applications"
 echo "source ~/ros/setup.bash"
-echo "rosmake FOOO"
+echo "rosmake app_manager"
 echo "exit"
 
 
