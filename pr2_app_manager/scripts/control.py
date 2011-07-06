@@ -28,7 +28,7 @@ def run(fun):
 
 def run_as_robot(command):
     run = "su applications -c \"" + command + "\""
-    print "C", run
+    #print "C", run
     child = pexpect.spawn(run)
     result = child.expect(["ssword:", "(yes/no)?"])
     child.sendline("willow")
@@ -53,15 +53,15 @@ if (message == "GET_STATE"):
     print "ACTIVE_USER: ", active_user
     print "INACTIVE_USERS:", dead_users.strip().strip(",")
 
-    print "PROCESSES:"
-    processes = ""
-    for i in run_as_robot("robot plist").split("\n"):
-        if (i.strip() != "Password:" and i.strip() != "The following processes are running:" and i.strip() != "" and i.strip() != "No processes running."):
-            l = i.strip().split(None)
-            if (len(l) > 5):
-                print l[5], "from", l[4]
-            else:
-                print "INVALID:", i.strip()
+    #print "PROCESSES:"
+    #processes = ""
+    #for i in run_as_robot("robot plist").split("\n"):
+    #    if (i.strip() != "Password:" and i.strip() != "The following processes are running:" and i.strip() != "" and i.strip() != "No processes running."):
+    #        l = i.strip().split(None)
+    #        if (len(l) > 5):
+    #            print l[5], "from", l[4]
+    #        else:
+    #            print "INVALID:", i.strip()
 
     print
 elif (message == "STOP_ROBOT"):
