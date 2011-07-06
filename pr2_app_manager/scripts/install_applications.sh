@@ -47,16 +47,9 @@ chmod a+x /usr/lib/cgi-bin/control.py
 rm ~applications/install_applications.rosinstall
 
 #FIXME: set robot name correctly in the launch file.
-
 chown -R applications ~applications/*
 
-#FIXME: need to implement this somehow.
-echo "Installation is now completed, except for rosmake"
-echo "Please enter the following:"
-echo "sudo su applications"
-echo "source ~/ros/setup.bash"
-echo "rosmake app_manager"
-echo "exit"
+su applications -c "source ~/ros/setup.bash && rosmake pr2_app_manager app_manager"
 
 
 
