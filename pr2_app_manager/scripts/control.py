@@ -43,7 +43,7 @@ if (message == "GET_STATE"):
     print "USERS"
     active_user = "(UNKNOWN)"
     dead_users = ""
-    for i in run("robot users").split("\n"):
+    for i in run("robot users --no-plist").split("\n"):
         if (i.find("Active User:") != -1):
             active_user = i.split(":")[1].strip()
         if (i.find("*") != -1):
