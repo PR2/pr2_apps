@@ -1,3 +1,5 @@
 apps:
  - display: Mannequin Mode
    app: pr2_mannequin_mode/mannequin_mode
+ - display: Tuck Arms
+   app: pr2_tuckarm/tuck_arms
