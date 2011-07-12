@@ -11,4 +11,4 @@ clients:
    app: 
      gravityMode: 0
      base_control_topic: /base_controller/command
-
+     camera_topic: /wide_stereo/left/image_color/compressed_throttle

@@ -1,4 +1,5 @@
 <launch>
-<!-- Does nothing -->
+  <node pkg="topic_tools" type="throttle" name="camera_throttle" output="screen"
+        args="messages wide_stereo/left/image_color/compressed 5"/>
 </launch>
 
