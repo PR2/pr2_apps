@@ -3,3 +3,5 @@ apps:
    app: pr2_mannequin_mode/mannequin_mode
  - display: Tuck Arms
    app: pr2_tuckarm/tuck_arms
+ - display: PR2 Teleop
+   app: pr2_teleop/pr2_teleop
