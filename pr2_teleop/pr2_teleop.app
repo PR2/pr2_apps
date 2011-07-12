@@ -1,3 +1,5 @@
+display: PR2 Teleop
+description: Teleop and control a PR2.
 platform: pr2
 launch: pr2_teleop/teleop.launch
 interface: pr2_teleop/teleop.interface
