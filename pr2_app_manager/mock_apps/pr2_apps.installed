@@ -5,3 +5,5 @@ apps:
    app: pr2_tuckarm/tuck_arms
  - display: PR2 Teleop
    app: pr2_teleop/pr2_teleop
+ - display: PR2 Make a Map
+   app: pr2_map_apps/make_a_map
