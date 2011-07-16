@@ -7,3 +7,5 @@ apps:
    app: pr2_teleop/pr2_teleop
  - display: PR2 Make a Map
    app: pr2_map_apps/make_a_map
+ - display: PR2 Map Navigation
+   app: pr2_map_apps/map_nav
