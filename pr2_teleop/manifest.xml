@@ -15,6 +15,8 @@
   <depend package="roscpp" />
   <depend package="topic_tools" />
   <depend package="actionlib" />
+  <depend package="rospy" />
+  <depend package="tf" />
   <platform os="ubuntu" version="9.04"/>
   <platform os="ubuntu" version="9.10"/>
   <platform os="ubuntu" version="10.04"/>
