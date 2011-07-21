@@ -10,4 +10,4 @@ apps:
  - display: PR2 Map Navigation
    app: pr2_map_apps/map_nav
  - display: PR2 Pan Tilt
-   app: pr2_teleop/pr2_pan_tilt
+   app: pr2_pan_tilt/pr2_pan_tilt
