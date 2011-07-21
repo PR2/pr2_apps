@@ -42,6 +42,9 @@ cat > ~applications/install_applications.rosinstall  <<EOF
     uri: https://kforge.ros.org/navigation/navigation
     local-name: navigation
     version: 1.5.0
+- hg:
+    local-name: pr2_pan_tilt
+    uri: https://kforge.ros.org/pr2apps/pr2_pan_tilt
 EOF
 
 chown -R applications ~applications/*
