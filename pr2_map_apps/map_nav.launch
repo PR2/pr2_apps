@@ -6,7 +6,10 @@
 
   <include file="$(find pr2_map_apps)/pr2_2dnav.launch" />
 
-  <include file="$(find warehouse)/launch/warehouse.launch"/>
+  <node name="mongo" type="wrapper.py" pkg="mongodb" output="log">
+    <param name="database_path" value="warehouse_data"/>
+    <param name="overwrite" value="false"/>
+  </node>
 
 
   <rosparam file="$(find pr2_navigation_config)/move_base/move_base_params.yaml" command="load" />
