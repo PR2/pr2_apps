@@ -36,7 +36,7 @@
 #include <math.h>
 
 #include <ros/ros.h>
-#include <joy/Joy.h>
+#include <sensor_msgs/Joy.h>
 
 #include <sensor_msgs/JointState.h>
 #include <pr2_msgs/SetPeriodicCmd.h>
