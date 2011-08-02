@@ -30,7 +30,7 @@
 
 #include <ros/ros.h>
 #include <pr2_controllers_msgs/Pr2GripperCommand.h>
-#include <joy/Joy.h>
+#include <sensor_msgs/Joy.h>
 
 class TeleopGripper
 {
@@ -54,7 +54,7 @@ public:
     ROS_DEBUG("teleop_gripper started");
   }
 
-  void joyCallback(const joy::JoyConstPtr& joy)
+  void joyCallback(const sensor_msgs::JoyConstPtr& joy)
   {
     ROS_DEBUG("Got a joy msg");
     if ((int) joy->buttons.size() <= open_button_ ||

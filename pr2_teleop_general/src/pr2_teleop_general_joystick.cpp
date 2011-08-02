@@ -39,7 +39,7 @@
 
 #include <ros/ros.h>
 
-#include <joy/Joy.h>
+#include <sensor_msgs/Joy.h>
 #include "pr2_teleop_general/pr2_teleop_general_commander.h"
 
 enum JoystickLayoutMode {
@@ -200,23 +200,23 @@ public:
     }
   }
 
-  bool buttonOkAndOn(unsigned int buttonNum, const joy::Joy::ConstPtr& joy_msg) const {
+  bool buttonOkAndOn(unsigned int buttonNum, const sensor_msgs::Joy::ConstPtr& joy_msg) const {
     if(buttonNum >= joy_msg->buttons.size()) return false;
     return(joy_msg->buttons[buttonNum]);
   }
 
-  bool axisOk(unsigned int axisNum, const joy::Joy::ConstPtr& joy_msg) const {
+  bool axisOk(unsigned int axisNum, const sensor_msgs::Joy::ConstPtr& joy_msg) const {
     return (axisNum < joy_msg->axes.size());
   }
 
   bool sameValueAsLast(unsigned int button, 
-                       const joy::Joy::ConstPtr& new_msg,
-                       const joy::Joy::ConstPtr& old_msg) {
+                       const sensor_msgs::Joy::ConstPtr& new_msg,
+                       const sensor_msgs::Joy::ConstPtr& old_msg) {
     return (buttonOkAndOn(button, new_msg) == buttonOkAndOn(button, old_msg));
   }
                        
 
-  void joy_cb(const joy::Joy::ConstPtr& joy_msg)
+  void joy_cb(const sensor_msgs::Joy::ConstPtr& joy_msg)
   {
     if(first_callback_) {
       last_joy_ = joy_msg;
@@ -786,7 +786,7 @@ public:
 
   ros::Time joy_deadman_;
 
-  joy::JoyConstPtr last_joy_;
+  sensor_msgs::JoyConstPtr last_joy_;
   bool first_callback_;
 
   ros::NodeHandle n_;
