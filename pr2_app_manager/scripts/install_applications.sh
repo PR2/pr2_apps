@@ -59,6 +59,14 @@ rm ~applications/install_applications.rosinstall
 #FIXME: set robot name correctly in the launch file.
 chown -R applications ~applications/*
 
+#Add two items to the CKill whitelist
+if [ "x`grep su /etc/ckill/whitelist`" == "x" ] ; then
+    echo "su" >> /etc/ckill/whitelist
+fi                                                                                
+if [ "x`grep yes /etc/ckill/whitelist`" == "x" ]; then
+    echo "yes" >> /etc/ckill/whitelist
+fi
+
 su applications -c "source ~/ros/setup.bash && rosmake --rosdep-install pr2_app_manager app_manager map_store warehouse amcl navigation"
 
 
