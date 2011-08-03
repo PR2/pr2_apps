@@ -37,14 +37,10 @@ cat > ~applications/install_applications.rosinstall  <<EOF
 - hg:
     uri: https://kforge.ros.org/warehousewg/warehouse-hg
     local-name: warehouse
-    version: diamondback 
 - hg:
     uri: https://kforge.ros.org/navigation/navigation
     local-name: navigation
-    version: 1.5.0
-- hg:
-    local-name: pr2_pan_tilt
-    uri: https://kforge.ros.org/pr2apps/pr2_pan_tilt
+    version: navigation-1.5.0
 EOF
 
 chown -R applications ~applications/*
@@ -63,7 +59,7 @@ rm ~applications/install_applications.rosinstall
 #FIXME: set robot name correctly in the launch file.
 chown -R applications ~applications/*
 
-su applications -c "source ~/ros/setup.bash && rosmake pr2_app_manager app_manager map_store warehouse amcl navigation"
+su applications -c "source ~/ros/setup.bash && rosmake --rosdep-install pr2_app_manager app_manager map_store warehouse amcl navigation"
 
 
 
