@@ -73,7 +73,7 @@ elif (message == "START_ROBOT"):
     print "STARTING_APP_MAN"
     print run_as_robot("yes | robot claim ; source ~/.bashrc ; source /opt/ros/diamondback/setup.bash ; source ~/ros/setup.bash ; nohup robot start > ~/robot_start.txt &")
     time.sleep(10.0) #FIXME: this is a race condition. Should wait for the master.
-    print run_as_robot("source ~/.bashrc ; source /opt/ros/diamondback/setup.bash ; source ~/ros/setup.bash ; nohup roslaunch pr2_app_manager pr2_app_manager.launch > ~/run.txt &")
+    print run_as_robot("source /opt/ros/diamondback/setup.bash ; source ~/ros/setup.bash ~/.bashrc ; nohup roslaunch pr2_app_manager pr2_app_manager.launch > ~/run.txt &")
     print "DONE"
 else:
     print "REJECT_COMMAND"

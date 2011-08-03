@@ -13,6 +13,13 @@ else
     exit 1
 fi
 
+echo "Enter the robot name (e.g. pri):"
+read ROBOT_NAME
+if [ -z $ROBOT_NAME ] ; then
+    echo "Must specify a robot name"
+    exit 2
+fi
+
 cd ~applications
 
 echo "Make ROS Directory"
@@ -56,7 +63,9 @@ chmod a+x /usr/lib/cgi-bin/control.py
 
 rm ~applications/install_applications.rosinstall
 
-#FIXME: set robot name correctly in the launch file.
+#Set robot name
+echo "name: $ROBOT_NAME" >> ~applications/robot.yaml
+
 chown -R applications ~applications/*
 
 #Add two items to the CKill whitelist
