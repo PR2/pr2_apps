@@ -3,6 +3,7 @@
 robot:
   type: pr2
   app_store_url: http://pri/app_store.yaml
+  app_store_directory: http://pri/app_store/
   dashboard:
       class_name: ros.android.views.Pr2Dashboard
   </rosparam>
