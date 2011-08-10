@@ -50,7 +50,7 @@ cat > ~applications/install_applications.rosinstall  <<EOF
     version: navigation-1.5.0
 - hg:
     uri: https://kforge.ros.org/pr2apps/pr2_props_app
-    local-name: pr2_app_manager
+    local-name: pr2_props_app
 EOF
 
 chown -R applications ~applications/*
