@@ -3,6 +3,7 @@ description: Create a map for the PR2
 platform: pr2
 launch: pr2_map_apps/make_a_map.launch
 interface: pr2_map_apps/make_a_map.interface
+icon: pr2_map_apps/map.jpg
 clients:
  - type: android
    manager:

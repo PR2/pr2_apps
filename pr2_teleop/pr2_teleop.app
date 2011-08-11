@@ -3,6 +3,7 @@ description: Teleop and control a PR2.
 platform: pr2
 launch: pr2_teleop/teleop.launch
 interface: pr2_teleop/teleop.interface
+icon: pr2_teleop/android_lightning_pr2.png
 clients:
  - type: android
    manager:

@@ -3,6 +3,7 @@ description: Navigation for the PR2
 platform: pr2
 launch: pr2_map_apps/map_nav.launch
 interface: pr2_map_apps/map_nav.interface
+icon: pr2_map_apps/map.jpg
 clients:
  - type: android
    manager:
