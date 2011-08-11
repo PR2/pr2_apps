@@ -14,3 +14,4 @@ clients:
      footprint_param: /footprint
      base_scan_topic: /base_scan
      base_scan_frame: /base_laser_link
+     path_topic: /move_base_node/NavfnROS/plan
