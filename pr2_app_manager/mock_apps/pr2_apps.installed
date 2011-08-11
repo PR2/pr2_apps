@@ -11,3 +11,5 @@ apps:
    app: pr2_map_apps/map_nav
  - display: PR2 Props App
    app: pr2_props_app/pr2_props
+ - display: PR2 Props Repeat
+   app: pr2_props_app/pr2_repeat_props
