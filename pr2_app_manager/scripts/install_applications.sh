@@ -51,6 +51,21 @@ cat > ~applications/install_applications.rosinstall  <<EOF
 - hg:
     uri: https://kforge.ros.org/pr2apps/pr2_props_app
     local-name: pr2_props_app
+- hg:
+    uri: https://kforge.ros.org/pr2apps/pr2_make_a_maphg
+    local-name: pr2_make_a_map_app
+- hg:
+    uri: https://kforge.ros.org/pr2apps/pr2_map_navhg
+    local-name: pr2_map_nav_app
+- hg:
+    uri: https://kforge.ros.org/pr2apps/pr2_tuck_arms_ap
+    local-name: pr2_tuck_arms_app
+- hg:
+    uri: https://kforge.ros.org/pr2apps/pr2_manne_modehg
+    local-name: pr2_mannequin_mode_app
+- hg:
+    uri: https://kforge.ros.org/pr2apps/pr2_teleop_apphg
+    local-name: pr2_teleop_app
 EOF
 
 chown -R applications ~applications/*
