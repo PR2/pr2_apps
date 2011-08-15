@@ -1,6 +1,6 @@
 #! /usr/bin/python
 import roslib
-roslib.load_manifest('pr2_teleop')
+roslib.load_manifest('pr2_position_scripts')
 
 import rospy
 import actionlib
@@ -14,7 +14,7 @@ client = actionlib.SimpleActionClient('/head_traj_controller/point_head_action',
 client.wait_for_server()
 
 g = PointHeadGoal()
-g.target.header.frame_id = 'base_link'
+g.target.header.frame_id = 'head_pan_link'
 g.target.point.x = 1.0
 g.target.point.y = 0.0
 g.target.point.z = 0.0
