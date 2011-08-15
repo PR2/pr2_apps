@@ -43,15 +43,28 @@ if (message == "GET_STATE"):
     print "USERS"
     active_user = "(UNKNOWN)"
     dead_users = ""
+    message = ""
     for i in run("robot users --no-plist").split("\n"):
         if (i.find("Active User:") != -1):
             active_user = i.split(":")[1].strip()
+        if (i.find("Message:") != -1):
+            message = i.split(":")[1].strip()
         if (i.find("*") != -1):
             dead_users = dead_users + i[i.find("*") + 1:i.find("(")].strip() + ","
 
-
-    print "ACTIVE_USER: ", active_user
-    print "INACTIVE_USERS:", dead_users.strip().strip(",")
+    #print "ACTIVE_USER: ", active_user
+    #print "INACTIVE_USERS:", dead_users.strip().strip(",")
+    #print "MESSAGE:", message
+    
+    if (active_user == "applications"):
+        print "STATE_VALID"
+    elif (active_user == "" or active_user == "None"):
+        print "STATE_OFF"
+    else:
+        print "STATE_IN_USE"
+        print "USER:", active_user
+        if (message != ""):
+            print "MESSAGE:", message #TODO: no newlines!
 
     #print "PROCESSES:"
     #processes = ""
@@ -66,12 +79,12 @@ if (message == "GET_STATE"):
     print
 elif (message == "STOP_ROBOT"):
     print "STOPPING_ROBOT"
-    result = run_as_robot("yes | robot claim ; yes | robot stop ; yes | robot release")
+    result = run_as_robot("yes | robot claim -m 'stopping the robot' ; yes | robot stop ; yes | robot release")
     print result
     print "DONE"
 elif (message == "START_ROBOT"):
     print "STARTING_APP_MAN"
-    print run_as_robot("yes | robot claim ; source ~/.bashrc ; source /opt/ros/diamondback/setup.bash ; source ~/ros/setup.bash ; nohup robot start > ~/robot_start.txt &")
+    print run_as_robot("yes | robot claim -m 'running applications platform' ; source ~/.bashrc ; source /opt/ros/diamondback/setup.bash ; source ~/ros/setup.bash ; nohup robot start > ~/robot_start.txt &")
     time.sleep(10.0) #FIXME: this is a race condition. Should wait for the master.
     print run_as_robot("source /opt/ros/diamondback/setup.bash ; source ~/ros/setup.bash ~/.bashrc ; nohup roslaunch pr2_app_manager pr2_app_manager.launch > ~/run.txt &")
     print "DONE"
