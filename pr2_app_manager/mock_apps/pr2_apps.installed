@@ -13,3 +13,5 @@ apps:
    app: pr2_props_app/pr2_props
  - display: Props Repeat
    app: pr2_props_app/pr2_repeat_props
+ - display: PS3 Joystick
+   app: pr2_ps3_joystick_app/pr2_ps3_joystick

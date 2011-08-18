@@ -66,6 +66,9 @@ cat > ~applications/install_applications.rosinstall  <<EOF
 - hg:
     uri: https://kforge.ros.org/pr2apps/pr2_teleop_apphg
     local-name: pr2_teleop_app
+- hg:
+    uri: https://kforge.ros.org/pr2apps/pr2_ps3joy_apphg
+    local-name: pr2_ps3_joystick_app
 EOF
 
 chown -R applications ~applications/*
