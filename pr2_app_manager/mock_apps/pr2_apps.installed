@@ -11,7 +11,9 @@ apps:
    app: pr2_map_nav_app/map_nav
  - display: Props
    app: pr2_props_app/pr2_props
- - display: Props Repeat
-   app: pr2_props_app/pr2_repeat_props
+ - display: Props Repeat High
+   app: pr2_props_app/pr2_repeat_props_high
+ - display: Props Repeat Low
+   app: pr2_props_app/pr2_repeat_props_low
  - display: PS3 Joystick
    app: pr2_ps3_joystick_app/pr2_ps3_joystick
