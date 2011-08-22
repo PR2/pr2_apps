@@ -29,9 +29,9 @@ echo "Create ROS Install"
 
 cat > ~applications/install_applications.rosinstall  <<EOF
 - other:
-    local-name: /opt/ros/diamondback/ros
+    local-name: /opt/ros/electric/ros
 - other:
-    local-name: /opt/ros/diamondback/stacks
+    local-name: /opt/ros/electric/stacks
 - svn:
     uri: https://code.ros.org/svn/ros/stacks/multimaster_experimental/trunk
     local-name: multimaster_experimental
@@ -44,10 +44,6 @@ cat > ~applications/install_applications.rosinstall  <<EOF
 - hg:
     uri: https://kforge.ros.org/warehousewg/warehouse-hg
     local-name: warehouse
-- hg:
-    uri: https://kforge.ros.org/navigation/navigation
-    local-name: navigation
-    version: navigation-1.5.0
 - hg:
     uri: https://kforge.ros.org/pr2apps/pr2_props_app
     local-name: pr2_props_app
@@ -73,6 +69,7 @@ EOF
 
 chown -R applications ~applications/*
 
+sudo rm -f ~applications/ros/.rosinstall
 sudo -u applications rosinstall ~applications/ros --nobuild ~applications/install_applications.rosinstall
 
 chown -R applications ~applications/*
