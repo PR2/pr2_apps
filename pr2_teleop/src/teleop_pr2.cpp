@@ -37,7 +37,7 @@
 #include <math.h>
 #include <fcntl.h>
 #include "ros/ros.h"
-#include "joy/Joy.h"
+#include "sensor_msgs/Joy.h"
 #include "geometry_msgs/Twist.h"
 #include "sensor_msgs/JointState.h"
 #include "trajectory_msgs/JointTrajectory.h"
@@ -203,33 +203,33 @@ class TeleopPR2
   ~TeleopPR2() { }
 
   /** Callback for joy topic **/
-  void joy_cb(const joy::Joy::ConstPtr& joy_msg)
+  void joy_cb(const sensor_msgs::Joy::ConstPtr& joy_msg)
   {
     //Record this message reciept
     last_recieved_joy_message_time_ = ros::Time::now();
 
-    deadman_ = (((unsigned int)deadman_button < joy_msg->get_buttons_size()) && joy_msg->buttons[deadman_button]);
+    deadman_ = (((unsigned int)deadman_button < joy_msg->buttons.size()) && joy_msg->buttons[deadman_button]);
 
     if (!deadman_)
       return;
 
-    cmd_head = (((unsigned int)head_button < joy_msg->get_buttons_size()) && joy_msg->buttons[head_button] && head_publish_);
+    cmd_head = (((unsigned int)head_button < joy_msg->buttons.size()) && joy_msg->buttons[head_button] && head_publish_);
 
     // Base
-    bool running = (((unsigned int)run_button < joy_msg->get_buttons_size()) && joy_msg->buttons[run_button]);
+    bool running = (((unsigned int)run_button < joy_msg->buttons.size()) && joy_msg->buttons[run_button]);
     double vx = running ? max_vx_run : max_vx;
     double vy = running ? max_vy_run : max_vy;
     double vw = running ? max_vw_run : max_vw;
 
-    if((axis_vx >= 0) && (((unsigned int)axis_vx) < joy_msg->get_axes_size()) && !cmd_head)
+    if((axis_vx >= 0) && (((unsigned int)axis_vx) < joy_msg->axes.size()) && !cmd_head)
       req_vx = joy_msg->axes[axis_vx] * vx;
     else
       req_vx = 0.0;
-    if((axis_vy >= 0) && (((unsigned int)axis_vy) < joy_msg->get_axes_size()) && !cmd_head)
+    if((axis_vy >= 0) && (((unsigned int)axis_vy) < joy_msg->axes.size()) && !cmd_head)
       req_vy = joy_msg->axes[axis_vy] * vy;
     else
       req_vy = 0.0;
-    if((axis_vw >= 0) && (((unsigned int)axis_vw) < joy_msg->get_axes_size()) && !cmd_head)
+    if((axis_vw >= 0) && (((unsigned int)axis_vw) < joy_msg->axes.size()) && !cmd_head)
       req_vw = joy_msg->axes[axis_vw] * vw;
     else
       req_vw = 0.0;
@@ -257,8 +257,8 @@ class TeleopPR2
     }
 
     // Torso
-    bool down = (((unsigned int)torso_dn_button < joy_msg->get_buttons_size()) && joy_msg->buttons[torso_dn_button]);
-    bool up = (((unsigned int)torso_up_button < joy_msg->get_buttons_size()) && joy_msg->buttons[torso_up_button]);
+    bool down = (((unsigned int)torso_dn_button < joy_msg->buttons.size()) && joy_msg->buttons[torso_dn_button]);
+    bool up = (((unsigned int)torso_up_button < joy_msg->buttons.size()) && joy_msg->buttons[torso_up_button]);
 
     // Bring torso up/down
     if (down && !up)

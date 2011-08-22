@@ -7,7 +7,6 @@
   <license>BSD</license>
   <url>http://ros.org/wiki/pr2_teleop</url>
   <review status="na" notes="" />
-  <depend package="joy" />
   <depend package="std_msgs" />
   <depend package="geometry_msgs" />
   <depend package="sensor_msgs" />
