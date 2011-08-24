@@ -2,8 +2,7 @@
   <rosparam>
 robot:
   type: pr2
-  app_store_url: http://pri1/app_store.yaml
-  app_store_directory: http://pri1/app_store/
+  app_store_url: https://kforge.ros.org/pr2apps/pr2_app_store/raw-file/tip
   dashboard:
       class_name: ros.android.views.Pr2Dashboard
   </rosparam>
