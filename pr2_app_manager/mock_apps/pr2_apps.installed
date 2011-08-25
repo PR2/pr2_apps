@@ -1,19 +1,5 @@
 apps:
- - display: Mannequin Mode
-   app: pr2_mannequin_mode_app/mannequin_mode
- - display: Tuck Arms
-   app: pr2_tuck_arms_app/tuck_arms
- - display: Teleop
-   app: pr2_teleop_app/pr2_teleop
  - display: Make a Map
    app: pr2_make_a_map_app/make_a_map
  - display: Map Navigation
    app: pr2_map_nav_app/map_nav
- - display: Props
-   app: pr2_props_app/pr2_props
- - display: Props Repeat High
-   app: pr2_props_app/pr2_repeat_props_high
- - display: Props Repeat Low
-   app: pr2_props_app/pr2_repeat_props_low
- - display: PS3 Joystick
-   app: pr2_ps3_joystick_app/pr2_ps3_joystick
