@@ -50,6 +50,15 @@ cat > ~applications/install_applications.rosinstall  <<EOF
 - hg:
     uri: https://kforge.ros.org/pr2apps/pr2_map_navhg
     local-name: pr2_map_nav_app
+- hg:
+    uri: https://kforge.ros.org/pr2apps/map_managerhg
+    local-name: pr2_map_manager_app
+- hg:
+    uri: https://kforge.ros.org/appmanandroid/roboframenet
+    local-name: roboframenet
+- hg:
+    uri: https://rosjava.googlecode.com/hg
+    local-name: rosjava
 EOF
 
 chown -R applications ~applications/*

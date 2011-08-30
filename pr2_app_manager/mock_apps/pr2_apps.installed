@@ -3,3 +3,8 @@ apps:
    app: pr2_make_a_map_app/make_a_map
  - display: Map Navigation
    app: pr2_map_nav_app/map_nav
+ - display: Map Manager
+   app: pr2_map_manager_app/map_manager
+ - display: Voice Command
+   app: roboframenet_bringup/roboframenet_pr2
+
