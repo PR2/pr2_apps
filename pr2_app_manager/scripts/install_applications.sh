@@ -40,6 +40,9 @@ cat > $USER_DIR/install_applications.rosinstall  <<EOF
     local-name: /opt/ros/electric/ros
 - other:
     local-name: /opt/ros/electric/stacks
+EOF
+
+cat > /dev/null <<EOF
 - svn:
     uri: https://code.ros.org/svn/ros/stacks/multimaster_experimental/trunk
     local-name: multimaster_experimental
