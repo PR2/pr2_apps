@@ -5,13 +5,14 @@ if [ "x`whoami`" != "xroot" ] ; then
     exit 1
 fi
 
-if [ -d ~applications ] ; then
+USER_DIR=/u/applications
+
+if [ -d $USER_DIR ] ; then
     echo "User already exists"
 else
     echo "Adding user"
     echo -e "willow\nwillow\n" | adduser applications
     yes | su applications -c "echo \"SSH keys okay\""
-    exit 1
 fi
 
 if [ "x`grep "rosget:" /etc/group`" == "x" ] ; then
@@ -28,17 +29,20 @@ if [ -z $ROBOT_NAME ] ; then
     exit 2
 fi
 
-cd ~applications
+cd $USER_DIR
 
 echo "Make ROS Directory"
 mkdir -p ros
 
 echo "Create ROS Install"
-cat > ~applications/install_applications.rosinstall  <<EOF
+cat > $USER_DIR/install_applications.rosinstall  <<EOF
 - other:
     local-name: /opt/ros/electric/ros
 - other:
     local-name: /opt/ros/electric/stacks
+EOF
+
+cat > /dev/null <<EOF
 - svn:
     uri: https://code.ros.org/svn/ros/stacks/multimaster_experimental/trunk
     local-name: multimaster_experimental
@@ -71,17 +75,17 @@ EOF
 
 
 echo "Run rosinstall"
-chown -R applications ~applications/*
-rm -f ~applications/ros/.rosinstall
-su applications -c "rosinstall ~applications/ros ~applications/install_applications.rosinstall"
-chown -R applications ~applications/*
-#rm ~applications/install_applications.rosinstall
+chown -R applications $USER_DIR/*
+rm -f $USER_DIR/ros/.rosinstall
+su applications -c "rosinstall $USER_DIR/ros $USER_DIR/install_applications.rosinstall"
+chown -R applications $USER_DIR/*
+rm $USER_DIR/install_applications.rosinstall
 
 echo "Set robot name"
-echo "name: $ROBOT_NAME" >> ~applications/robot.yaml
+echo "name: $ROBOT_NAME" >> $USER_DIR/robot.yaml
 
 echo "Chown applications"
-chown -R applications ~applications/*
+chown -R applications $USER_DIR/*
 
 #Add two items to the CKill whitelist
 if [ "x`grep su /etc/ckill/whitelist`" == "x" ] ; then
@@ -108,11 +112,11 @@ chmod a-wrx /usr/bin/rosget
 chmod ug+wrx /usr/bin/rosget
 
 echo "Add local_apps"
-mkdir -p ~applications/local_apps
-cat > ~applications/local_apps/README <<EOF
+mkdir -p $USER_DIR/local_apps
+cat > $USER_DIR/local_apps/README <<EOF
 This is a directory where you can add applications in list files so that the system can read them. See the wiki for more information.
 EOF
-chown -R applications ~applications/local_apps
+chown -R applications $USER_DIR/local_apps
 
 echo "ROSMake the required applications. This should not do anything"
 su applications -c "source ~/ros/setup.bash && rosmake --rosdep-install pr2_app_manager app_manager"
