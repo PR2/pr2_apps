@@ -12,7 +12,7 @@ if [ -d $USER_DIR ] ; then
 else
     echo "Adding user"
     echo -e "willow\nwillow\n" | adduser applications
-    yes | su applications -c "echo \"SSH keys okay\""
+    yes | su applications -c "/usr/bin/check-ssh-keys"
 fi
 
 if [ "x`grep "rosget:" /etc/group`" == "x" ] ; then
