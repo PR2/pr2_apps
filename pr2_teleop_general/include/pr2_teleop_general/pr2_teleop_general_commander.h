@@ -130,8 +130,8 @@ public:
 
   void updateCurrentWristPositions();
 
-  void sendArmVelCommands(double r_x_vel, double r_y_vel, double r_z_vel, double r_yaw_vel, 
-                          double l_x_vel, double l_y_vel, double l_z_vel, double l_yaw_vel,
+  void sendArmVelCommands(double r_x_vel, double r_y_vel, double r_z_vel, double r_pitch_vel, double r_roll_vel,
+                          double l_x_vel, double l_y_vel, double l_z_vel, double l_pitch_vel, double l_roll_vel,
                           double hz);
 
   bool moveToWalkAlongArmPose();

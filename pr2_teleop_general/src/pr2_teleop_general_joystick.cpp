@@ -877,8 +877,8 @@ int main(int argc, char **argv)
         //generaljoy.gc->updateCurrentWristPositions();
         generaljoy.gc->sendWristVelCommands(generaljoy.des_right_wrist_vel_, generaljoy.des_left_wrist_vel_, SlowHz);
         
-        generaljoy.gc->sendArmVelCommands(generaljoy.right_arm_vx_, generaljoy.right_arm_vy_, generaljoy.right_arm_vz_, 0.0,
-                                          generaljoy.left_arm_vx_, generaljoy.left_arm_vy_, generaljoy.left_arm_vz_, 0.0,
+        generaljoy.gc->sendArmVelCommands(generaljoy.right_arm_vx_, generaljoy.right_arm_vy_, generaljoy.right_arm_vz_, 0.0, 0.0,
+                                          generaljoy.left_arm_vx_, generaljoy.left_arm_vy_, generaljoy.left_arm_vz_, 0.0, 0.0,
                                           SlowHz);
       }
     }
