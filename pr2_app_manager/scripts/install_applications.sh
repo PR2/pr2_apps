@@ -22,6 +22,18 @@ fi
 
 usermod -aG rosget applications
 
+echo "Check for ROS_PACKAGE_PATH in ~/.bashrc"
+if [ "x`grep ROS_PACKAGE_PATH $USER_DIR/.bashrc`" == "x" ] ; then
+    echo "Add ROS_PACKAGE_PATH"
+    echo "" >> $USER_DIR/.bashrc
+    echo "source /etc/ros/distro/setup.bash" >> $USER_DIR/.bashrc
+    echo "export ROS_ENV_LOADER=/etc/ros/distro/env.sh" >> $USER_DIR/.bashrc
+    echo "export ROS_WORKSPACE=/u/pratkanis/atp_ros" >> $USER_DIR/.bashrc
+    echo "export ROS_PACKAGE_PATH=$USER_DIR/apps:\$ROS_PACKAGE_PATH" >> $USER_DIR/.bashrc
+else
+    echo "ROS_PACKAGE_PATH already present"
+fi
+
 echo "Enter the robot name (e.g. pri):"
 read ROBOT_NAME
 if [ -z $ROBOT_NAME ] ; then
@@ -31,55 +43,8 @@ fi
 
 cd $USER_DIR
 
-echo "Make ROS Directory"
-mkdir -p ros
-
-echo "Create ROS Install"
-cat > $USER_DIR/install_applications.rosinstall  <<EOF
-- other:
-    local-name: /opt/ros/electric/ros
-- other:
-    local-name: /opt/ros/electric/stacks
-EOF
-
-cat > /dev/null <<EOF
-- svn:
-    uri: https://code.ros.org/svn/ros/stacks/multimaster_experimental/trunk
-    local-name: multimaster_experimental
-- hg:
-    uri: https://kforge.ros.org/pr2apps/pr2_apps
-    local-name: pr2_apps
-EOF
-
-#Script for adding extras
-# - display: Make a Map
-#   app: pr2_make_a_map_app/make_a_map
-# - display: Map Navigation
-#   app: pr2_map_nav_app/map_nav
-# - display: Map Manager
-#   app: pr2_map_manager_app/map_manager
-cat > /dev/null <<EOF
-- hg:
-    uri: https://kforge.ros.org/mapstore/hg
-    local-name: map_store
-- hg:
-    uri: https://kforge.ros.org/pr2apps/pr2_make_a_maphg
-    local-name: pr2_make_a_map_app
-- hg:
-    uri: https://kforge.ros.org/pr2apps/pr2_map_navhg
-    local-name: pr2_map_nav_app
-- hg:
-    uri: https://kforge.ros.org/pr2apps/map_managerhg
-    local-name: pr2_map_manager_app
-EOF
-
-
-echo "Run rosinstall"
-chown -R applications $USER_DIR/*
-rm -f $USER_DIR/ros/.rosinstall
-su applications -c "rosinstall $USER_DIR/ros $USER_DIR/install_applications.rosinstall"
-chown -R applications $USER_DIR/*
-rm $USER_DIR/install_applications.rosinstall
+echo "Add apps directory"
+mkdir -p $USER_DIR/apps
 
 echo "Set robot name"
 echo "name: $ROBOT_NAME" >> $USER_DIR/robot.yaml
@@ -94,11 +59,25 @@ fi
 if [ "x`grep yes /etc/ckill/whitelist`" == "x" ]; then
     echo "yes" >> /etc/ckill/whitelist
 fi
+if [ "x`grep /bin/bash /etc/ckill/whitelist`" == "x" ]; then
+    echo "/bin/bash" >> /etc/ckill/whitelist
+fi
+
+cat > $USER_DIR/sourcer.bash <<EOF
+#!/bin/bash
+#This is a shell script that solves the problem of the inablity of bash to source commands
+. $USER_DIR/.bashrc
+export PATH=$ROS_ROOT/../../bin:\$PATH
+export LD_LIBRARY_PATH=$ROS_ROOT/../../lib:$LD_LIBRARY_PATH
+bash -c "\$*" 2> /dev/null
+EOF
+chmod a+x $USER_DIR/sourcer.bash
+chown -R applications $USER_DIR/*
 
 echo "Copy scripts"
-PR2_APP_MAN_PKG=`su applications -c "source ~/ros/setup.bash && rospack find pr2_app_manager 2> /dev/null"`
-APP_MAN_PKG=`su applications -c "source ~/ros/setup.bash && rospack find app_manager 2> /dev/null"`
-WILLOW_MAPS_PKG=`su applications -c "source ~/ros/setup.bash && rospack find willow_maps 2> /dev/null"`
+PR2_APP_MAN_PKG=`su applications -c "~applications/sourcer.bash rospack find pr2_app_manager"`
+APP_MAN_PKG=`su applications -c "~applications/sourcer.bash rospack find app_manager"`
+WILLOW_MAPS_PKG=`su applications -c "~applications/sourcer.bash rospack find willow_maps"`
 
 echo "Add control.py"
 cp $PR2_APP_MAN_PKG/scripts/control.py /usr/lib/cgi-bin
@@ -119,16 +98,38 @@ EOF
 chown -R applications $USER_DIR/local_apps
 
 echo "ROSMake the required applications. This should not do anything"
-su applications -c "source ~/ros/setup.bash && rosmake --rosdep-install pr2_app_manager app_manager"
+su applications -c "~applications/sourcer.bash rosmake --rosdep-install pr2_app_manager app_manager"
+
+#Get the name of the current ROS distribution, e.g. fuerte, electric, etc.
+ROS_DISTRO=`echo $PR2_APP_MAN_PKG | sed 's/\// /g' | awk "{ print \\\$3; }"`
+
+echo "Create ROS Install"
+cat > $USER_DIR/install_applications.rosinstall <<EOF
+- other:
+    local-name: /opt/ros/$ROS_DISTRO/ros
+- other:
+    local-name: /opt/ros/$ROS_DISTRO/stacks 
+EOF
+
+echo "Run rosinstall"
+chown -R applications $USER_DIR/*
+rm -f $USER_DIR/ros/.rosinstall
+su applications -c "rosinstall $USER_DIR/ros $USER_DIR/install_applications.rosinstall"
+chown -R applications $USER_DIR/*
+rm $USER_DIR/install_applications.rosinstall 
+
+
+echo "The current distribution is: $ROS_DISTRO"
+sed -i "s/ROS_DISTRO/$ROS_DISTRO/g" /usr/lib/cgi-bin/control.py
 
 apt-get update
-if [ "x`apt-cache dump | grep ros-electric-map-store`" == "x" ] ; then
+if [ "x`apt-cache dump | grep ros-$ROS_DISTRO-map-store`" == "x" ] ; then
     echo "No map store available"
 else
     echo "Map store exists"
-    apt-get install ros-electric-map-store -y
+    apt-get install ros-$ROS_DISTRO-map-store -y
     echo "Install the willowgarage map into the map_store"
-    su applications -c "source ~/ros/setup.bash && roslaunch map_store add_map.launch \"map_file:=$WILLOW_MAPS_PKG/willow-sans-whitelab-2010-02-18-0.025.pgm\" \"map_package:=willow_maps\" \"map_name:=willow_garage\" \"map_resolution:=0.025\""
+    su applications -c "~applications/sourcer.bash roslaunch map_store add_map.launch \"map_file:=$WILLOW_MAPS_PKG/willow-sans-whitelab-2010-02-18-0.025.pgm\" \"map_package:=willow_maps\" \"map_name:=willow_garage\" \"map_resolution:=0.025\""
 fi
 
 echo "Check for sudo rule"
@@ -146,7 +147,6 @@ EOF
 else
     echo "Sudo rule already present"
 fi
-
 
 
 
