@@ -47,7 +47,7 @@ echo "Add apps directory"
 mkdir -p $USER_DIR/apps
 
 echo "Set robot name"
-echo "name: $ROBOT_NAME" >> $USER_DIR/robot.yaml
+echo "name: $ROBOT_NAME" > $USER_DIR/robot.yaml
 
 echo "Chown applications"
 chown -R applications $USER_DIR/*
@@ -102,6 +102,12 @@ su applications -c "~applications/sourcer.bash rosmake --rosdep-install pr2_app_
 
 #Get the name of the current ROS distribution, e.g. fuerte, electric, etc.
 ROS_DISTRO=`echo $PR2_APP_MAN_PKG | sed 's/\// /g' | awk "{ print \\\$3; }"`
+
+echo "type: pr2" >> $USER_DIR/robot.yaml
+echo "exchange_url: https://kforge.ros.org/pr2apps/pr2_exchange/raw-file/$ROS_DISTRO" >> $USER_DIR/robot.yaml
+echo "dashboard:" >> $USER_DIR/robot.yaml
+echo "  class_name: ros.android.views.Pr2Dashboard" >> $USER_DIR/robot.yaml
+
 
 echo "Create ROS Install"
 cat > $USER_DIR/install_applications.rosinstall <<EOF
