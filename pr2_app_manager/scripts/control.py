@@ -88,6 +88,19 @@ elif (message == "START_ROBOT"):
     print "STARTING_APP_MAN"
     print run_as_robot("yes | robot claim -m 'running applications platform'")
     print run_as_robot(". /opt/ros/" + ros_distro + "/setup.bash ; . ~/.bashrc ; export ROS_ENV_LOADER=/opt/ros/" + ros_distro + "/env.sh ; nohup roslaunch pr2_app_manager whole_pr2_apps.launch > ~/run.txt &")
+    # Wait for master to become available
+    import socket
+    s = socket.socket()
+    connect = 0
+    # Wait for a maximum of 30 seconds
+    while connect < 30:
+        try:
+            s.connect(('localhost', 11311))
+            connect = 30
+            s.close()
+        except:
+            time.sleep(1)
+            connect += 1
     print "DONE"
 else:
     print "REJECT_COMMAND"
