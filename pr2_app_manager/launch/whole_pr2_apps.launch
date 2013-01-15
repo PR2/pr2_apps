@@ -1,0 +1,4 @@
+<launch>
+	<include file="/etc/ros/robot.launch"/>
+	<include file="$(find pr2_app_manager)/launch/pr2_app_manager.launch"/>
+</launch>
