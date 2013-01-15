@@ -8,6 +8,7 @@
   <url>http://ros.org/wiki/application_manager</url>
 
   <depend package="app_manager"/>
+  <depend package="willow_maps"/>
 
 </package>
 

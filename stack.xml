@@ -17,5 +17,6 @@
   <depend stack="ros" />
   <depend stack="ros_comm" /> <!-- rospy, topic_tools, std_msgs, roscpp -->
   <depend stack="multimaster_experimental" /> <!-- app_manager -->
+  <depend stack="wg_common" /> <!-- willow_maps -->
 
 </stack>
