@@ -1,9 +1,0 @@
-<launch>
-
-  <!-- Start the controllers -->
-  <include file="$(find pr2_mannequin_mode)/controllers.launch"/>
-
-  <!-- Start the scripts to actually lock the arms and head in place -->
-  <include file="$(find pr2_mannequin_mode)/trajectory_lock.launch"/>
-
-</launch>

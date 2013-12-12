@@ -5,12 +5,12 @@
         name="controller_stopper" args="head_traj_controller l_arm_controller r_arm_controller" />
 
   <!--  Arm Controllers -->
-  <rosparam command="load" file="$(find pr2_mannequin_mode)/pr2_arm_controllers_loose.yaml" />
+  <rosparam command="load" file="$(find pr2_mannequin_mode)/config/pr2_arm_controllers_loose.yaml" />
   <node pkg="pr2_controller_manager" type="spawner" name="spawn_arm_controllers"
         args="r_arm_controller_loose l_arm_controller_loose" />
 
   <!--  Head Controllers -->
-  <rosparam command="load" file="$(find pr2_mannequin_mode)/head_position_controller_loose.yaml" />
+  <rosparam command="load" file="$(find pr2_mannequin_mode)/config/head_position_controller_loose.yaml" />
   <node pkg="pr2_controller_manager" type="spawner" name="spawn_head_controller"
         args="head_traj_controller_loose" />
 
