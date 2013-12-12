@@ -12,7 +12,7 @@
     <remap from="command" to="l_gripper_controller/command" />
   </node>
 
-  <node pkg="pr2_teleop" type="teleop_pr2" name="pr2_teleop" output="screen">
+  <node type="teleop_pr2" pkg="pr2_teleop" name="pr2_teleop" output="screen">
     <remap from="cmd_vel" to="base_controller/command" />
     <rosparam file="$(find pr2_teleop)/config/teleop.yaml" command="load" />
   </node>

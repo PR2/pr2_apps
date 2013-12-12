@@ -35,8 +35,6 @@
 # namespace as the controller, in order to link up correctly to the
 # "<controller>/command" and "<controller>/state" topics".
 
-import roslib
-roslib.load_manifest('pr2_mannequin_mode')
 import sys
 import time
 import rospy
