@@ -63,12 +63,14 @@ static const unsigned int PROSILICA_POLL_BUTTON = 6;
 static const unsigned int OPEN_GRIPPER_BUTTON = 15;
 static const unsigned int CLOSE_GRIPPER_BUTTON = 13;
 static const unsigned int ARM_MODE_TOGGLE_BUTTON = 4;
+static const unsigned int ARM_POSE_BUTTON = 6;
 
 static const unsigned int LEFT_AXIS_NUMBER = 1;
 static const unsigned int RIGHT_AXIS_NUMBER = 1;
 
 static const unsigned int TORSO_UP_BUTTON = 12;
 static const unsigned int TORSO_DOWN_BUTTON = 14;
+static const unsigned int SPEED_UP_BUTTON = 11;
 
 static const unsigned int WRIST_CLOCKWISE_BUTTON = 12;
 static const unsigned int WRIST_COUNTER_BUTTON = 14;
@@ -131,6 +133,10 @@ public:
     n_local.param("arm_x_scale", arm_x_scale_, .15);
     n_local.param("arm_y_scale", arm_y_scale_, .15);
     n_local.param("arm_z_scale", arm_z_scale_, .15);
+
+    n_local.param("arm_roll_scale", arm_roll_scale_, -1.50);
+    n_local.param("arm_pitch_scale", arm_pitch_scale_, 1.50);
+    n_local.param("arm_yaw_scale", arm_yaw_scale_, 1.50);
 
     n_local.param("wrist_velocity",wrist_velocity_, 4.5);
 
@@ -280,6 +286,12 @@ public:
 	left_arm_vx_ = 0.0;
 	left_arm_vy_ = 0.0;
 	left_arm_vz_ = 0.0;
+	right_arm_vel_roll_ = 0.0;
+	right_arm_vel_pitch_ = 0.0;
+	right_arm_vel_yaw_ = 0.0;
+	left_arm_vel_roll_ = 0.0;
+	left_arm_vel_pitch_ = 0.0;
+	left_arm_vel_yaw_ = 0.0;
 	in_walk_along = true;
       }
     }
@@ -396,6 +408,8 @@ public:
     if(!in_walk_along && layout == LAYOUT_BODY) {
       bool down = buttonOkAndOn(TORSO_DOWN_BUTTON, joy_msg);
       bool up = buttonOkAndOn(TORSO_UP_BUTTON, joy_msg);
+      bool speedup = buttonOkAndOn(SPEED_UP_BUTTON, joy_msg);
+      bool unsafe = buttonOkAndOn(RIGHT_ARM_LAYOUT_BUTTON, joy_msg); // for jsk_pr2_startup
       
       //ROS_INFO_STREAM("Down is " << down);
       //ROS_INFO_STREAM("Up is " << up);
@@ -409,17 +423,17 @@ public:
         des_torso_vel_ = 0.0;
       }
       if(axisOk(VX_AXIS, joy_msg)) {
-        des_vx_ = joy_msg->axes[VX_AXIS]*vx_scale_;
+        des_vx_ = joy_msg->axes[VX_AXIS]*vx_scale_*(unsafe?0.5:(speedup?2.0:1.0));
       } else {
         des_vx_ = 0.0;
       }
       if(axisOk(VY_AXIS, joy_msg)) {
-        des_vy_ = joy_msg->axes[VY_AXIS]*vy_scale_;
+        des_vy_ = joy_msg->axes[VY_AXIS]*vy_scale_*(unsafe?0.5:(speedup?2.0:1.0));
       } else {
         des_vy_ = 0.0;
       }
       if(axisOk(VW_AXIS, joy_msg)) {
-        des_vw_ = joy_msg->axes[VW_AXIS]*vw_scale_;
+        des_vw_ = joy_msg->axes[VW_AXIS]*vw_scale_*(unsafe?0.5:(speedup?2.0:1.0));
       } else {
         des_vw_ = 0.0;
       }
@@ -464,6 +478,7 @@ public:
         bool lookAnalog = false;
         bool rotClock = buttonOkAndOn(WRIST_CLOCKWISE_BUTTON, joy_msg);
         bool rotCounter = buttonOkAndOn(WRIST_COUNTER_BUTTON, joy_msg);
+	bool rotateArm = buttonOkAndOn(ARM_POSE_BUTTON, joy_msg);
         if(rotClock && !rotCounter) {
           des_right_wrist_vel_ = wrist_velocity_;
         } else if(!rotClock && rotCounter) {
@@ -472,29 +487,35 @@ public:
           des_right_wrist_vel_ = 0.0;
           lookAnalog = true;
         }
+
+	right_arm_vx_ = 0.0;
+	right_arm_vy_ = 0.0;
+	right_arm_vz_ = 0.0;
+	right_arm_vel_roll_ = 0.0;
+	right_arm_vel_pitch_ = 0.0;
+	right_arm_vel_yaw_ = 0.0;
         
         if(lookAnalog) {
           //look at analog sticks if we aren't supposed to wrist rotate
           if(axisOk(ARM_X_AXIS, joy_msg)) {
-            right_arm_vx_ = joy_msg->axes[ARM_X_AXIS]*arm_x_scale_;
-          } else {
-            right_arm_vx_ = 0.0;
+	    if(!rotateArm)
+	      right_arm_vx_ = joy_msg->axes[ARM_X_AXIS]*arm_x_scale_;
+	    else
+	      right_arm_vel_pitch_ = joy_msg->axes[ARM_X_AXIS]*arm_pitch_scale_;
           }
           if(axisOk(ARM_Y_AXIS, joy_msg)) {
-            right_arm_vy_ = joy_msg->axes[ARM_Y_AXIS]*arm_y_scale_;
-          } else {
-            right_arm_vy_ = 0.0;
+	    if(!rotateArm)
+	      right_arm_vy_ = joy_msg->axes[ARM_Y_AXIS]*arm_y_scale_;
+	    else
+	      right_arm_vel_roll_ = joy_msg->axes[ARM_Y_AXIS]*arm_roll_scale_;
           }
-          if(axisOk(ARM_Z_AXIS, joy_msg)) {
-            right_arm_vz_ = joy_msg->axes[ARM_Z_AXIS]*arm_z_scale_;
-          } else {
-            right_arm_vz_ = 0.0;
+          if(axisOk(ARM_Z_AXIS, joy_msg) && (!rotateArm)) {
+	    right_arm_vz_ = joy_msg->axes[ARM_Z_AXIS]*arm_z_scale_;
           }
+          if(axisOk(ARM_YAW_AXIS, joy_msg) && rotateArm) {
+	    right_arm_vel_yaw_ = joy_msg->axes[ARM_YAW_AXIS]*arm_yaw_scale_;
+	  }
           //ROS_INFO_STREAM("Setting vx " << right_arm_vx_ << " " << right_arm_vy_ << " " << right_arm_vz_);
-        } else {
-          right_arm_vx_ = 0.0;
-          right_arm_vy_ = 0.0;
-          right_arm_vz_ = 0.0;
         }
       }
     } else if (layout != LAYOUT_BOTH_ARMS) {
@@ -502,6 +523,9 @@ public:
       right_arm_vx_ = 0.0;
       right_arm_vy_ = 0.0;
       right_arm_vz_ = 0.0;
+      right_arm_vel_roll_ = 0.0;
+      right_arm_vel_pitch_ = 0.0;
+      right_arm_vel_yaw_ = 0.0;
     }
     if(layout == LAYOUT_LEFT_ARM) {
       if(buttonOkAndOn(ARM_MODE_TOGGLE_BUTTON, joy_msg) && !sameValueAsLast(ARM_MODE_TOGGLE_BUTTON, joy_msg, last_joy_)) {
@@ -536,6 +560,7 @@ public:
         bool lookAnalog = false;
         bool rotClock = buttonOkAndOn(WRIST_CLOCKWISE_BUTTON, joy_msg);
         bool rotCounter = buttonOkAndOn(WRIST_COUNTER_BUTTON, joy_msg);
+	bool rotateArm = buttonOkAndOn(ARM_POSE_BUTTON, joy_msg);
         if(rotClock && !rotCounter) {
           des_left_wrist_vel_ = wrist_velocity_;
         } else if(!rotClock && rotCounter) {
@@ -544,29 +569,35 @@ public:
           des_left_wrist_vel_ = 0.0;
           lookAnalog = true;
         }
+
+	left_arm_vx_ = 0.0;
+	left_arm_vy_ = 0.0;
+	left_arm_vz_ = 0.0;
+	left_arm_vel_roll_ = 0.0;
+	left_arm_vel_pitch_ = 0.0;
+	left_arm_vel_yaw_ = 0.0;
         
         if(lookAnalog) {
           //look at analog sticks if we aren't supposed to wrist rotate
           if(axisOk(ARM_X_AXIS, joy_msg)) {
-            left_arm_vx_ = joy_msg->axes[ARM_X_AXIS]*arm_x_scale_;
-          } else {
-            left_arm_vx_ = 0.0;
+	    if(!rotateArm)
+	      left_arm_vx_ = joy_msg->axes[ARM_X_AXIS]*arm_x_scale_;
+	    else
+	      left_arm_vel_pitch_ = joy_msg->axes[ARM_X_AXIS]*arm_pitch_scale_;
           }
           if(axisOk(ARM_Y_AXIS, joy_msg)) {
-            left_arm_vy_ = joy_msg->axes[ARM_Y_AXIS]*arm_y_scale_;
-          } else {
-            left_arm_vy_ = 0.0;
+	    if(!rotateArm)
+	      left_arm_vy_ = joy_msg->axes[ARM_Y_AXIS]*arm_y_scale_;
+	    else
+	      left_arm_vel_roll_ = joy_msg->axes[ARM_Y_AXIS]*arm_roll_scale_;
           }
-          if(axisOk(ARM_Z_AXIS, joy_msg)) {
+          if(axisOk(ARM_Z_AXIS, joy_msg) && (!rotateArm)) {
             left_arm_vz_ = joy_msg->axes[ARM_Z_AXIS]*arm_z_scale_;
-          } else {
-            left_arm_vz_ = 0.0;
           }
+          if(axisOk(ARM_YAW_AXIS, joy_msg) && rotateArm) {
+	    left_arm_vel_yaw_ = joy_msg->axes[ARM_YAW_AXIS]*arm_yaw_scale_;
+	  }
           //ROS_INFO_STREAM("Setting vx " << left_arm_vx_ << " " << left_arm_vy_ << " " << left_arm_vz_);
-        } else {
-          left_arm_vx_ = 0.0;
-          left_arm_vy_ = 0.0;
-          left_arm_vz_ = 0.0;
         }
       }
     } else if (layout != LAYOUT_BOTH_ARMS) {
@@ -574,6 +605,9 @@ public:
       left_arm_vx_ = 0.0;
       left_arm_vy_ = 0.0;
       left_arm_vz_ = 0.0;
+      left_arm_vel_roll_ = 0.0;
+      left_arm_vel_pitch_ = 0.0;
+      left_arm_vel_yaw_ = 0.0;
     }
     if(layout == LAYOUT_BOTH_ARMS) {
       if(buttonOkAndOn(ARM_MODE_TOGGLE_BUTTON, joy_msg) && !sameValueAsLast(ARM_MODE_TOGGLE_BUTTON, joy_msg, last_joy_)) {
@@ -612,6 +646,7 @@ public:
         bool lookAnalog = false;
         bool rotClock = buttonOkAndOn(WRIST_CLOCKWISE_BUTTON, joy_msg);
         bool rotCounter = buttonOkAndOn(WRIST_COUNTER_BUTTON, joy_msg);
+        bool rotateArm = buttonOkAndOn(ARM_POSE_BUTTON, joy_msg);
         if(rotClock && !rotCounter) {
           des_left_wrist_vel_ = wrist_velocity_;
           des_right_wrist_vel_ = wrist_velocity_;
@@ -623,38 +658,49 @@ public:
           des_right_wrist_vel_ = 0.0;
           lookAnalog = true;
         }
+
+	left_arm_vx_ = 0.0;
+	left_arm_vy_ = 0.0;
+	left_arm_vz_ = 0.0;
+	right_arm_vx_ = 0.0;
+	right_arm_vy_ = 0.0;
+	right_arm_vz_ = 0.0;
+	left_arm_vel_roll_ = 0.0;
+	left_arm_vel_pitch_ = 0.0;
+	left_arm_vel_yaw_ = 0.0;
+	right_arm_vel_roll_ = 0.0;
+	right_arm_vel_pitch_ = 0.0;
+	right_arm_vel_yaw_ = 0.0;
         
         if(lookAnalog) {
           //look at analog sticks if we aren't supposed to wrist rotate
           if(axisOk(ARM_X_AXIS, joy_msg)) {
-            left_arm_vx_ = joy_msg->axes[ARM_X_AXIS]*arm_x_scale_;
-            right_arm_vx_ = joy_msg->axes[ARM_X_AXIS]*arm_x_scale_;
-          } else {
-            left_arm_vx_ = 0.0;
-            right_arm_vz_ = 0.0;
+	    if(!rotateArm) {
+	      left_arm_vx_ = joy_msg->axes[ARM_X_AXIS]*arm_x_scale_;
+	      right_arm_vx_ = joy_msg->axes[ARM_X_AXIS]*arm_x_scale_;
+	    } else {
+	      left_arm_vel_pitch_ = joy_msg->axes[ARM_X_AXIS]*arm_pitch_scale_;
+	      right_arm_vel_pitch_ = joy_msg->axes[ARM_X_AXIS]*arm_pitch_scale_;
+	    }
           }
           if(axisOk(ARM_Y_AXIS, joy_msg)) {
-            left_arm_vy_ = joy_msg->axes[ARM_Y_AXIS]*arm_y_scale_;
-            right_arm_vy_ = joy_msg->axes[ARM_Y_AXIS]*arm_y_scale_;
-          } else {
-            left_arm_vy_ = 0.0;
-            right_arm_vz_ = 0.0;
+	    if(!rotateArm) {
+	      left_arm_vy_ = joy_msg->axes[ARM_Y_AXIS]*arm_y_scale_;
+	      right_arm_vy_ = joy_msg->axes[ARM_Y_AXIS]*arm_y_scale_;
+	    } else {
+	      left_arm_vel_roll_ = joy_msg->axes[ARM_Y_AXIS]*arm_roll_scale_;
+	      right_arm_vel_roll_ = joy_msg->axes[ARM_Y_AXIS]*arm_roll_scale_;
+	    }
           }
-          if(axisOk(ARM_Z_AXIS, joy_msg)) {
+          if(axisOk(ARM_Z_AXIS, joy_msg) && (!rotateArm)) {
             left_arm_vz_ = joy_msg->axes[ARM_Z_AXIS]*arm_z_scale_;
             right_arm_vz_ = joy_msg->axes[ARM_Z_AXIS]*arm_z_scale_;
-          } else {
-            left_arm_vz_ = 0.0;
-            right_arm_vz_ = 0.0;
           }
+          if(axisOk(ARM_YAW_AXIS, joy_msg) && rotateArm) {
+	    left_arm_vel_yaw_ = joy_msg->axes[ARM_YAW_AXIS]*arm_yaw_scale_;
+	    right_arm_vel_yaw_ = joy_msg->axes[ARM_YAW_AXIS]*arm_yaw_scale_;
+	  }
         //ROS_INFO_STREAM("Setting vx " << left_arm_vx_ << " " << left_arm_vy_ << " " << left_arm_vz_);
-        } else {
-          left_arm_vx_ = 0.0;
-          left_arm_vy_ = 0.0;
-          left_arm_vz_ = 0.0;
-          right_arm_vx_ = 0.0;
-          right_arm_vy_ = 0.0;
-          right_arm_vz_ = 0.0;
         }
       }
     } else if (layout != LAYOUT_RIGHT_ARM && layout != LAYOUT_LEFT_ARM) {
@@ -666,6 +712,12 @@ public:
       right_arm_vx_ = 0.0;
       right_arm_vy_ = 0.0;
       right_arm_vz_ = 0.0;
+      left_arm_vel_roll_ = 0.0;
+      left_arm_vel_pitch_ = 0.0;
+      left_arm_vel_yaw_ = 0.0;
+      right_arm_vel_roll_ = 0.0;
+      right_arm_vel_pitch_ = 0.0;
+      right_arm_vel_yaw_ = 0.0;
     }
 
     joy_deadman_ = ros::Time::now();
@@ -739,6 +791,9 @@ public:
   double arm_x_scale_;
   double arm_y_scale_;
   double arm_z_scale_;
+  double arm_roll_scale_;
+  double arm_pitch_scale_;
+  double arm_yaw_scale_;
 
   double right_arm_vx_;
   double right_arm_vy_;
@@ -747,6 +802,14 @@ public:
   double left_arm_vx_;
   double left_arm_vy_;
   double left_arm_vz_;
+
+  double right_arm_vel_roll_;
+  double right_arm_vel_pitch_;
+  double right_arm_vel_yaw_;
+
+  double left_arm_vel_roll_;
+  double left_arm_vel_pitch_;
+  double left_arm_vel_yaw_;
 
   bool head_init_;
   bool torso_init_;
@@ -877,8 +940,8 @@ int main(int argc, char **argv)
         //generaljoy.gc->updateCurrentWristPositions();
         generaljoy.gc->sendWristVelCommands(generaljoy.des_right_wrist_vel_, generaljoy.des_left_wrist_vel_, SlowHz);
         
-        generaljoy.gc->sendArmVelCommands(generaljoy.right_arm_vx_, generaljoy.right_arm_vy_, generaljoy.right_arm_vz_, 0.0, 0.0,
-                                          generaljoy.left_arm_vx_, generaljoy.left_arm_vy_, generaljoy.left_arm_vz_, 0.0, 0.0,
+        generaljoy.gc->sendArmVelCommands(generaljoy.right_arm_vx_, generaljoy.right_arm_vy_, generaljoy.right_arm_vz_, generaljoy.right_arm_vel_roll_, generaljoy.right_arm_vel_pitch_, generaljoy.right_arm_vel_yaw_,
+                                          generaljoy.left_arm_vx_, generaljoy.left_arm_vy_, generaljoy.left_arm_vz_, generaljoy.left_arm_vel_roll_, generaljoy.left_arm_vel_pitch_, generaljoy.left_arm_vel_yaw_,
                                           SlowHz);
       }
     }

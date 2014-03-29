@@ -448,151 +448,151 @@ int main(int argc, char** argv)
             break;
           case 'i':
             if(arm == GeneralCommander::ARMS_LEFT) {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,0.0,
-                                             generalkey->arm_x_scale_, 0.0,0.0,0.0,0.0,
+              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,0.0,0.0,
+                                             generalkey->arm_x_scale_, 0.0,0.0,0.0,0.0,0.0,
                                              20.0);
             } else if(arm == GeneralCommander::ARMS_RIGHT) {
-              generalkey->gc->sendArmVelCommands(generalkey->arm_x_scale_,0.0,0.0,0.0,0.0,
-                                             0.0, 0.0,0.0,0.0,0.0,
+              generalkey->gc->sendArmVelCommands(generalkey->arm_x_scale_,0.0,0.0,0.0,0.0,0.0,
+                                             0.0, 0.0,0.0,0.0,0.0,0.0,
                                              20.0);
             } else {
-              generalkey->gc->sendArmVelCommands(generalkey->arm_x_scale_,0.0,0.0,0.0,0.0,
-                                             generalkey->arm_x_scale_, 0.0,0.0,0.0,0.0,
+              generalkey->gc->sendArmVelCommands(generalkey->arm_x_scale_,0.0,0.0,0.0,0.0,0.0,
+                                             generalkey->arm_x_scale_, 0.0,0.0,0.0,0.0,0.0,
                                              20.0);
             }
             break;
           case 'k':
             if(arm == GeneralCommander::ARMS_LEFT) {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,0.0,
-                                             -generalkey->arm_x_scale_, 0.0,0.0,0.0,0.0,
+              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,0.0,0.0,
+                                             -generalkey->arm_x_scale_, 0.0,0.0,0.0,0.0,0.0,
                                              20.0);
             } else if(arm == GeneralCommander::ARMS_RIGHT) {
-              generalkey->gc->sendArmVelCommands(-generalkey->arm_x_scale_,0.0,0.0,0.0,0.0,
-                                             0.0, 0.0,0.0,0.0,0.0,
+              generalkey->gc->sendArmVelCommands(-generalkey->arm_x_scale_,0.0,0.0,0.0,0.0,0.0,
+                                             0.0, 0.0,0.0,0.0,0.0,0.0,
                                              20.0);
             } else {
-              generalkey->gc->sendArmVelCommands(-generalkey->arm_x_scale_,0.0,0.0,0.0,0.0,
-                                             -generalkey->arm_x_scale_, 0.0,0.0,0.0,0.0,
+              generalkey->gc->sendArmVelCommands(-generalkey->arm_x_scale_,0.0,0.0,0.0,0.0,0.0,
+                                             -generalkey->arm_x_scale_, 0.0,0.0,0.0,0.0,0.0,
                                              20.0);
             }
             break;
           case 'j':
             if(arm == GeneralCommander::ARMS_LEFT) {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,0.0,
-                                             0.0,generalkey->arm_y_scale_,0.0,0.0,0.0,
+              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,0.0,0.0,
+                                             0.0,generalkey->arm_y_scale_,0.0,0.0,0.0,0.0,
                                              20.0);
             } else if(arm == GeneralCommander::ARMS_RIGHT) {
-              generalkey->gc->sendArmVelCommands(0.0,generalkey->arm_y_scale_,0.0,0.0,0.0,
-                                             0.0, 0.0,0.0,0.0,0.0,
+              generalkey->gc->sendArmVelCommands(0.0,generalkey->arm_y_scale_,0.0,0.0,0.0,0.0,
+                                             0.0, 0.0,0.0,0.0,0.0,0.0,
                                              20.0);
             } else {
-              generalkey->gc->sendArmVelCommands(0.0,generalkey->arm_y_scale_,0.0,0.0,0.0,
-                                                 0.0,generalkey->arm_y_scale_, 0.0,0.0,0.0,
+              generalkey->gc->sendArmVelCommands(0.0,generalkey->arm_y_scale_,0.0,0.0,0.0,0.0,
+                                                 0.0,generalkey->arm_y_scale_, 0.0,0.0,0.0,0.0,
                                                  20.0);
             }
             break;
           case 'l':
             if(arm == GeneralCommander::ARMS_LEFT) {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,0.0,
-                                             0.0,-generalkey->arm_y_scale_,0.0,0.0,0.0,
+              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,0.0,0.0,
+                                             0.0,-generalkey->arm_y_scale_,0.0,0.0,0.0,0.0,
                                              20.0);
             } else if(arm == GeneralCommander::ARMS_RIGHT) {
-              generalkey->gc->sendArmVelCommands(0.0,-generalkey->arm_y_scale_,0.0,0.0,0.0,
-                                             0.0, 0.0,0.0,0.0,0.0,
+              generalkey->gc->sendArmVelCommands(0.0,-generalkey->arm_y_scale_,0.0,0.0,0.0,0.0,
+                                             0.0, 0.0,0.0,0.0,0.0,0.0,
                                              20.0);
             } else {
-              generalkey->gc->sendArmVelCommands(0.0,-generalkey->arm_y_scale_,0.0,0.0,0.0,
-                                                 0.0,-generalkey->arm_y_scale_, 0.0,0.0,0.0,
+              generalkey->gc->sendArmVelCommands(0.0,-generalkey->arm_y_scale_,0.0,0.0,0.0,0.0,
+                                                 0.0,-generalkey->arm_y_scale_, 0.0,0.0,0.0,0.0,
                                                  20.0);
             }
             break;
           case 'h':
             if(arm == GeneralCommander::ARMS_LEFT) {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,0.0,
-                                                 0.0,0.0,generalkey->arm_z_scale_,0.0,0.0,
+              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,0.0,0.0,
+                                                 0.0,0.0,generalkey->arm_z_scale_,0.0,0.0,0.0,
                                                  20.0);
             } else if(arm == GeneralCommander::ARMS_RIGHT) {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,generalkey->arm_z_scale_,0.0,0.0,
-                                                 0.0, 0.0,0.0,0.0,0.0,
+              generalkey->gc->sendArmVelCommands(0.0,0.0,generalkey->arm_z_scale_,0.0,0.0,0.0,
+                                                 0.0, 0.0,0.0,0.0,0.0,0.0,
                                                  20.0);
             } else {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,generalkey->arm_z_scale_,0.0,0.0,
-                                                 0.0,0.0,generalkey->arm_z_scale_, 0.0,0.0,
+              generalkey->gc->sendArmVelCommands(0.0,0.0,generalkey->arm_z_scale_,0.0,0.0,0.0,
+                                                 0.0,0.0,generalkey->arm_z_scale_, 0.0,0.0,0.0,
                                                  20.0);
             }
             break;
           case 'n':
             if(arm == GeneralCommander::ARMS_LEFT) {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,0.0,
-                                                 0.0,0.0,-generalkey->arm_z_scale_,0.0,0.0,
+              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,0.0,0.0,
+                                                 0.0,0.0,-generalkey->arm_z_scale_,0.0,0.0,0.0,
                                                  20.0);
             } else if(arm == GeneralCommander::ARMS_RIGHT) {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,-generalkey->arm_z_scale_,0.0,0.0,
-                                                 0.0, 0.0,0.0,0.0,0.0,
+              generalkey->gc->sendArmVelCommands(0.0,0.0,-generalkey->arm_z_scale_,0.0,0.0,0.0,
+                                                 0.0, 0.0,0.0,0.0,0.0,0.0,
                                                  20.0);
             } else {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,-generalkey->arm_z_scale_,0.0,0.0,
-                                                 0.0,0.0,-generalkey->arm_z_scale_, 0.0,0.0,
-                                                 20.0);
-            }
-            break;
-          case 'd':
-            if(arm == GeneralCommander::ARMS_LEFT) {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,0.0,
-                                                 0.0,0.0,0,generalkey->arm_pitch_scale_,0.0,
-                                                 20.0);
-            } else if(arm == GeneralCommander::ARMS_RIGHT) {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,0,generalkey->arm_pitch_scale_,0.0,
-                                                 0.0, 0.0,0.0,0.0,0.0,
-                                                 20.0);
-            } else {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,0,generalkey->arm_pitch_scale_,0.0,
-                                                 0.0,0.0,0,generalkey->arm_pitch_scale_,0.0,
-                                                 20.0);
-            }
-            break;
-          case 'u':
-            if(arm == GeneralCommander::ARMS_LEFT) {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,0.0,
-                                                 0.0,0.0,0,-generalkey->arm_pitch_scale_,0.0,
-                                                 20.0);
-            } else if(arm == GeneralCommander::ARMS_RIGHT) {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,0,-generalkey->arm_pitch_scale_,0.0,
-                                                 0.0, 0.0,0.0,0.0,0.0,
-                                                 20.0);
-            } else {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,0,-generalkey->arm_pitch_scale_,0.0,
-                                                 0.0,0.0,0,-generalkey->arm_pitch_scale_,0.0,
+              generalkey->gc->sendArmVelCommands(0.0,0.0,-generalkey->arm_z_scale_,0.0,0.0,0.0,
+                                                 0.0,0.0,-generalkey->arm_z_scale_, 0.0,0.0,0.0,
                                                  20.0);
             }
             break;
           case 'r':
             if(arm == GeneralCommander::ARMS_LEFT) {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,0.0,
-                                                 0.0,0.0,0.0,0.0,generalkey->arm_roll_scale_,
+              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,0.0,0.0,
+                                                 0.0,0.0,0.0,generalkey->arm_roll_scale_,0.0,0.0,
                                                  20.0);
             } else if(arm == GeneralCommander::ARMS_RIGHT) {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,generalkey->arm_roll_scale_,
-                                                 0.0, 0.0,0.0,0.0,0.0,
+              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,generalkey->arm_roll_scale_,0.0,0.0,
+                                                 0.0, 0.0,0.0,0.0,0.0,0.0,
                                                  20.0);
             } else {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,generalkey->arm_roll_scale_,
-                                                 0.0,0.0,0.0,0.0,generalkey->arm_roll_scale_,
+              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,generalkey->arm_roll_scale_,0.0,0.0,
+                                                 0.0,0.0,0.0,generalkey->arm_roll_scale_,0.0,0.0,
                                                  20.0);
             }
             break;
           case 't':
             if(arm == GeneralCommander::ARMS_LEFT) {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,0.0,
-                                                 0.0,0.0,0.0,0.0,-generalkey->arm_roll_scale_,
+              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,0.0,0.0,
+                                                 0.0,0.0,0.0,-generalkey->arm_roll_scale_,0.0,0.0,
                                                  20.0);
             } else if(arm == GeneralCommander::ARMS_RIGHT) {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,-generalkey->arm_roll_scale_,
-                                                 0.0, 0.0,0.0,0.0,0.0,
+              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,-generalkey->arm_roll_scale_,0.0,0.0,
+                                                 0.0,0.0,0.0,0.0,0.0,0.0,
                                                  20.0);
             } else {
-              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,-generalkey->arm_roll_scale_,
-                                                 0.0,0.0,0.0,0.0,-generalkey->arm_roll_scale_,
+              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,-generalkey->arm_roll_scale_,0.0,0.0,
+                                                 0.0,0.0,0.0,-generalkey->arm_roll_scale_,0.0,0.0,
+                                                 20.0);
+            }
+            break;
+          case 'd':
+            if(arm == GeneralCommander::ARMS_LEFT) {
+              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,0.0,0.0,
+                                                 0.0,0.0,0,0.0,generalkey->arm_pitch_scale_,0.0,
+                                                 20.0);
+            } else if(arm == GeneralCommander::ARMS_RIGHT) {
+              generalkey->gc->sendArmVelCommands(0.0,0.0,0,0.0,generalkey->arm_pitch_scale_,0.0,
+                                                 0.0, 0.0,0.0,0.0,0.0,0.0,
+                                                 20.0);
+            } else {
+              generalkey->gc->sendArmVelCommands(0.0,0.0,0,0.0,generalkey->arm_pitch_scale_,0.0,
+                                                 0.0,0.0,0,0.0,generalkey->arm_pitch_scale_,0.0,
+                                                 20.0);
+            }
+            break;
+          case 'u':
+            if(arm == GeneralCommander::ARMS_LEFT) {
+              generalkey->gc->sendArmVelCommands(0.0,0.0,0.0,0.0,0.0,0.0,
+                                                 0.0,0.0,0,0.0,-generalkey->arm_pitch_scale_,0.0,
+                                                 20.0);
+            } else if(arm == GeneralCommander::ARMS_RIGHT) {
+              generalkey->gc->sendArmVelCommands(0.0,0.0,0,0.0,-generalkey->arm_pitch_scale_,0.0,
+                                                 0.0, 0.0,0.0,0.0,0.0,0.0,
+                                                 20.0);
+            } else {
+              generalkey->gc->sendArmVelCommands(0.0,0.0,0,0.0,-generalkey->arm_pitch_scale_,0.0,
+                                                 0.0,0.0,0,0.0,-generalkey->arm_pitch_scale_,0.0,
                                                  20.0);
             }
             break;
