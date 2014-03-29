@@ -32,6 +32,8 @@
 
 #include <string>
 #include <boost/bind.hpp>
+#include <LinearMath/btQuaternion.h>
+#include <LinearMath/btMatrix3x3.h>
 
 #include <pr2_mechanism_msgs/SwitchController.h>
 #include <geometry_msgs/Twist.h>
@@ -770,7 +772,11 @@ void GeneralCommander::clampDesiredArmPositionsToActual(double max_dist)  {
   if(control_rarm_) {
     tot_distance = sqrt(pow(des_r_wrist_roll_pose_.position.x-right_wrist_roll_pose_.position.x,2.0)+
                         pow(des_r_wrist_roll_pose_.position.y-right_wrist_roll_pose_.position.y,2.0)+
-                        pow(des_r_wrist_roll_pose_.position.z-right_wrist_roll_pose_.position.z,2.0));
+                        pow(des_r_wrist_roll_pose_.position.z-right_wrist_roll_pose_.position.z,2.0)+
+			pow(des_r_wrist_roll_pose_.orientation.x-right_wrist_roll_pose_.orientation.x,2.0)+
+			pow(des_r_wrist_roll_pose_.orientation.y-right_wrist_roll_pose_.orientation.y,2.0)+
+			pow(des_r_wrist_roll_pose_.orientation.z-right_wrist_roll_pose_.orientation.z,2.0)+
+			pow(des_r_wrist_roll_pose_.orientation.w-right_wrist_roll_pose_.orientation.w,2.0));
     
     //ROS_INFO_STREAM("Cur " << right_wrist_roll_pose_.position.x << " " << right_wrist_roll_pose_.position.y << " " << right_wrist_roll_pose_.position.z
     //                << " des " << des_r_wrist_roll_pose_.position.x << " " << des_r_wrist_roll_pose_.position.y << " " << des_r_wrist_roll_pose_.position.z);
@@ -803,7 +809,12 @@ void GeneralCommander::clampDesiredArmPositionsToActual(double max_dist)  {
   if(control_larm_) {
     tot_distance = sqrt(pow(des_l_wrist_roll_pose_.position.x-left_wrist_roll_pose_.position.x,2.0)+
                         pow(des_l_wrist_roll_pose_.position.y-left_wrist_roll_pose_.position.y,2.0)+
-                        pow(des_l_wrist_roll_pose_.position.z-left_wrist_roll_pose_.position.z,2.0));
+                        pow(des_l_wrist_roll_pose_.position.z-left_wrist_roll_pose_.position.z,2.0)+
+			pow(des_l_wrist_roll_pose_.orientation.x-left_wrist_roll_pose_.orientation.x,2.0)+
+			pow(des_l_wrist_roll_pose_.orientation.y-left_wrist_roll_pose_.orientation.y,2.0)+
+			pow(des_l_wrist_roll_pose_.orientation.z-left_wrist_roll_pose_.orientation.z,2.0)+
+			pow(des_l_wrist_roll_pose_.orientation.w-left_wrist_roll_pose_.orientation.w,2.0));
+
     
     if(tot_distance > max_dist) {
       des_l_wrist_roll_pose_ = left_wrist_roll_pose_;
@@ -882,8 +893,8 @@ void GeneralCommander::unnormalizeTrajectory(trajectory_msgs::JointTrajectory& t
   traj = unnormalized_trajectory; 
 }
 
-void GeneralCommander::sendArmVelCommands(double r_x_vel, double r_y_vel, double r_z_vel, double r_pitch_vel, double r_roll_vel,
-                                        double l_x_vel, double l_y_vel, double l_z_vel, double l_pitch_vel, double l_roll_vel,
+void GeneralCommander::sendArmVelCommands(double r_x_vel, double r_y_vel, double r_z_vel, double r_roll_vel, double r_pitch_vel, double r_yaw_vel,
+					  double l_x_vel, double l_y_vel, double l_z_vel, double l_roll_vel, double l_pitch_vel, double l_yaw_vel,
                                         double hz) {
 
 
@@ -892,12 +903,12 @@ void GeneralCommander::sendArmVelCommands(double r_x_vel, double r_y_vel, double
   double trajectory_duration = .2;
 
   //ROS_INFO_STREAM("Got vels " << r_x_vel << " " << r_y_vel << " " << r_z_vel);
-
   clampDesiredArmPositionsToActual(.1);
 
   if(control_rarm_) {
     
-    if(fabs(r_x_vel) > .001 || fabs(r_y_vel) > .001 || fabs(r_z_vel) > .001 || fabs(r_roll_vel) > 0 || fabs(r_pitch_vel) > 0) {
+    if(fabs(r_x_vel) > .001 || fabs(r_y_vel) > .001 || fabs(r_z_vel) > .001 ||
+       fabs(r_roll_vel) > .001 || fabs(r_pitch_vel) > .001 || fabs(r_yaw_vel) > .001) {
       
       geometry_msgs::Pose right_trajectory_endpoint = des_r_wrist_roll_pose_;
       
@@ -909,44 +920,45 @@ void GeneralCommander::sendArmVelCommands(double r_x_vel, double r_y_vel, double
       double pos_diff_x = r_x_vel*(1.0/hz);//*look_ahead;
       double pos_diff_y = r_y_vel*(1.0/hz);//*look_ahead;
       double pos_diff_z = r_z_vel*(1.0/hz);//*look_ahead;
-      double pos_diff_pitch = r_pitch_vel*trajectory_duration;
-      double pos_diff_roll = r_roll_vel*trajectory_duration;
-      
+
+      double pos_diff_roll = r_roll_vel*(1.0/hz);//*look_ahead;
+      double pos_diff_pitch = r_pitch_vel*(1.0/hz);//*look_ahead;
+      double pos_diff_yaw = r_yaw_vel;//*(1.0/hz);//*look_ahead;
+
+      btQuaternion endpoint_quat, des_quat;
+      btMatrix3x3 end_rot, des_rot, diff_rot, duration_rot;
+      end_rot.setRotation(btQuaternion(
+			      right_trajectory_endpoint.orientation.x,
+			      right_trajectory_endpoint.orientation.y,
+			      right_trajectory_endpoint.orientation.z,
+			      right_trajectory_endpoint.orientation.w));
+      des_rot = end_rot;
+      duration_rot.setEulerYPR(r_yaw_vel*trajectory_duration,
+			       r_pitch_vel*trajectory_duration,
+			       r_roll_vel*trajectory_duration);
+      diff_rot.setEulerYPR(pos_diff_yaw, pos_diff_pitch, pos_diff_roll);
+
+      (duration_rot *= end_rot).getRotation(endpoint_quat);
+      (diff_rot *= des_rot).getRotation(des_quat);
+
       right_trajectory_endpoint.position.x += r_x_vel*trajectory_duration;
       right_trajectory_endpoint.position.y += r_y_vel*trajectory_duration;
       right_trajectory_endpoint.position.z += r_z_vel*trajectory_duration;
-      { 
-        urdf::Rotation q(right_trajectory_endpoint.orientation.x,right_trajectory_endpoint.orientation.y,
-                         right_trajectory_endpoint.orientation.z,right_trajectory_endpoint.orientation.w);
-        double tmp[3];
-        q.getRPY(tmp[0],tmp[1],tmp[2]);
-        tmp[0] += r_roll_vel*trajectory_duration;
-        tmp[1] += r_pitch_vel*trajectory_duration;
-        q.setFromRPY(tmp[0],tmp[1],tmp[2]);
 
-        right_trajectory_endpoint.orientation.x = q.x;
-        right_trajectory_endpoint.orientation.y = q.y;
-        right_trajectory_endpoint.orientation.z = q.z;
-        right_trajectory_endpoint.orientation.w = q.w;
-      }
-
+      right_trajectory_endpoint.orientation.x = endpoint_quat.getAxis().getX();
+      right_trajectory_endpoint.orientation.y = endpoint_quat.getAxis().getY();
+      right_trajectory_endpoint.orientation.z = endpoint_quat.getAxis().getZ();
+      right_trajectory_endpoint.orientation.w = endpoint_quat.getW();
+      
       des_r_wrist_roll_pose_.position.x += pos_diff_x;
       des_r_wrist_roll_pose_.position.y += pos_diff_y;
       des_r_wrist_roll_pose_.position.z += pos_diff_z;
-      {
-        urdf::Rotation q(des_r_wrist_roll_pose_.orientation.x,des_r_wrist_roll_pose_.orientation.y,
-                         des_r_wrist_roll_pose_.orientation.z,des_r_wrist_roll_pose_.orientation.w);
-        double tmp[3];
-        q.getRPY(tmp[0],tmp[1],tmp[2]);
-        tmp[0] += pos_diff_roll;
-        tmp[1] += pos_diff_pitch;
-        q.setFromRPY(tmp[0],tmp[1],tmp[2]);
+      
+      des_r_wrist_roll_pose_.orientation.x = des_quat.getAxis().getX();
+      des_r_wrist_roll_pose_.orientation.y = des_quat.getAxis().getY();
+      des_r_wrist_roll_pose_.orientation.z = des_quat.getAxis().getZ();
+      des_r_wrist_roll_pose_.orientation.w = des_quat.getW();
 
-        des_r_wrist_roll_pose_.orientation.x = q.x;
-        des_r_wrist_roll_pose_.orientation.y = q.y;
-        des_r_wrist_roll_pose_.orientation.z = q.z;
-        des_r_wrist_roll_pose_.orientation.w = q.w;
-      }
       //ROS_INFO_STREAM("Desired " << des_r_wrist_roll_pose_.position.x << " " << des_r_wrist_roll_pose_.position.y << " " << des_r_wrist_roll_pose_.position.z);
       
       //now call ik
@@ -1013,7 +1025,8 @@ void GeneralCommander::sendArmVelCommands(double r_x_vel, double r_y_vel, double
     ros::Time afterCall = ros::Time::now();
   }
   if(control_larm_) {
-    if(fabs(l_x_vel) > .001 || fabs(l_y_vel) > .001 || fabs(l_z_vel) > .001 || fabs(l_roll_vel) > 0 || fabs(l_pitch_vel) > 0) {
+    if(fabs(l_x_vel) > .001 || fabs(l_y_vel) > .001 || fabs(l_z_vel) > .001 ||
+       fabs(l_roll_vel) > .001 || fabs(l_pitch_vel) > .001 || fabs(l_yaw_vel) > .001) {
 
       geometry_msgs::Pose left_trajectory_endpoint = des_l_wrist_roll_pose_;
 
@@ -1025,45 +1038,43 @@ void GeneralCommander::sendArmVelCommands(double r_x_vel, double r_y_vel, double
       double pos_diff_x = l_x_vel*(1.0/hz);
       double pos_diff_y = l_y_vel*(1.0/hz);
       double pos_diff_z = l_z_vel*(1.0/hz);
-      double pos_diff_pitch = l_pitch_vel*trajectory_duration;
-      double pos_diff_roll = l_roll_vel*trajectory_duration;
+      double pos_diff_roll = l_roll_vel*(1.0/hz);//*look_ahead;
+      double pos_diff_pitch = l_pitch_vel*(1.0/hz);//*look_ahead;
+      double pos_diff_yaw = l_yaw_vel*(1.0/hz);
+
+      btQuaternion endpoint_quat, des_quat;
+      btMatrix3x3 end_rot, des_rot, diff_rot, duration_rot;
+      end_rot.setRotation(btQuaternion(
+			      left_trajectory_endpoint.orientation.x,
+			      left_trajectory_endpoint.orientation.y,
+			      left_trajectory_endpoint.orientation.z,
+			      left_trajectory_endpoint.orientation.w));
+      des_rot = end_rot;
+      duration_rot.setEulerYPR(l_yaw_vel*trajectory_duration,
+			       l_pitch_vel*trajectory_duration,
+			       l_roll_vel*trajectory_duration);
+      diff_rot.setEulerYPR(pos_diff_yaw, pos_diff_pitch, pos_diff_roll);
+
+      (duration_rot *= end_rot).getRotation(endpoint_quat);
+      (diff_rot *= des_rot).getRotation(des_quat);
     
       left_trajectory_endpoint.position.x += l_x_vel*trajectory_duration;
       left_trajectory_endpoint.position.y += l_y_vel*trajectory_duration;
       left_trajectory_endpoint.position.z += l_z_vel*trajectory_duration;
 
-      { 
-        urdf::Rotation q(left_trajectory_endpoint.orientation.x,left_trajectory_endpoint.orientation.y,
-                         left_trajectory_endpoint.orientation.z,left_trajectory_endpoint.orientation.w);
-        double tmp[3];
-        q.getRPY(tmp[0],tmp[1],tmp[2]);
-        tmp[0] += r_roll_vel*trajectory_duration;
-        tmp[1] += r_pitch_vel*trajectory_duration;
-        q.setFromRPY(tmp[0],tmp[1],tmp[2]);
-
-        left_trajectory_endpoint.orientation.x = q.x;
-        left_trajectory_endpoint.orientation.y = q.y;
-        left_trajectory_endpoint.orientation.z = q.z;
-        left_trajectory_endpoint.orientation.w = q.w;
-      }
+      left_trajectory_endpoint.orientation.x = endpoint_quat.getAxis().getX();
+      left_trajectory_endpoint.orientation.y = endpoint_quat.getAxis().getY();
+      left_trajectory_endpoint.orientation.z = endpoint_quat.getAxis().getZ();
+      left_trajectory_endpoint.orientation.w = endpoint_quat.getW();
 
       des_l_wrist_roll_pose_.position.x += pos_diff_x;
       des_l_wrist_roll_pose_.position.y += pos_diff_y;
       des_l_wrist_roll_pose_.position.z += pos_diff_z;
-      {
-        urdf::Rotation q(des_l_wrist_roll_pose_.orientation.x,des_l_wrist_roll_pose_.orientation.y,
-                         des_l_wrist_roll_pose_.orientation.z,des_l_wrist_roll_pose_.orientation.w);
-        double tmp[3];
-        q.getRPY(tmp[0],tmp[1],tmp[2]);
-        tmp[0] += pos_diff_roll;
-        tmp[1] += pos_diff_pitch;
-        q.setFromRPY(tmp[0],tmp[1],tmp[2]);
 
-        des_l_wrist_roll_pose_.orientation.x = q.x;
-        des_l_wrist_roll_pose_.orientation.y = q.y;
-        des_l_wrist_roll_pose_.orientation.z = q.z;
-        des_l_wrist_roll_pose_.orientation.w = q.w;
-      }
+      des_l_wrist_roll_pose_.orientation.x = des_quat.getAxis().getX();
+      des_l_wrist_roll_pose_.orientation.y = des_quat.getAxis().getY();
+      des_l_wrist_roll_pose_.orientation.z = des_quat.getAxis().getZ();
+      des_l_wrist_roll_pose_.orientation.w = des_quat.getW();
 
       //now call ik
     
@@ -1088,7 +1099,6 @@ void GeneralCommander::sendArmVelCommands(double r_x_vel, double r_y_vel, double
           //                << ik_req.ik_request.ik_seed_state.joint_state.name[i]);
         }
       }
-    
     
       //otherwise not a lot to be done
       if(left_arm_kinematics_inverse_client_.call(ik_req, ik_res) && ik_res.error_code.val == ik_res.error_code.SUCCESS) {

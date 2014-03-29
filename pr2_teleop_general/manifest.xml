@@ -19,11 +19,13 @@
   <depend package="pr2_controller_manager" />
   <depend package="pr2_mechanism_msgs" />
   <depend package="kinematics_msgs" />
+  <depend package="angles" />
   <depend package="urdf" />
   <depend package="urdf_interface" />
   <depend package="ps3joy" />
   <depend package="pr2_common_action_msgs" />
   <depend package="polled_camera" />
+  <depend package="bullet" />
 
   <export>
     <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib"/>
