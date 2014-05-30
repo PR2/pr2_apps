@@ -1,0 +1,67 @@
+<package>
+  <name>pr2_teleop_general</name>
+  <version>0.5.0</version>
+  <description>pr2_teleop_general</description>
+  <maintainer email="gil@willowgarage.com">Gil Jones</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/pr2_teleop_general</url>
+
+  <author>Gil Jones</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+  <build_depend>actionlib</build_depend>
+  <build_depend>actionlib_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>pr2_msgs</build_depend>
+  <build_depend>pr2_controllers_msgs</build_depend>
+  <build_depend>pr2_controller_manager</build_depend>
+  <build_depend>pr2_mechanism_msgs</build_depend>
+  <build_depend>angles</build_depend>
+  <build_depend>urdf</build_depend>
+  <build_depend>ps3joy</build_depend>
+  <build_depend>pr2_common_action_msgs</build_depend>
+  <build_depend>polled_camera</build_depend>
+  <build_depend>bullet</build_depend>
+
+  <run_depend>roscpp</run_depend>
+  <run_depend>actionlib</run_depend>
+  <run_depend>actionlib_msgs</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>pr2_msgs</run_depend>
+  <run_depend>pr2_controllers_msgs</run_depend>
+  <run_depend>pr2_controller_manager</run_depend>
+  <run_depend>pr2_mechanism_msgs</run_depend>
+  <run_depend>angles</run_depend>
+  <run_depend>urdf</run_depend>
+  <run_depend>ps3joy</run_depend>
+  <run_depend>pr2_common_action_msgs</run_depend>
+  <run_depend>polled_camera</run_depend>
+  <run_depend>bullet</run_depend>
+
+  <!-- <test_depend>roscpp</test_depend> -->
+  <!-- <test_depend>actionlib</test_depend> -->
+  <!-- <test_depend>actionlib_msgs</test_depend> -->
+  <!-- <test_depend>geometry_msgs</test_depend> -->
+  <!-- <test_depend>sensor_msgs</test_depend> -->
+  <!-- <test_depend>pr2_msgs</test_depend> -->
+  <!-- <test_depend>pr2_controllers_msgs</test_depend> -->
+  <!-- <test_depend>pr2_controller_manager</test_depend> -->
+  <!-- <test_depend>pr2_mechanism_msgs</test_depend> -->
+  <!-- <test_depend>kinematics_msgs</test_depend> -->
+  <!-- <test_depend>angles</test_depend> -->
+  <!-- <test_depend>urdf</test_depend> -->
+  <!-- <test_depend>ps3joy</test_depend> -->
+  <!-- <test_depend>pr2_common_action_msgs</test_depend> -->
+  <!-- <test_depend>polled_camera</test_depend> -->
+  <!-- <test_depend>bullet</test_depend> -->
+
+  <export>
+  </export>
+
+</package>
