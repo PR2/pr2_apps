@@ -32,8 +32,8 @@
 
 #include <string>
 #include <boost/bind.hpp>
-#include <LinearMath/btQuaternion.h>
-#include <LinearMath/btMatrix3x3.h>
+#include <tf/LinearMath/Quaternion.h>
+#include <tf/LinearMath/Matrix3x3.h>
 
 #include <pr2_mechanism_msgs/SwitchController.h>
 #include <geometry_msgs/Twist.h>
@@ -45,7 +45,7 @@
 
 #include "pr2_teleop_general/pr2_teleop_general_commander.h"
 
-#include "urdf_interface/pose.h"
+#include "urdf_model/pose.h"
 
 static const std::string LEFT_HAND_LINK_TO_TRACK = "l_gripper_palm_link";
 static const std::string RIGHT_HAND_LINK_TO_TRACK = "r_gripper_palm_link";
@@ -925,9 +925,9 @@ void GeneralCommander::sendArmVelCommands(double r_x_vel, double r_y_vel, double
       double pos_diff_pitch = r_pitch_vel*(1.0/hz);//*look_ahead;
       double pos_diff_yaw = r_yaw_vel;//*(1.0/hz);//*look_ahead;
 
-      btQuaternion endpoint_quat, des_quat;
-      btMatrix3x3 end_rot, des_rot, diff_rot, duration_rot;
-      end_rot.setRotation(btQuaternion(
+      tf::Quaternion endpoint_quat, des_quat;
+      tf::Matrix3x3 end_rot, des_rot, diff_rot, duration_rot;
+      end_rot.setRotation(tf::Quaternion(
 			      right_trajectory_endpoint.orientation.x,
 			      right_trajectory_endpoint.orientation.y,
 			      right_trajectory_endpoint.orientation.z,
@@ -1042,9 +1042,9 @@ void GeneralCommander::sendArmVelCommands(double r_x_vel, double r_y_vel, double
       double pos_diff_pitch = l_pitch_vel*(1.0/hz);//*look_ahead;
       double pos_diff_yaw = l_yaw_vel*(1.0/hz);
 
-      btQuaternion endpoint_quat, des_quat;
-      btMatrix3x3 end_rot, des_rot, diff_rot, duration_rot;
-      end_rot.setRotation(btQuaternion(
+      tf::Quaternion endpoint_quat, des_quat;
+      tf::Matrix3x3 end_rot, des_rot, diff_rot, duration_rot;
+      end_rot.setRotation(tf::Quaternion(
 			      left_trajectory_endpoint.orientation.x,
 			      left_trajectory_endpoint.orientation.y,
 			      left_trajectory_endpoint.orientation.z,
