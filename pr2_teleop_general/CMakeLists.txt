@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(pr2_teleop_general)
 
-find_package(catkin REQUIRED COMPONENTS roscpp actionlib actionlib_msgs geometry_msgs sensor_msgs pr2_msgs pr2_controllers_msgs pr2_controller_manager pr2_mechanism_msgs angles urdf ps3joy pr2_common_action_msgs polled_camera)
+find_package(catkin REQUIRED COMPONENTS roscpp actionlib actionlib_msgs geometry_msgs sensor_msgs pr2_msgs pr2_controllers_msgs pr2_controller_manager pr2_mechanism_msgs angles urdf ps3joy pr2_common_action_msgs polled_camera kinematics_msgs)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
