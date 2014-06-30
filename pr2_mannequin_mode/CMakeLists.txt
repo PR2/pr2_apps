@@ -83,6 +83,7 @@ catkin_package(
 #  LIBRARIES pr2_mannequin_mode
 #  CATKIN_DEPENDS pr2_controller_manager pr2_controllers_msgs trajectory_msgs
 #  DEPENDS system_lib
+   CATKIN_DEPENDS trajectory_msgs pr2_controllers_msgs 
 )
 
 ###########
