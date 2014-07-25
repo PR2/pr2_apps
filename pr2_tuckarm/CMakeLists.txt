@@ -6,7 +6,7 @@ find_package(catkin REQUIRED COMPONENTS rospy trajectory_msgs pr2_mechanism_msgs
 
 catkin_package(
     DEPENDS
-    CATKIN-DEPENDS rospy trajectory_msgs pr2_mechanism_msgs pr2_tuck_arms_action
+    CATKIN_DEPENDS rospy trajectory_msgs pr2_mechanism_msgs pr2_tuck_arms_action
     INCLUDE_DIRS
     LIBRARIES
 )
