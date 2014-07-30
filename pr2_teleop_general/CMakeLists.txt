@@ -7,10 +7,6 @@ find_package(catkin REQUIRED COMPONENTS roscpp actionlib actionlib_msgs geometry
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 
-target_link_libraries(pr2_teleop_general_commander  ${catkin_LIBRARIES})
-add_dependencies(pr2_teleop_general_commander gencpp ${PROJECT_NAME}_gencpp)
-add_dependencies(pr2_teleop_general_commander kinematics_msgs_gencpp)
-
 
 
 
@@ -29,6 +25,10 @@ target_link_libraries(pr2_teleop_general_keyboard)
 
 add_library(pr2_teleop_general_commander src/pr2_teleop_general_commander.cpp)
 
+
+target_link_libraries(pr2_teleop_general_commander  ${catkin_LIBRARIES})
+add_dependencies(pr2_teleop_general_commander gencpp ${PROJECT_NAME}_gencpp)
+add_dependencies(pr2_teleop_general_commander kinematics_msgs_gencpp)
 install(TARGETS pr2_teleop_general_joystick pr2_teleop_general_keyboard
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
