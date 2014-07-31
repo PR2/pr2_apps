@@ -14,14 +14,14 @@ catkin_package(
     CATKIN_DEPENDS roscpp actionlib actionlib_msgs geometry_msgs sensor_msgs pr2_msgs pr2_controllers_msgs pr2_controller_manager pr2_mechanism_msgs angles urdf ps3joy pr2_common_action_msgs polled_camera kinematics_msgs
     INCLUDE_DIRS include
     DEPENDS  bullet
-    LIBRARIES
+    LIBRARIES pr2_teleop_general_commander
 )
 
 add_executable(pr2_teleop_general_joystick src/pr2_teleop_general_joystick.cpp)
-target_link_libraries(pr2_teleop_general_joystick)
+target_link_libraries(pr2_teleop_general_joystick  ${catkin_LIBRARIES} pr2_teleop_general_commander)
 
 add_executable(pr2_teleop_general_keyboard src/pr2_teleop_general_keyboard.cpp)
-target_link_libraries(pr2_teleop_general_keyboard)
+target_link_libraries(pr2_teleop_general_keyboard  ${catkin_LIBRARIES} pr2_teleop_general_commander)
 
 add_library(pr2_teleop_general_commander src/pr2_teleop_general_commander.cpp)
 
