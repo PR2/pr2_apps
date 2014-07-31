@@ -1,12 +1,12 @@
 <launch>
 
   <!-- Head controllers for mannequin mode -->
-  <rosparam command="load" file="$(find pr2_mannequin_mode)/head_position_controller_loose.yaml" />
+  <rosparam command="load" file="$(find pr2_mannequin_mode)/config/head_position_controller_loose.yaml" />
   <node pkg="pr2_controller_manager" type="spawner" name="spawn_head_controller"
         args="--stopped head_traj_controller_loose" />
   
   <!-- Trajectory Locks for Mannequin Modes -->
-  <include file="$(find pr2_mannequin_mode)/trajectory_lock.launch"/>
+  <include file="$(find pr2_mannequin_mode)/launch/trajectory_lock.launch"/>
 
   <node pkg="pr2_teleop_general" type="pr2_teleop_general_keyboard" name="headcart_general_keyboard" output="screen">
   	<param name="control_body" type="bool" value="false"/>
