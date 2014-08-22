@@ -1,0 +1,6 @@
+footprint: [[-0.325, -0.325], [-0.37, -0.095], [-0.325, 0.325], [0.325, 0.325], [0.46, 0.0], [0.325, -0.325]]
+
+#we'll put a little extra padding on the global footprint for the recovery
+#behavoirs
+global_costmap:
+  footprint_padding: 0.02

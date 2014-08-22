@@ -1,0 +1,8 @@
+<launch>
+  <include file="$(find pr2_machine)/$(env ROBOT).machine" />
+  <include file="$(find pr2_map_navigation_app)/amcl_node.xml" />
+  <include file="$(find pr2_navigation_teleop)/teleop.xml" />
+  <include file="$(find pr2_navigation_perception)/lasers_and_filters.xml" />
+  <include file="$(find pr2_navigation_perception)/ground_plane.xml" />
+  <include file="$(find pr2_navigation_global)/move_base.xml" />
+</launch>

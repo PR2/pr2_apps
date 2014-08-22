@@ -1,0 +1,59 @@
+<package>
+  <name>navigation_application</name>
+  <version>1.0.0</version>
+  <description>Navigation Application</description>
+  <maintainer email="dash@clearpathrobotics.com">Devon Ash</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://pr.willowgarage.com/wiki/navigation_application</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Scott Hassan</author>
+
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+  <build_depend>roslib</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>webui</build_depend>
+  <build_depend>pr2_navigation_global</build_depend>
+  <build_depend>pr2_navigation_perception</build_depend>
+  <build_depend>pr2_navigation_teleop</build_depend>
+  <build_depend>pr2_machine</build_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>laser_geometry</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>message_filters</build_depend>
+  <build_depend>nav_msgs</build_depend>
+
+  <!-- Dependencies needed after this package is compiled. -->
+  <run_depend>roslib</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>webui</run_depend>
+  <run_depend>pr2_navigation_global</run_depend>
+  <run_depend>pr2_navigation_perception</run_depend>
+  <run_depend>pr2_navigation_teleop</run_depend>
+  <run_depend>pr2_machine</run_depend>
+  <run_depend>tf</run_depend>
+  <run_depend>laser_geometry</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>message_filters</run_depend>
+  <run_depend>nav_msgs</run_depend>
+
+  <!-- Dependencies needed only for running tests. -->
+  <!-- <test_depend>roslib</test_depend> -->
+  <!-- <test_depend>rospy</test_depend> -->
+  <!-- <test_depend>webui</test_depend> -->
+  <!-- <test_depend>pr2_navigation_global</test_depend> -->
+  <!-- <test_depend>pr2_navigation_perception</test_depend> -->
+  <!-- <test_depend>pr2_navigation_teleop</test_depend> -->
+  <!-- <test_depend>pr2_machine</test_depend> -->
+  <!-- <test_depend>tf</test_depend> -->
+  <!-- <test_depend>laser_geometry</test_depend> -->
+  <!-- <test_depend>sensor_msgs</test_depend> -->
+  <!-- <test_depend>message_filters</test_depend> -->
+  <!-- <test_depend>nav_msgs</test_depend> -->
+
+</package>

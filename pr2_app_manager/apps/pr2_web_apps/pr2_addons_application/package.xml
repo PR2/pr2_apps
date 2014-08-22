@@ -1,0 +1,48 @@
+<package>
+  <name>pr2_addons_application</name>
+  <version>1.0.0</version>
+  <description>A collection of nodes that multiple apps depend on at runtime.  Eventually, many of these nodes will migrate into pr2_bringup/pr2.launch</description>
+  <maintainer email="dash@clearpathrobotics.com">Devon Ash</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://pr.willowgarage.com/wiki/pr2_addons</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Brian Gerkey</author>
+  <author>Eitan Marder-Eppstein</author>
+
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+  <build_depend>roslib</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>webui</build_depend>
+  <build_depend>rosweb</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>pr2_navigation_global</build_depend>
+  <build_depend>map_server</build_depend>
+  <build_depend>willow_maps</build_depend>
+
+  <!-- Dependencies needed after this package is compiled. -->
+  <run_depend>roslib</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>webui</run_depend>
+  <run_depend>rosweb</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>pr2_navigation_global</run_depend>
+  <run_depend>map_server</run_depend>
+  <run_depend>willow_maps</run_depend>
+
+  <!-- Dependencies needed only for running tests. -->
+  <!-- <test_depend>roslib</test_depend> -->
+  <!-- <test_depend>rospy</test_depend> -->
+  <!-- <test_depend>webui</test_depend> -->
+  <!-- <test_depend>rosweb</test_depend> -->
+  <!-- <test_depend>std_msgs</test_depend> -->
+  <!-- <test_depend>pr2_navigation_global</test_depend> -->
+  <!-- <test_depend>map_server</test_depend> -->
+  <!-- <test_depend>willow_maps</test_depend> -->
+
+</package>

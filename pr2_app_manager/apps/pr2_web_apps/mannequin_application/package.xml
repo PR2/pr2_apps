@@ -1,0 +1,42 @@
+<package>
+  <name>mannequin_application</name>
+  <version>1.0.0</version>
+  <description>A super simple tool for letting a person position the arms manually, by simply pushing the arm to the location that want. Without out this tool, users are often stuck tweaking joint angles in a script, or holding the arm steady while hitting keys to freeze the arm.</description>
+  <maintainer email="dash@clearpathrobotics.com">Devon Ash</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://pr.willowgarage.com/wiki/pr2_mannequin_mode</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Vijay Pradeep</author>
+  <author>Scott Hassan</author>
+
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+  <build_depend>roslib</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>webui</build_depend>
+  <build_depend>rosweb</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>pr2_mannequin_mode</build_depend>
+
+  <!-- Dependencies needed after this package is compiled. -->
+  <run_depend>roslib</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>webui</run_depend>
+  <run_depend>rosweb</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>pr2_mannequin_mode</run_depend>
+
+  <!-- Dependencies needed only for running tests. -->
+  <!-- <test_depend>roslib</test_depend> -->
+  <!-- <test_depend>rospy</test_depend> -->
+  <!-- <test_depend>webui</test_depend> -->
+  <!-- <test_depend>rosweb</test_depend> -->
+  <!-- <test_depend>std_msgs</test_depend> -->
+  <!-- <test_depend>pr2_mannequin_mode</test_depend> -->
+
+</package>

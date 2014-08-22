@@ -1,0 +1,5 @@
+<launch>
+    <include file="$(find pr2_props)/launch/pr2_props.launch" />
+    <node pkg="pr2_props_app" type="prop_runner" name="pr2_props_app" />
+    <node pkg="pr2_position_scripts" type="head_up.py" name="head_up" />
+</launch>

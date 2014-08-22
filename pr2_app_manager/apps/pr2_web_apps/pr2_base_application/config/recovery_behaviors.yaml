@@ -1,0 +1,55 @@
+recovery_behaviors:
+  - name: 'super_conservative_reset'
+    type: 'clear_costmap_recovery/ClearCostmapRecovery'
+  - name: 'conservative_reset'
+    type: 'clear_costmap_recovery/ClearCostmapRecovery'
+  - name: 'aggressive_reset'
+    type: 'clear_costmap_recovery/ClearCostmapRecovery'
+  - name: 'move_slow_and_clear'
+    type: 'move_slow_and_clear/MoveSlowAndClear'
+#  - name: 'sbpl_recovery'
+#    type: 'sbpl_recovery/SBPLRecovery'
+
+super_conservative_reset:
+  reset_distance: 5.0
+
+conservative_reset:
+  reset_distance: 3.0
+
+aggressive_reset:
+  reset_distance: 1.84
+
+sbpl_recovery:
+  planning_attempts: 1
+  planning_distance: 1.0
+  use_local_frame: false
+
+  sbpl_lattice_planner:
+    enviornment_type: XYThetaLattice
+    allocated_time: 30.0
+    initial_epsilon: 3.0
+    forward_search: true
+
+  pose_follower:
+    sim_time: 0.5
+    k_trans: 1.0
+    k_rot: 1.0
+    tolerance_trans: 0.1
+    tolerance_rot: 0.05
+    tolerance_timeout: 0.5
+    holonomic: true
+    samples: 10
+    max_vel_lin: 0.20
+    min_vel_lin: 0.1
+    max_vel_th: 1.0
+    min_vel_th: 0.0
+    min_in_place_vel_th: 0.1
+    in_place_trans_vel: 0.01
+    trans_stopped_velocity: 0.0001
+    rot_stopped_velocity: 0.0001
+
+move_slow_and_clear:
+  clearing_distance: 0.5
+  limited_trans_speed: 0.25
+  limited_rot_speed: 0.45
+  limited_distance: 0.3

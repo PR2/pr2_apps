@@ -1,0 +1,84 @@
+#!/usr/bin/env python
+import roslib; roslib.load_manifest('pr2_props_app')
+
+import rospy
+import os
+from std_srvs.srv import *
+
+class QueueItem:
+    def __init__(self, txt):
+        self.is_done = False
+        self.txt = txt
+
+goal_queue = [QueueItem("pwd")]
+
+def run_command(cmd):
+    item = QueueItem(cmd)
+    goal_queue.append(item)
+    while (item.is_done == False):
+        rospy.sleep(0.01)
+
+def high_five_double(msg):
+    run_command("rosrun pr2_props high_five double")
+    return EmptyResponse()
+
+def high_five_left(msg):
+    run_command("rosrun pr2_props high_five left")
+    return EmptyResponse()
+
+def high_five_right(msg):
+    run_command("rosrun pr2_props high_five right")
+    return EmptyResponse()
+
+def low_five_left(msg):
+    run_command("rosrun pr2_props low_five left")
+    return EmptyResponse()
+
+def low_five_right(msg):
+    run_command("rosrun pr2_props low_five right")
+    return EmptyResponse()
+
+def pound_double(msg):
+    run_command("rosrun pr2_props pound double")
+    return EmptyResponse()
+
+def pound_left(msg):
+    run_command("rosrun pr2_props pound left")
+    return EmptyResponse()
+
+def pound_right(msg):
+    run_command("rosrun pr2_props pound right")
+    return EmptyResponse()
+
+def hug(msg):
+    run_command("rosrun pr2_props hug")
+    return EmptyResponse()
+
+
+
+
+if __name__ == "__main__":
+    rospy.init_node("pr2_prop_app")
+    s1 = rospy.Service('pr2_props/high_five_double', Empty, high_five_double)
+    s2 = rospy.Service('pr2_props/high_five_left', Empty, high_five_left)
+    s3 = rospy.Service('pr2_props/high_five_right', Empty, high_five_right)
+    s4 = rospy.Service('pr2_props/low_five_right', Empty, low_five_right)
+    s5 = rospy.Service('pr2_props/low_five_left', Empty, low_five_left)
+    s6 = rospy.Service('pr2_props/pound_double', Empty, pound_double)
+    s7 = rospy.Service('pr2_props/pound_left', Empty, pound_left)
+    s8 = rospy.Service('pr2_props/pound_right', Empty, pound_right)
+    s9 = rospy.Service('pr2_props/hug', Empty, hug)
+
+    while not rospy.is_shutdown():
+        while (len(goal_queue) > 0):
+            goal = goal_queue[0]
+            goal_queue = goal_queue[1:]
+            os.system(goal.txt)
+            goal.is_done = True
+        rospy.sleep(0.01)
+
+
+
+
+
+

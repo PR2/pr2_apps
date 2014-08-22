@@ -1,0 +1,17 @@
+<stack>
+  <description brief="pr2_map_navigation_app">pr2_map_navigation_app</description>
+  <author>Tony Pratkanis</author>
+  <license>BSD</license>  
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_map_navigation_app</url>
+  <depend stack="geometry" /> <!-- tf -->
+  <depend stack="map_store" /> <!-- map_store -->
+  <depend stack="navigation" /> <!-- amcl -->
+  <depend stack="pr2_apps" /> <!-- pr2_position_scripts -->
+  <depend stack="pr2_common" /> <!-- pr2_machine -->
+  <depend stack="pr2_navigation" /> <!-- pr2_navigation_teleop, pr2_navigation_perception, pr2_navigation_global, pr2_navigation_config -->
+  <depend stack="ros" />
+  <depend stack="ros_comm" /> <!-- topic_tools -->
+  <depend stack="warehousewg" /> <!-- mongodb -->
+
+</stack>

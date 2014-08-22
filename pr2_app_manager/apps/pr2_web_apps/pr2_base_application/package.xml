@@ -1,0 +1,56 @@
+<package>
+  <name>pr2_base_application</name>
+  <version>1.0.0</version>
+  <description>A collection of nodes that multiple apps depend on at runtime.  Eventually, many of these nodes will migrate into pr2_bringup/pr2.launch</description>
+  <maintainer email="dash@clearpathrobotics.com">Devon Ash</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://pr.willowgarage.com/wiki/pr2_base</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Wim Meeussen</author>
+
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+  <build_depend>roslib</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>webui</build_depend>
+  <build_depend>rosweb</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>pr2_tuck_arms_action</build_depend>
+  <build_depend>pr2_arm_move_ik</build_depend>
+  <build_depend>joint_trajectory_generator</build_depend>
+  <build_depend>dwa_local_planner</build_depend>
+  <build_depend>wg_pr2_2dnav</build_depend>
+  <build_depend>move_slow_and_clear</build_depend>
+
+  <!-- Dependencies needed after this package is compiled. -->
+  <run_depend>roslib</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>webui</run_depend>
+  <run_depend>rosweb</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>pr2_tuck_arms_action</run_depend>
+  <run_depend>pr2_arm_move_ik</run_depend>
+  <run_depend>joint_trajectory_generator</run_depend>
+  <run_depend>dwa_local_planner</run_depend>
+  <run_depend>wg_pr2_2dnav</run_depend>
+  <run_depend>move_slow_and_clear</run_depend>
+
+  <!-- Dependencies needed only for running tests. -->
+  <!-- <test_depend>roslib</test_depend> -->
+  <!-- <test_depend>rospy</test_depend> -->
+  <!-- <test_depend>webui</test_depend> -->
+  <!-- <test_depend>rosweb</test_depend> -->
+  <!-- <test_depend>std_msgs</test_depend> -->
+  <!-- <test_depend>pr2_tuck_arms_action</test_depend> -->
+  <!-- <test_depend>pr2_arm_move_ik</test_depend> -->
+  <!-- <test_depend>joint_trajectory_generator</test_depend> -->
+  <!-- <test_depend>dwa_local_planner</test_depend> -->
+  <!-- <test_depend>wg_pr2_2dnav</test_depend> -->
+  <!-- <test_depend>move_slow_and_clear</test_depend> -->
+
+</package>

@@ -1,0 +1,29 @@
+<launch>
+  <node pkg="topic_tools" type="throttle" name="camera_throttle"
+        args="messages wide_stereo/left/image_color/compressed 5"/>
+  <node pkg="pr2_position_scripts" type="head_down.py" name="head_down" />
+  <node pkg="pr2_position_scripts" type="torso_down.py" name="torso_down" />
+
+  <include file="$(find pr2_map_navigation_app)/pr2_2dnav.launch" />
+
+  <node name="mongo" type="wrapper.py" pkg="mongodb" output="log">
+    <param name="database_path" value="warehouse_data"/>
+    <param name="overwrite" value="false"/>
+  </node>
+
+
+  <rosparam file="$(find pr2_navigation_config)/move_base/move_base_params.yaml" command="load" />
+
+  <node pkg="tf" type="tf_change_notifier" name="tf_throttle_for_android_gui" output="screen">
+    <param name="polling_frequency" value="5"/>
+    <param name="translational_update_distance" value="-1"/>
+    <param name="angular_update_distance" value="-1"/>
+    <rosparam param="frame_pairs">
+      - {source_frame: base_footprint, target_frame: map}
+      - {source_frame: base_laser_link, target_frame: map}
+    </rosparam>
+  </node>
+
+  <node pkg="map_store" type="map_manager" name="map_manager" output="screen"/>
+</launch>
+

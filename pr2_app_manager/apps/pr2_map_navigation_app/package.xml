@@ -1,0 +1,56 @@
+<package>
+  <name>pr2_map_navigation_app</name>
+  <version>1.0.0</version>
+  <description>Map nav for the PR2.</description>
+  <maintainer email="dash@clearpathrobotics.com">Devon Ash</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/map_nav</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Tony Pratkanis</author>
+
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+  <build_depend>pr2_position_scripts</build_depend>
+  <build_depend>pr2_navigation_teleop</build_depend>
+  <build_depend>pr2_navigation_perception</build_depend>
+  <build_depend>amcl</build_depend>
+  <build_depend>pr2_machine</build_depend>
+  <build_depend>pr2_navigation_global</build_depend>
+  <build_depend>pr2_navigation_config</build_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>mongodb</build_depend>
+  <build_depend>topic_tools</build_depend>
+  <build_depend>map_store</build_depend>
+
+  <!-- Dependencies needed after this package is compiled. -->
+  <run_depend>pr2_position_scripts</run_depend>
+  <run_depend>pr2_navigation_teleop</run_depend>
+  <run_depend>pr2_navigation_perception</run_depend>
+  <run_depend>amcl</run_depend>
+  <run_depend>pr2_machine</run_depend>
+  <run_depend>pr2_navigation_global</run_depend>
+  <run_depend>pr2_navigation_config</run_depend>
+  <run_depend>tf</run_depend>
+  <run_depend>mongodb</run_depend>
+  <run_depend>topic_tools</run_depend>
+  <run_depend>map_store</run_depend>
+
+  <!-- Dependencies needed only for running tests. -->
+  <!-- <test_depend>pr2_position_scripts</test_depend> -->
+  <!-- <test_depend>pr2_navigation_teleop</test_depend> -->
+  <!-- <test_depend>pr2_navigation_perception</test_depend> -->
+  <!-- <test_depend>amcl</test_depend> -->
+  <!-- <test_depend>pr2_machine</test_depend> -->
+  <!-- <test_depend>pr2_navigation_global</test_depend> -->
+  <!-- <test_depend>pr2_navigation_config</test_depend> -->
+  <!-- <test_depend>tf</test_depend> -->
+  <!-- <test_depend>mongodb</test_depend> -->
+  <!-- <test_depend>topic_tools</test_depend> -->
+  <!-- <test_depend>map_store</test_depend> -->
+
+</package>

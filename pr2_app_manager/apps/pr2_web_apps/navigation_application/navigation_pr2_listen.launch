@@ -1,0 +1,4 @@
+<launch>
+  <include file="$(find pr2_machine)/$(env ROBOT).machine" />
+  <node name="nav_app_visualizations" pkg="navigation_application" type="navigation_visualizations"/>
+</launch>

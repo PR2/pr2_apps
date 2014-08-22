@@ -1,0 +1,92 @@
+.mapviewer { 
+	position:relative;
+	overflow:hidden;
+	height:70%;
+	border:2px solid;
+}
+
+#map_status {
+    position: relative;
+    top: 20%;
+    width: 15em;
+    margin: auto;
+    background: #333;
+    opacity: 0.9;
+    color: #4f4;
+    z-index: 2;
+    padding: 5px;
+    font-size: 150%;
+    text-align: center;
+}
+
+.app_link {
+    text-align: left;
+}
+
+.app_instructions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: #333;
+    opacity: 0.95;
+    color: white;
+    z-index: 3;
+    display: none;
+}
+
+.app_instructions_box {
+    margin: 5px 10px 5px 50px;
+}
+
+.app_instructions li {
+    font-weight: bold;
+    color: #4f4;
+}
+
+.app_instructions li p {
+    font-weight: normal;
+    color: white;
+}
+
+.app_instructions img {
+    cursor: pointer;
+    position: relative;
+    top: 7;
+    left: 4;
+    border: 2px solid black;
+}
+
+#button_bar {
+    font-size: 80%;
+    background: #333;
+    opacity: 0.9;
+}
+
+#button_bar img {
+    border: 2px solid black;
+    margin: 1;
+    cursor: pointer;
+}
+
+.app_instructions img:hover {
+    border: 2px solid #ff4;
+}
+
+#button_bar img:hover {
+    border: 2px solid #ff4;
+}
+
+.app_help_link {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #333;
+    opacity: 0.9;
+    color: white;
+    z-index: 2;
+    padding: 5px 10px;
+    display: none;
+}
+

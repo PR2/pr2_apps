@@ -1,0 +1,5 @@
+<launch>
+    <include file="$(find pr2_props_app)/launch/pr2_props_app.launch" />
+    <node pkg="pr2_props_app" type="prop_repeat" name="pr2_props_caller" />
+    <node pkg="pr2_position_scripts" type="torso_down.py" name="torso_down" />
+</launch>

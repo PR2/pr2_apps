@@ -1,0 +1,8 @@
+<launch>
+  <node name="wide_stereo_left_throttle" pkg="topic_tools" type="throttle" args="messages /wide_stereo/left/image_rect_color 3" />
+  <node name="wide_stereo_right_throttle" pkg="topic_tools" type="throttle" args="messages /wide_stereo/right/image_rect_color 3" />
+  <node name="narrow_stereo_left_throttle" pkg="topic_tools" type="throttle" args="messages /narrow_stereo/left/image_rect_color 3" />
+  <node name="narrow_stereo_right_throttle" pkg="topic_tools" type="throttle" args="messages /narrow_stereo/right/image_rect_color 3" />
+  <node name="l_forearm_cam_throttle" pkg="topic_tools" type="throttle" args="messages /l_forearm_cam/image_rect_color 3" />
+  <node name="r_forearm_cam_throttle" pkg="topic_tools" type="throttle" args="messages /r_forearm_cam/image_rect_color 3" />
+</launch>
