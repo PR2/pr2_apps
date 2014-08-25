@@ -1,5 +1,0 @@
-<launch>
-  <include file="$(find pr2_machine)/$(env ROBOT).machine" />
-  <include file="$(find pr2_navigation_global)/amcl_node.xml" />
-  <node name="map_server" pkg="map_server" type="map_server" args="$(find willow_maps)/willow-2010-02-18-0.025.pgm 0.025" machine="c2" />
-</launch>

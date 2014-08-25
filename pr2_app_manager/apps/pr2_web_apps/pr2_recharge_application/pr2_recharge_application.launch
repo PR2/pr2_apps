@@ -1,9 +1,0 @@
-<launch>
-  <!-- plugging in -->
-  <include file="$(find pr2_plugs_actions)/launch/plug_actions.launch">
-    <arg name="run_sim" value="false" />
-  </include>
-
-  <!-- plugs web adaptor -->
-  <node pkg="pr2_plugs_actions" type="recharge_web_adaptor.py" name="recharge_web_adaptor" />
-</launch>
