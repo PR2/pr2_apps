@@ -160,10 +160,10 @@ public:
 
 private:
 
-  geometry_msgs::Pose getPositionFromJointsPose(ros::ServiceClient& service_client,  						
-						std::string fk_link,
-						const std::vector<std::string>& joint_names, const std::vector<double>& joint_pos);
-  
+  geometry_msgs::Pose getPositionFromJointsPose(
+                                                std::string fk_link,
+                                                const std::vector<std::string>& joint_names, const std::vector<double>& joint_pos);
+
   void updateWalkAlongAverages();
 
   void jointStateCallback(const sensor_msgs::JointStateConstPtr &jointState);
@@ -216,12 +216,6 @@ private:
 
   ros::ServiceClient tilt_laser_service_;
   ros::ServiceClient switch_controllers_service_;
-  ros::ServiceClient right_arm_kinematics_solver_client_;
-  ros::ServiceClient right_arm_kinematics_forward_client_;
-  ros::ServiceClient right_arm_kinematics_inverse_client_;
-  ros::ServiceClient left_arm_kinematics_solver_client_;
-  ros::ServiceClient left_arm_kinematics_forward_client_;
-  ros::ServiceClient left_arm_kinematics_inverse_client_;
   ros::ServiceClient prosilica_polling_client_;
   ros::Publisher head_pub_;
   ros::Publisher torso_pub_;
@@ -231,7 +225,10 @@ private:
   ros::Subscriber joint_state_sub_;
   ros::Subscriber power_board_sub_;
 
-  ros::Time last_right_wrist_goal_stamp_;  
+  ros::ServiceClient both_arms_kinematics_forward_client_;
+  ros::ServiceClient both_arms_kinematics_inverse_client_;
+
+  ros::Time last_right_wrist_goal_stamp_;
   ros::Time last_left_wrist_goal_stamp_;
 
   double last_torso_vel_;
