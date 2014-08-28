@@ -48,6 +48,8 @@
 #include <pr2_controllers_msgs/JointTrajectoryAction.h>
 #include <pr2_common_action_msgs/TuckArmsAction.h>
 #include <pr2_msgs/PowerBoardState.h>
+#include <moveit/robot_model_loader/robot_model_loader.h>
+#include <moveit/robot_state/robot_state.h>
 
 static const std::string default_arm_controller_name="arm_controller";
 
@@ -160,10 +162,10 @@ public:
 
 private:
 
-  geometry_msgs::Pose getPositionFromJointsPose(ros::ServiceClient& service_client,  						
-						std::string fk_link,
-						const std::vector<std::string>& joint_names, const std::vector<double>& joint_pos);
-  
+  geometry_msgs::Pose getPositionFromJointsPose(
+                                                std::string fk_link,
+                                                const std::vector<std::string>& joint_names, const std::vector<double>& joint_pos);
+
   void updateWalkAlongAverages();
 
   void jointStateCallback(const sensor_msgs::JointStateConstPtr &jointState);
@@ -216,12 +218,6 @@ private:
 
   ros::ServiceClient tilt_laser_service_;
   ros::ServiceClient switch_controllers_service_;
-  ros::ServiceClient right_arm_kinematics_solver_client_;
-  ros::ServiceClient right_arm_kinematics_forward_client_;
-  ros::ServiceClient right_arm_kinematics_inverse_client_;
-  ros::ServiceClient left_arm_kinematics_solver_client_;
-  ros::ServiceClient left_arm_kinematics_forward_client_;
-  ros::ServiceClient left_arm_kinematics_inverse_client_;
   ros::ServiceClient prosilica_polling_client_;
   ros::Publisher head_pub_;
   ros::Publisher torso_pub_;
@@ -231,7 +227,13 @@ private:
   ros::Subscriber joint_state_sub_;
   ros::Subscriber power_board_sub_;
 
-  ros::Time last_right_wrist_goal_stamp_;  
+  robot_model_loader::RobotModelLoader robot_model_loader_;
+  moveit::core::RobotModelPtr kinematic_model_;
+  moveit::core::RobotStatePtr kinematic_state_;
+  const moveit::core::JointModelGroup* right_joint_model_group_;
+  const moveit::core::JointModelGroup* left_joint_model_group_;
+
+  ros::Time last_right_wrist_goal_stamp_;
   ros::Time last_left_wrist_goal_stamp_;
 
   double last_torso_vel_;

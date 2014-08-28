@@ -27,7 +27,10 @@
   <build_depend>pr2_common_action_msgs</build_depend>
   <build_depend>polled_camera</build_depend>
   <build_depend>bullet</build_depend>
-  <build_depend>kinematics_msgs</build_depend>
+  <build_depend>moveit_msgs</build_depend>
+  <build_depend>moveit_core</build_depend>
+  <build_depend>moveit_ros_planning</build_depend>
+  <build_depend>eigen_conversions</build_depend>
 
   <run_depend>roscpp</run_depend>
   <run_depend>actionlib</run_depend>
@@ -44,7 +47,10 @@
   <run_depend>pr2_common_action_msgs</run_depend>
   <run_depend>polled_camera</run_depend>
   <run_depend>bullet</run_depend>
-  <run_depend>kinematics_msgs</run_depend>
+  <run_depend>moveit_msgs</run_depend>
+  <run_depend>moveit_core</run_depend>
+  <run_depend>moveit_ros_planning</run_depend>
+  <run_depend>eigen_conversions</run_depend>
 
   <!-- <test_depend>roscpp</test_depend> -->
   <!-- <test_depend>actionlib</test_depend> -->
