@@ -48,6 +48,8 @@
 #include <pr2_controllers_msgs/JointTrajectoryAction.h>
 #include <pr2_common_action_msgs/TuckArmsAction.h>
 #include <pr2_msgs/PowerBoardState.h>
+#include <moveit/robot_model_loader/robot_model_loader.h>
+#include <moveit/robot_state/robot_state.h>
 
 static const std::string default_arm_controller_name="arm_controller";
 
@@ -225,8 +227,11 @@ private:
   ros::Subscriber joint_state_sub_;
   ros::Subscriber power_board_sub_;
 
-  ros::ServiceClient both_arms_kinematics_forward_client_;
-  ros::ServiceClient both_arms_kinematics_inverse_client_;
+  robot_model_loader::RobotModelLoader robot_model_loader_;
+  moveit::core::RobotModelPtr kinematic_model_;
+  moveit::core::RobotStatePtr kinematic_state_;
+  const moveit::core::JointModelGroup* right_joint_model_group_;
+  const moveit::core::JointModelGroup* left_joint_model_group_;
 
   ros::Time last_right_wrist_goal_stamp_;
   ros::Time last_left_wrist_goal_stamp_;

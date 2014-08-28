@@ -1,4 +1,5 @@
 <launch>
+<include file="$(find pr2_moveit_config)/launch/planning_context.launch" />
 
   <!--  Arm controllers for mannequin mode -->
   <rosparam command="load" file="$(find pr2_mannequin_mode)/pr2_arm_controllers_loose.yaml" />

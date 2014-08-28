@@ -2,16 +2,12 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(pr2_teleop_general)
 
-find_package(catkin REQUIRED COMPONENTS roscpp actionlib actionlib_msgs geometry_msgs sensor_msgs pr2_msgs pr2_controllers_msgs pr2_controller_manager pr2_mechanism_msgs angles urdf ps3joy pr2_common_action_msgs polled_camera moveit_msgs)
+find_package(catkin REQUIRED COMPONENTS roscpp actionlib actionlib_msgs geometry_msgs sensor_msgs pr2_msgs pr2_controllers_msgs pr2_controller_manager pr2_mechanism_msgs angles urdf ps3joy pr2_common_action_msgs polled_camera moveit_msgs moveit_core moveit_ros_planning eigen_conversions)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-
-
-
-
 catkin_package(
-    CATKIN_DEPENDS roscpp actionlib actionlib_msgs geometry_msgs sensor_msgs pr2_msgs pr2_controllers_msgs pr2_controller_manager pr2_mechanism_msgs angles urdf ps3joy pr2_common_action_msgs polled_camera moveit_msgs
+    CATKIN_DEPENDS roscpp actionlib actionlib_msgs geometry_msgs sensor_msgs pr2_msgs pr2_controllers_msgs pr2_controller_manager pr2_mechanism_msgs angles urdf ps3joy pr2_common_action_msgs polled_camera moveit_msgs moveit_core moveit_ros_planning eigen_conversions
     INCLUDE_DIRS include
     DEPENDS  bullet
     LIBRARIES pr2_teleop_general_commander
