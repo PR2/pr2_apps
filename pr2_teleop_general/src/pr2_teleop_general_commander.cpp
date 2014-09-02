@@ -156,12 +156,9 @@ GeneralCommander::GeneralCommander(bool control_body,
   }
   if(control_larm_ || control_rarm_) {
     tuck_arms_client_ = new actionlib::SimpleActionClient<pr2_common_action_msgs::TuckArmsAction>("tuck_arms", true);
+    updateCurrentWristPositions();
   } else {
     tuck_arms_client_ = NULL;
-  }
-
-  if (control_rarm_ || control_larm_){
-    updateCurrentWristPositions();
   }
 
   if(control_prosilica_) {
@@ -918,10 +915,6 @@ void GeneralCommander::sendArmVelCommands(double r_x_vel, double r_y_vel, double
       if(found_ik)
         {
           kinematic_state_->copyJointGroupPositions(right_joint_model_group_, joint_values);
-          for(std::size_t i=0; i < joint_names.size(); ++i)
-            {
-              ROS_INFO("Joint %s: %f", joint_names[i].c_str(), joint_values[i]);
-            }
 
           pr2_controllers_msgs::JointTrajectoryGoal goal;
           goal.trajectory.joint_names = joint_names;
@@ -939,7 +932,7 @@ void GeneralCommander::sendArmVelCommands(double r_x_vel, double r_y_vel, double
         }
       else
         {
-          ROS_INFO("Did not find IK solution");
+          // ROS_INFO("Did not find IK solution");
         }
       ros::Time afterCall = ros::Time::now();
     }
@@ -1009,10 +1002,7 @@ void GeneralCommander::sendArmVelCommands(double r_x_vel, double r_y_vel, double
         if(found_ik)
           {
             kinematic_state_->copyJointGroupPositions(left_joint_model_group_, joint_values);
-            for(std::size_t i=0; i < joint_names.size(); ++i)
-              {
-                ROS_INFO("Joint %s: %f", joint_names[i].c_str(), joint_values[i]);
-              }
+
             pr2_controllers_msgs::JointTrajectoryGoal goal;
             goal.trajectory.joint_names = joint_names;
             goal.trajectory.points.resize(1);
@@ -1027,7 +1017,7 @@ void GeneralCommander::sendArmVelCommands(double r_x_vel, double r_y_vel, double
           }
         else
           {
-            ROS_INFO("Did not find IK solution");
+            // ROS_INFO("Did not find IK solution");
           }
       }
     }
