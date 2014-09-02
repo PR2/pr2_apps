@@ -731,7 +731,7 @@ void GeneralCommander::updateCurrentWristPositions() {
     } else {
       ROS_WARN("Left fk call failed all together");
     }
-    ROS_INFO_STREAM("Current x " << left_wrist_roll_pose_.position.x << " y " << left_wrist_roll_pose_.position.y << " z " << left_wrist_roll_pose_.position.z);
+    // ROS_INFO_STREAM("Current x " << left_wrist_roll_pose_.position.x << " y " << left_wrist_roll_pose_.position.y << " z " << left_wrist_roll_pose_.position.z);
   } 
 }
 
