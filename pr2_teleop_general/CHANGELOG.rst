@@ -2,6 +2,9 @@
 Changelog for package pr2_teleop_general
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.5.1 (2014-09-06)
 ------------------
 * pr2_teleop_general now depends on moveit_msgs instead of kinematics_msgs
