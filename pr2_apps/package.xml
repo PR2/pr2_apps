@@ -3,6 +3,7 @@
   <version>0.5.5</version>
   <description>Basic applications for the PR2 robot</description>
   <maintainer email="wim@willowgarage.com">Maintained by Wim Meeussen</maintainer>
+  <maintainer email="dash@clearpathrobotics.com">Devon Ash</maintainer>
 
   <license>BSD</license>
 
@@ -13,7 +14,6 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <run_depend>pr2_position_scripts</run_depend>
-  <run_depend>pr2_app_manager</run_depend>
   <run_depend>pr2_teleop_general</run_depend>
   <run_depend>pr2_tuckarm</run_depend>
 
