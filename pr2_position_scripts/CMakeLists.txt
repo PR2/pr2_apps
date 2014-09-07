@@ -6,7 +6,7 @@ find_package(catkin REQUIRED COMPONENTS actionlib rospy tf pr2_controllers_msgs)
 
 catkin_package(
     DEPENDS
-    CATKIN-DEPENDS  actionlib rospy tf pr2_controllers_msgs
+    CATKIN_DEPENDS
     INCLUDE_DIRS
     LIBRARIES
 )
