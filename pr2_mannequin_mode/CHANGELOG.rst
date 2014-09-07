@@ -2,8 +2,8 @@
 Changelog for package pr2_mannequin_mode
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.1 (2014-09-06)
+------------------
 * Fixed bug in CMake regarding pr2_ctrls_msgs
 * fix version number
 * fix to install script/launch

@@ -2,8 +2,8 @@
 Changelog for package pr2_tuckarm
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.1 (2014-09-06)
+------------------
 * Works
 * catkinize pr2_tuckarm
 * Remove tuck_arms

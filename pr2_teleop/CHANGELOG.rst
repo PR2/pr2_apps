@@ -2,8 +2,8 @@
 Changelog for package pr2_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.1 (2014-09-06)
+------------------
 * fix version number
 * catkinization of pr2_teleop and pr2_mannequin mode
   Included organizing files into launch/config directories.
