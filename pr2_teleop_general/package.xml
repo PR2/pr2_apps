@@ -1,6 +1,6 @@
 <package>
   <name>pr2_teleop_general</name>
-  <version>0.5.2</version>
+  <version>0.5.3</version>
   <description>pr2_teleop_general</description>
   <maintainer email="gil@willowgarage.com">Gil Jones</maintainer>
 
