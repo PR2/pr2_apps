@@ -1,6 +1,6 @@
 <package>
   <name>pr2_apps</name>
-  <version>0.5.3</version>
+  <version>0.5.4</version>
   <description>Basic applications for the PR2 robot</description>
   <maintainer email="wim@willowgarage.com">Maintained by Wim Meeussen</maintainer>
 
