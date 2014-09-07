@@ -1,0 +1,21 @@
+<package>
+  <name>pr2_app_manager</name>
+  <version>1.0.0</version>
+  <description>Scripts and tools for running the application manager on the PR2.</description>
+  <maintainer email="dash@clearpathrobotics.com">Devon Ash</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/application_manager</url>
+
+  <author>Vijay Pradeep</author>
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>app_manager</build_depend>
+  <build_depend>willow_maps</build_depend>
+
+  <run_depend>app_manager</run_depend>
+  <run_depend>willow_maps</run_depend>
+
+
+</package>
