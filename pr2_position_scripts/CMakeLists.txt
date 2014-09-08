@@ -11,7 +11,5 @@ catkin_package(
     LIBRARIES
 )
 
-install(DIRECTORY scripts
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-  USE_SOURCE_PERMISSIONS
-)
+
+install(PROGRAMS scripts/head_down.py scripts/head_up.py scripts/torso_down.py scripts/torso_up.py DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
