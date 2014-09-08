@@ -2,6 +2,11 @@
 Changelog for package pr2_tuckarm
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Things
+* Contributors: TheDash
+
 0.5.6 (2014-09-07)
 ------------------
 

@@ -2,6 +2,11 @@
 Changelog for package pr2_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added install targets for pr2_teleop
+* Contributors: TheDash
+
 0.5.6 (2014-09-07)
 ------------------
 
