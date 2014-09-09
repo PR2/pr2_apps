@@ -18,7 +18,9 @@ target_link_libraries(pr2_teleop_general_joystick  ${catkin_LIBRARIES} pr2_teleo
 add_executable(pr2_teleop_general_keyboard src/pr2_teleop_general_keyboard.cpp)
 target_link_libraries(pr2_teleop_general_keyboard  ${catkin_LIBRARIES} pr2_teleop_general_commander)
 
+
 add_library(pr2_teleop_general_commander src/pr2_teleop_general_commander.cpp)
+add_dependencies(pr2_teleop_general_commander pr2_common_action_msgs_gencpp)
 
 
 target_link_libraries(pr2_teleop_general_commander  ${catkin_LIBRARIES})
