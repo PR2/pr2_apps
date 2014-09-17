@@ -2,8 +2,8 @@
 Changelog for package pr2_teleop_general
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.7 (2014-09-17)
+------------------
 * Fixed teleop commander lib gen
 * Changelog
 * Things

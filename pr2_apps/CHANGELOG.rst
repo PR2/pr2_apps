@@ -2,8 +2,8 @@
 Changelog for package pr2_apps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.7 (2014-09-17)
+------------------
 * Changelog
 * Contributors: TheDash
 
