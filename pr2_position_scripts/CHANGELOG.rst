@@ -4,6 +4,10 @@ Changelog for package pr2_position_scripts
 
 Forthcoming
 -----------
+* Changelog
+* install targets
+* Contributors: TheDash
+
 * install targets
 * Contributors: TheDash
 

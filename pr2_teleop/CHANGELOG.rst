@@ -4,6 +4,10 @@ Changelog for package pr2_teleop
 
 Forthcoming
 -----------
+* Changelog
+* Added install targets for pr2_teleop
+* Contributors: TheDash
+
 * Added install targets for pr2_teleop
 * Contributors: TheDash
 

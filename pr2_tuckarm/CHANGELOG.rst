@@ -4,6 +4,10 @@ Changelog for package pr2_tuckarm
 
 Forthcoming
 -----------
+* Changelog
+* Things
+* Contributors: TheDash
+
 * Things
 * Contributors: TheDash
 

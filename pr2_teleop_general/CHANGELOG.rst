@@ -4,6 +4,11 @@ Changelog for package pr2_teleop_general
 
 Forthcoming
 -----------
+* Fixed teleop commander lib gen
+* Changelog
+* Things
+* Contributors: TheDash
+
 * Things
 * Contributors: TheDash
 

@@ -4,6 +4,10 @@ Changelog for package pr2_mannequin_mode
 
 Forthcoming
 -----------
+* Changelog
+* install targets
+* Contributors: TheDash
+
 * install targets
 * Contributors: TheDash
 
