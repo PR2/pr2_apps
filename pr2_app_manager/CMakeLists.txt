@@ -42,8 +42,8 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 # CATKIN_MIGRATION: removed during catkin migration
 # rosbuild_add_boost_directories()
 #find_package(Boost REQUIRED COMPONENTS thread)
-#include_directories(${Boost_INCLUDE_DIRS})
-#target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+include_directories(${Boost_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 #add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
 ## Generate added messages and services with any dependencies listed here
@@ -63,3 +63,14 @@ catkin_package(
     INCLUDE_DIRS # TODO include
     LIBRARIES # TODO
 )
+
+
+install(FILES /launch/whole_pr2_apps.launch /launch/pr2_app_manager.launch  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(PROGRAMS /scripts/control.py /scripts/install_applications.sh  USE_SOURCE_PERMISSIONS 
+ DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+install(DIRECTORY include/ DESTINATION ${CATKIN_PACKAGE_INCLUDE_DIRECTORY}
+install(DIRECTORY mock_apps launch scripts  
+ DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+
+
+
