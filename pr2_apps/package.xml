@@ -8,13 +8,14 @@
 
   <url type="website">http://ros.org/wiki/pr2_apps</url>
 
-  <author>Maintained by Wim Meeussen</author>
+  <author>Wim Meeussen</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 
   <run_depend>pr2_position_scripts</run_depend>
   <run_depend>pr2_teleop_general</run_depend>
   <run_depend>pr2_tuckarm</run_depend>
+  <run_depend>pr2_app_manager</run_depend>
 
   <export>
     <metapackage/>
