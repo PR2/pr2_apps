@@ -2,7 +2,7 @@
   <name>pr2_teleop_general</name>
   <version>0.5.7</version>
   <description>pr2_teleop_general</description>
-  <maintainer email="gil@willowgarage.com">Gil Jones</maintainer>
+  <maintainer email="dash@clearpathrobotics.com">Devon Ash</maintainer>
 
   <license>BSD</license>
 
