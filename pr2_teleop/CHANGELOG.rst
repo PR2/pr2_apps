@@ -2,6 +2,11 @@
 Changelog for package pr2_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Updated maintainership
+* Contributors: TheDash
+
 0.5.7 (2014-09-17)
 ------------------
 * Changelog
