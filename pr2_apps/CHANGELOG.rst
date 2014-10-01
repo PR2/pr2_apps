@@ -2,6 +2,9 @@
 Changelog for package pr2_apps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.5.9 (2014-10-01)
 ------------------
 * Added app manager to package.xml

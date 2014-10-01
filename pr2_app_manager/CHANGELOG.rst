@@ -2,6 +2,9 @@
 Changelog for package pr2_app_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.5.9 (2014-10-01)
 ------------------
 * Updated pr2_app_manager, now compiles in hydro

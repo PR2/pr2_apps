@@ -2,6 +2,9 @@
 Changelog for package pr2_position_scripts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.5.9 (2014-10-01)
 ------------------
 
