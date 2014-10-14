@@ -10,8 +10,8 @@ catkin_package(
 )
 
 
-install(FILES /launch/whole_pr2_apps.launch /launch/pr2_app_manager.launch  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-install(PROGRAMS /scripts/control.py /scripts/install_applications.sh  USE_SOURCE_PERMISSIONS 
+install(FILES launch/whole_pr2_apps.launch launch/pr2_app_manager.launch  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(PROGRAMS scripts/control.py scripts/install_applications.sh  USE_SOURCE_PERMISSIONS 
  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 install(DIRECTORY include/ DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
 install(DIRECTORY mock_apps launch scripts  
