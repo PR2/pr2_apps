@@ -2,8 +2,8 @@
 Changelog for package pr2_app_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.10 (2014-10-17)
+-------------------
 * Removed include dependency
 * Removed use_source_permissions
 * Fixed pr2_app_manager install
