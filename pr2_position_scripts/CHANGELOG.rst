@@ -4,6 +4,8 @@ Changelog for package pr2_position_scripts
 
 Forthcoming
 -----------
+* Changelogs
+* Contributors: TheDash
 
 0.5.9 (2014-10-01)
 ------------------

@@ -4,6 +4,11 @@ Changelog for package pr2_app_manager
 
 Forthcoming
 -----------
+* Removed include dependency
+* Removed use_source_permissions
+* Fixed pr2_app_manager install
+* Changelogs
+* Contributors: TheDash
 
 0.5.9 (2014-10-01)
 ------------------

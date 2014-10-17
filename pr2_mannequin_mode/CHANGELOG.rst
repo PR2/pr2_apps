@@ -4,6 +4,8 @@ Changelog for package pr2_mannequin_mode
 
 Forthcoming
 -----------
+* Changelogs
+* Contributors: TheDash
 
 0.5.9 (2014-10-01)
 ------------------
