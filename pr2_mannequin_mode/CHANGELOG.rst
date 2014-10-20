@@ -2,6 +2,9 @@
 Changelog for package pr2_mannequin_mode
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.5.10 (2014-10-17)
 -------------------
 * Changelogs

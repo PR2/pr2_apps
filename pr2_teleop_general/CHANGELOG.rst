@@ -2,6 +2,9 @@
 Changelog for package pr2_teleop_general
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.5.10 (2014-10-17)
 -------------------
 * Changelogs
