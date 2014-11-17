@@ -2,8 +2,8 @@
 Changelog for package pr2_mannequin_mode
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.12 (2014-11-17)
+-------------------
 * Updated maintainership
 * Contributors: TheDash
 
