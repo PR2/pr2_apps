@@ -21,11 +21,9 @@ install(PROGRAMS scripts/trajectory_lock.py
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/scripts
 )
 
-install(DIRECTORY launch/
+install(DIRECTORY config/ launch/
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
-
-install(FILES config/head_position_controller_loose.yaml config/pr2_arm_controllers_loose.yaml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 install(FILES icon.png
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
