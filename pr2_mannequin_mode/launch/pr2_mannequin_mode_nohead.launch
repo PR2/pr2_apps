@@ -1,9 +1,9 @@
 <launch>
 <!-- This file is mannequin mode except for the head (which conflicts with the joystick teleop -->
   <!-- Start the controllers, note that we call the nohead launch so that head controllers are left for the joystick-->
-  <include file="$(find pr2_mannequin_mode)/controllers_nohead.launch"/>
+  <include file="$(find pr2_mannequin_mode)/launch/controllers_nohead.launch"/>
 
   <!-- Start the scripts to actually lock the arms and head in place -->
-  <include file="$(find pr2_mannequin_mode)/trajectory_lock.launch"/>
+  <include file="$(find pr2_mannequin_mode)/scripts/trajectory_lock.launch"/>
 
 </launch>
