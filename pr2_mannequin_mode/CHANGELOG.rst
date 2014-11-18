@@ -2,8 +2,8 @@
 Changelog for package pr2_mannequin_mode
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.13 (2014-11-18)
+-------------------
 * Files were in correcet positoin, script was referencing wrong subdir
 * Mannequin mode installs
 * Contributors: dash

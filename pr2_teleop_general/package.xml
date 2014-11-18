@@ -1,6 +1,6 @@
 <package>
   <name>pr2_teleop_general</name>
-  <version>0.5.12</version>
+  <version>0.5.13</version>
   <description>pr2_teleop_general</description>
   <maintainer email="dash@clearpathrobotics.com">Devon Ash</maintainer>
 
