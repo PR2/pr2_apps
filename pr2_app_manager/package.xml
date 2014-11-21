@@ -1,6 +1,6 @@
 <package>
   <name>pr2_app_manager</name>
-  <version>0.5.13</version>
+  <version>0.5.14</version>
   <description>Scripts and tools for running the application manager on the PR2.</description>
   <maintainer email="dash@clearpathrobotics.com">Dash</maintainer>
 
