@@ -37,6 +37,8 @@ target_link_libraries(teleop_pr2_keyboard
   ${catkin_LIBRARIES}
 )
 
+install(PROGRAMS teleop_pr2_keyboard teleop_pr2 teleop_gripper ${CATKIN_PACKAGE_BIN_DESTINATION} ${CATKIN_PACKAGE_LIB_DESTINATION})
+
 install(DIRECTORY config/ launch/ DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 install(FILES android_lightning_pr2.png DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
