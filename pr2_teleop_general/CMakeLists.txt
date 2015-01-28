@@ -29,11 +29,12 @@ add_dependencies(pr2_teleop_general_commander gencpp ${PROJECT_NAME}_gencpp tf_g
 add_dependencies(pr2_teleop_general_commander kinematics_msgs_gencpp)
 
 install(TARGETS pr2_teleop_general_joystick pr2_teleop_general_keyboard pr2_teleop_general_commander
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 install(TARGETS pr2_teleop_general_commander
-  DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
 
 install(DIRECTORY launch
