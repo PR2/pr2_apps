@@ -1,6 +1,6 @@
 <package>
   <name>pr2_tuckarm</name>
-  <version>0.5.14</version>
+  <version>0.5.15</version>
   <description>Tucks the arms of the PR2 robot into a safe position for moving the base of the robot.
      This also moves the arms out of the view of the tilting laser scanner, as much as possible.</description>
   <maintainer email="wim@willowgarage.com">Wim Meeussen</maintainer>

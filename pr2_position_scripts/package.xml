@@ -1,6 +1,6 @@
 <package>
   <name>pr2_position_scripts</name>
-  <version>0.5.14</version>
+  <version>0.5.15</version>
   <description>This package contains a number of scripts to set various components of the PR2. They are used in the apps to improve usablity.</description>
   <maintainer email="tony@willowgarage.com">Tony Pratkanis</maintainer>
 
