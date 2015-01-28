@@ -2,6 +2,13 @@
 Changelog for package pr2_teleop_general
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Bugfix for pr2_teleop_general. Added destinations for targets
+* Added target locations to pr2_teleop libs and execs
+* Added installs for pr2_teleop_general and pr2_teleop
+* Contributors: dash
+
 0.5.14 (2014-11-20)
 -------------------
 
