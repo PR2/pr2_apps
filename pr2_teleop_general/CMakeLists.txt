@@ -27,7 +27,8 @@ target_link_libraries(pr2_teleop_general_commander  ${catkin_LIBRARIES})
 add_dependencies(pr2_teleop_general_commander gencpp ${PROJECT_NAME}_gencpp tf_gencpp)
 
 add_dependencies(pr2_teleop_general_commander kinematics_msgs_gencpp)
-install(TARGETS pr2_teleop_general_joystick pr2_teleop_general_keyboard
+
+install(TARGETS pr2_teleop_general_joystick pr2_teleop_general_keyboard pr2_teleop_general_commander
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
