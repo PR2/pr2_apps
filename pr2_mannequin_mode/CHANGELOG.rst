@@ -2,8 +2,8 @@
 Changelog for package pr2_mannequin_mode
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.18 (2015-02-10)
+-------------------
 * fix install destination
 * Contributors: Furushchev
 
