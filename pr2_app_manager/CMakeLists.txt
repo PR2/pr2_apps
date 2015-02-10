@@ -9,12 +9,7 @@ catkin_package(
     LIBRARIES # TODO
 )
 
-
-install(FILES launch/whole_pr2_apps.launch launch/pr2_app_manager.launch  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 install(PROGRAMS scripts/control.py scripts/install_applications.sh
  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-install(DIRECTORY mock_apps launch scripts  
+install(DIRECTORY mock_apps launch
  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-
-
-

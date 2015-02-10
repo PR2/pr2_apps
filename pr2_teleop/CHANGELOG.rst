@@ -2,6 +2,9 @@
 Changelog for package pr2_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.5.16 (2015-02-06)
+-------------------
+
 0.5.15 (2015-01-28)
 -------------------
 * Added target locations to pr2_teleop libs and execs

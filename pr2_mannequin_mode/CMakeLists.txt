@@ -21,7 +21,7 @@ install(PROGRAMS scripts/trajectory_lock.py
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/scripts
 )
 
-install(DIRECTORY config/ launch/
+install(DIRECTORY config launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
