@@ -4,6 +4,8 @@ Changelog for package pr2_teleop
 
 Forthcoming
 -----------
+* added changelogs
+* Contributors: TheDash
 
 0.5.18 (2015-02-10)
 -------------------
