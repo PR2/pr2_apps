@@ -2,8 +2,8 @@
 Changelog for package pr2_position_scripts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.5.19 (2015-04-29)
+-------------------
 * added changelogs
 * Contributors: TheDash
 
