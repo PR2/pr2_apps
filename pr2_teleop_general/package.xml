@@ -47,6 +47,7 @@
   <run_depend>pr2_common_action_msgs</run_depend>
   <run_depend>polled_camera</run_depend>
   <run_depend>bullet</run_depend>
+  <run_depend>pr2_mannequin_mode</run_depend>
 
   <!-- <test_depend>roscpp</test_depend> -->
   <!-- <test_depend>actionlib</test_depend> -->
