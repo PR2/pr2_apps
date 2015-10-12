@@ -36,6 +36,7 @@
   <run_depend>actionlib</run_depend>
   <run_depend>actionlib_msgs</run_depend>
   <run_depend>geometry_msgs</run_depend>
+  <run_depend>face_detector</run_depend>
   <run_depend>sensor_msgs</run_depend>
   <run_depend>pr2_msgs</run_depend>
   <run_depend>pr2_controllers_msgs</run_depend>
