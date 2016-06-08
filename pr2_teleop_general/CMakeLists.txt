@@ -20,7 +20,7 @@ target_link_libraries(pr2_teleop_general_keyboard  ${catkin_LIBRARIES} pr2_teleo
 
 
 add_library(pr2_teleop_general_commander src/pr2_teleop_general_commander.cpp)
-add_dependencies(pr2_teleop_general_commander pr2_common_action_msgs_gencpp)
+add_dependencies(pr2_teleop_general_commander pr2_common_action_msgs_gencpp pr2_msgs_gencpp)
 
 
 target_link_libraries(pr2_teleop_general_commander  ${catkin_LIBRARIES})
