@@ -74,7 +74,7 @@ def callback(msg):
         print "Small: %.4f" % max_error
 
 global pub
-pub = rospy.Publisher("command", trajectory_msgs.msg.JointTrajectory)
+pub = rospy.Publisher("command", trajectory_msgs.msg.JointTrajectory, queue_size=10)
 
 rospy.Subscriber("state", pr2_controllers_msgs.msg.JointTrajectoryControllerState, callback)
 
