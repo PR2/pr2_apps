@@ -209,7 +209,9 @@ class TeleopPR2
   {
     // Do not process the same message twice.
     if(joy_msg->header.stamp == last_processed_joy_message_.header.stamp) {
-        ROS_WARN_THROTTLE(1.0, "Received Joy message with same timestamp multiple times. Ignoring subsequent messages.");
+        // notify the user only if the problem persists
+        if(ros::Time::now() - joy_msg->header.stamp > ros::Duration(5.0/PUBLISH_FREQ))
+            ROS_WARN_THROTTLE(1.0, "Received Joy message with same timestamp multiple times. Ignoring subsequent messages.");
         deadman_ = false;
         return;
     }
