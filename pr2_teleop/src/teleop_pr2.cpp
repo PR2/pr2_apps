@@ -392,9 +392,9 @@ class TeleopPR2
   void headCB(const pr2_controllers_msgs::JointTrajectoryControllerState::ConstPtr &msg)
   {
     // Updates the current positions
-    req_pan = msg->actual.positions[0];
+    req_pan = msg->desired.positions[0];
     req_pan = max(min(req_pan, max_pan), -max_pan);
-    req_tilt = msg->actual.positions[1];
+    req_tilt = msg->desired.positions[1];
     req_tilt = max(min(req_tilt, max_tilt), min_tilt);
   }
 };
