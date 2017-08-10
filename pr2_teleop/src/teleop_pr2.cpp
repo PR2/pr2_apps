@@ -72,6 +72,8 @@ class TeleopPR2
   bool use_mux_, last_deadman_;
   std::string last_selected_topic_;
 
+  sensor_msgs::Joy last_processed_joy_message_;
+
   ros::Time last_recieved_joy_message_time_;
   ros::Duration joy_msg_timeout_;
 
@@ -205,6 +207,14 @@ class TeleopPR2
   /** Callback for joy topic **/
   void joy_cb(const sensor_msgs::Joy::ConstPtr& joy_msg)
   {
+    // Do not process the same message twice.
+    if(joy_msg->header.stamp == last_processed_joy_message_.header.stamp) {
+        ROS_WARN_THROTTLE(1.0, "Received Joy message with same timestamp multiple times. Ignoring subsequent messages.");
+        deadman_ = false;
+        return;
+    }
+    last_processed_joy_message_ = *joy_msg;
+
     //Record this message reciept
     last_recieved_joy_message_time_ = ros::Time::now();
 
