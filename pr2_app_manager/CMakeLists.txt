@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(pr2_app_manager)
-find_package(catkin REQUIRED COMPONENTS app_manager willow_maps)
+find_package(catkin REQUIRED COMPONENTS)
 
 catkin_package(
-    DEPENDS app_manager willow_maps
+    DEPENDS # TODO
     CATKIN_DEPENDS # TODO
     INCLUDE_DIRS # TODO include
     LIBRARIES # TODO

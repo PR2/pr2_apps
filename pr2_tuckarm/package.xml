@@ -13,11 +13,6 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>rospy</build_depend>
-  <build_depend>trajectory_msgs</build_depend>
-  <build_depend>pr2_mechanism_msgs</build_depend>
-  <build_depend>pr2_tuck_arms_action</build_depend>
-
   <run_depend>rospy</run_depend>
   <run_depend>trajectory_msgs</run_depend>
   <run_depend>pr2_mechanism_msgs</run_depend>
