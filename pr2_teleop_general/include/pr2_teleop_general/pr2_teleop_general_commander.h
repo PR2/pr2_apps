@@ -216,10 +216,8 @@ private:
 
   ros::ServiceClient tilt_laser_service_;
   ros::ServiceClient switch_controllers_service_;
-  ros::ServiceClient right_arm_kinematics_solver_client_;
   ros::ServiceClient right_arm_kinematics_forward_client_;
   ros::ServiceClient right_arm_kinematics_inverse_client_;
-  ros::ServiceClient left_arm_kinematics_solver_client_;
   ros::ServiceClient left_arm_kinematics_forward_client_;
   ros::ServiceClient left_arm_kinematics_inverse_client_;
   ros::ServiceClient prosilica_polling_client_;

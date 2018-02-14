@@ -38,7 +38,6 @@
 #include <pr2_mechanism_msgs/SwitchController.h>
 #include <geometry_msgs/Twist.h>
 #include <trajectory_msgs/JointTrajectory.h>
-#include <moveit_msgs/GetKinematicSolverInfo.h>
 #include <moveit_msgs/GetPositionFK.h>
 #include <moveit_msgs/GetPositionIK.h>
 #include <polled_camera/GetPolledImage.h>
@@ -155,10 +154,8 @@ GeneralCommander::GeneralCommander(bool control_body,
 
   if(control_rarm_) {
     ROS_INFO("Waiting for right arm kinematics servers");
-    ros::service::waitForService("pr2_right_arm_kinematics/get_fk_solver_info");
     ros::service::waitForService("pr2_right_arm_kinematics/get_fk");
     ros::service::waitForService("pr2_right_arm_kinematics/get_ik");
-    right_arm_kinematics_solver_client_ = n_.serviceClient<moveit_msgs::GetKinematicSolverInfo>("pr2_right_arm_kinematics/get_fk_solver_info", true);
     right_arm_kinematics_forward_client_ = n_.serviceClient<moveit_msgs::GetPositionFK>("pr2_right_arm_kinematics/get_fk", true);
     right_arm_kinematics_inverse_client_ = n_.serviceClient<moveit_msgs::GetPositionIK>("pr2_right_arm_kinematics/get_ik", true);
   }
@@ -166,9 +163,7 @@ GeneralCommander::GeneralCommander(bool control_body,
   if(control_larm_) {
     ROS_INFO("Waiting for left arm kinematics servers");
     ros::service::waitForService("pr2_left_arm_kinematics/get_fk");
-    ros::service::waitForService("pr2_left_arm_kinematics/get_fk_solver_info");
     ros::service::waitForService("pr2_left_arm_kinematics/get_ik");
-    left_arm_kinematics_solver_client_ = n_.serviceClient<moveit_msgs::GetKinematicSolverInfo>("pr2_left_arm_kinematics/get_fk_solver_info", true);
     left_arm_kinematics_forward_client_ = n_.serviceClient<moveit_msgs::GetPositionFK>("pr2_left_arm_kinematics/get_fk", true);
     left_arm_kinematics_inverse_client_ = n_.serviceClient<moveit_msgs::GetPositionIK>("pr2_left_arm_kinematics/get_ik", true);
   }
@@ -700,18 +695,22 @@ void GeneralCommander::composeWristRotGoal(const std::string pref, pr2_controlle
 void GeneralCommander::updateCurrentWristPositions() {
 
   if(control_rarm_) {
-    moveit_msgs::GetKinematicSolverInfo::Request right_request;
-    moveit_msgs::GetKinematicSolverInfo::Response right_response;
-    
     moveit_msgs::GetPositionFK::Request right_fk_request;
     moveit_msgs::GetPositionFK::Response right_fk_response;
     
-    right_arm_kinematics_solver_client_.call(right_request, right_response);
-    
     right_fk_request.header.frame_id = "base_link";
     right_fk_request.fk_link_names.push_back("r_wrist_roll_link");
-    right_fk_request.robot_state.joint_state.position.resize(right_response.kinematic_solver_info.joint_names.size());
-    right_fk_request.robot_state.joint_state.name = right_response.kinematic_solver_info.joint_names;
+    std::vector<std::string> right_joint_names;
+    right_joint_names.push_back("r_shoulder_pan_joint");
+    right_joint_names.push_back("r_shoulder_lift_joint");
+    right_joint_names.push_back("r_upper_arm_roll_joint");
+    right_joint_names.push_back("r_elbow_flex_joint");
+    right_joint_names.push_back("r_forearm_roll_joint");
+    right_joint_names.push_back("r_wrist_flex_joint");
+    right_joint_names.push_back("r_wrist_roll_joint");
+
+    right_fk_request.robot_state.joint_state.position.resize(right_joint_names.size());
+    right_fk_request.robot_state.joint_state.name = right_joint_names;
     for(unsigned int i = 0; i < right_fk_request.robot_state.joint_state.name.size(); i++) {
       bool ok = getJointPosition(right_fk_request.robot_state.joint_state.name[i],  right_fk_request.robot_state.joint_state.position[i]);
       if(!ok) {
@@ -731,18 +730,22 @@ void GeneralCommander::updateCurrentWristPositions() {
   }
 
   if(control_larm_) {
-    moveit_msgs::GetKinematicSolverInfo::Request left_request;
-    moveit_msgs::GetKinematicSolverInfo::Response left_response;
-    
     moveit_msgs::GetPositionFK::Request left_fk_request;
     moveit_msgs::GetPositionFK::Response left_fk_response;
 
-    left_arm_kinematics_solver_client_.call(left_request, left_response);
-    
     left_fk_request.header.frame_id = "base_link";
     left_fk_request.fk_link_names.push_back("l_wrist_roll_link");
-    left_fk_request.robot_state.joint_state.position.resize(left_response.kinematic_solver_info.joint_names.size());
-    left_fk_request.robot_state.joint_state.name = left_response.kinematic_solver_info.joint_names;
+    std::vector<std::string> left_joint_names;
+    left_joint_names.push_back("l_shoulder_pan_joint");
+    left_joint_names.push_back("l_shoulder_lift_joint");
+    left_joint_names.push_back("l_upper_arm_roll_joint");
+    left_joint_names.push_back("l_elbow_flex_joint");
+    left_joint_names.push_back("l_forearm_roll_joint");
+    left_joint_names.push_back("l_wrist_flex_joint");
+    left_joint_names.push_back("l_wrist_roll_joint");
+
+    left_fk_request.robot_state.joint_state.position.resize(left_joint_names.size());
+    left_fk_request.robot_state.joint_state.name = left_joint_names;
     for(unsigned int i = 0; i < left_fk_request.robot_state.joint_state.name.size(); i++) {
       bool ok = getJointPosition(left_fk_request.robot_state.joint_state.name[i],  left_fk_request.robot_state.joint_state.position[i]);
       if(!ok) {
@@ -912,11 +915,6 @@ void GeneralCommander::sendArmVelCommands(double r_x_vel, double r_y_vel, double
       
       geometry_msgs::Pose right_trajectory_endpoint = des_r_wrist_roll_pose_;
       
-      moveit_msgs::GetKinematicSolverInfo::Request right_request;
-      moveit_msgs::GetKinematicSolverInfo::Response right_response;
-      
-      right_arm_kinematics_solver_client_.call(right_request, right_response);
-      
       double pos_diff_x = r_x_vel*(1.0/hz);//*look_ahead;
       double pos_diff_y = r_y_vel*(1.0/hz);//*look_ahead;
       double pos_diff_z = r_z_vel*(1.0/hz);//*look_ahead;
@@ -972,8 +970,16 @@ void GeneralCommander::sendArmVelCommands(double r_x_vel, double r_y_vel, double
       ik_req.ik_request.pose_stamped.header.stamp = ros::Time::now();
       ik_req.ik_request.pose_stamped.pose = right_trajectory_endpoint;
       
-      ik_req.ik_request.robot_state.joint_state.position.resize(right_response.kinematic_solver_info.joint_names.size());
-      ik_req.ik_request.robot_state.joint_state.name = right_response.kinematic_solver_info.joint_names;
+      std::vector<std::string> right_joint_names;
+      right_joint_names.push_back("r_shoulder_pan_joint");
+      right_joint_names.push_back("r_shoulder_lift_joint");
+      right_joint_names.push_back("r_upper_arm_roll_joint");
+      right_joint_names.push_back("r_elbow_flex_joint");
+      right_joint_names.push_back("r_forearm_roll_joint");
+      right_joint_names.push_back("r_wrist_flex_joint");
+      right_joint_names.push_back("r_wrist_roll_joint");
+      ik_req.ik_request.robot_state.joint_state.position.resize(right_joint_names.size());
+      ik_req.ik_request.robot_state.joint_state.name = right_joint_names;
       for(unsigned int i = 0; i < ik_req.ik_request.robot_state.joint_state.name.size(); i++) {
         bool ok = getJointPosition(ik_req.ik_request.robot_state.joint_state.name[i], ik_req.ik_request.robot_state.joint_state.position[i]);
         if(!ok) {
@@ -1030,11 +1036,6 @@ void GeneralCommander::sendArmVelCommands(double r_x_vel, double r_y_vel, double
 
       geometry_msgs::Pose left_trajectory_endpoint = des_l_wrist_roll_pose_;
 
-      moveit_msgs::GetKinematicSolverInfo::Request left_request;
-      moveit_msgs::GetKinematicSolverInfo::Response left_response;
-    
-      left_arm_kinematics_solver_client_.call(left_request, left_response);
-
       double pos_diff_x = l_x_vel*(1.0/hz);
       double pos_diff_y = l_y_vel*(1.0/hz);
       double pos_diff_z = l_z_vel*(1.0/hz);
@@ -1087,8 +1088,17 @@ void GeneralCommander::sendArmVelCommands(double r_x_vel, double r_y_vel, double
       ik_req.ik_request.pose_stamped.header.stamp = ros::Time::now();
       ik_req.ik_request.pose_stamped.pose = left_trajectory_endpoint;
 
-      ik_req.ik_request.robot_state.joint_state.position.resize(left_response.kinematic_solver_info.joint_names.size());
-      ik_req.ik_request.robot_state.joint_state.name = left_response.kinematic_solver_info.joint_names;
+      std::vector<std::string> left_joint_names;
+      left_joint_names.push_back("l_shoulder_pan_joint");
+      left_joint_names.push_back("l_shoulder_lift_joint");
+      left_joint_names.push_back("l_upper_arm_roll_joint");
+      left_joint_names.push_back("l_elbow_flex_joint");
+      left_joint_names.push_back("l_forearm_roll_joint");
+      left_joint_names.push_back("l_wrist_flex_joint");
+      left_joint_names.push_back("l_wrist_roll_joint");
+
+      ik_req.ik_request.robot_state.joint_state.position.resize(left_joint_names.size());
+      ik_req.ik_request.robot_state.joint_state.name = left_joint_names;
       for(unsigned int i = 0; i < ik_req.ik_request.robot_state.joint_state.name.size(); i++) {
         bool ok = getJointPosition(ik_req.ik_request.robot_state.joint_state.name[i], ik_req.ik_request.robot_state.joint_state.position[i]);
         if(!ok) {
