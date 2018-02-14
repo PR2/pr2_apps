@@ -1,6 +1,6 @@
 <package>
   <name>pr2_apps</name>
-  <version>0.5.20</version>
+  <version>0.5.22</version>
   <description>Basic applications for the PR2 robot</description>
   <maintainer email="ros-orphaned-packages@googlegroups.com">ROS Orphaned Package Maintainers</maintainer>
 
@@ -16,6 +16,8 @@
   <run_depend>pr2_teleop_general</run_depend>
   <run_depend>pr2_tuckarm</run_depend>
   <run_depend>pr2_app_manager</run_depend>
+  <run_depend>pr2_mannequin_mode</run_depend>
+  <run_depend>pr2_kinematics</run_depend>
 
   <export>
     <metapackage/>
