@@ -2,6 +2,33 @@
 Changelog for package pr2_teleop_general
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#35 <https://github.com/pr2/pr2_apps/issues/35>`_ from k-okada/remove_GetKinematicSolverInfo
+  remove GetKinematicSolverInfo
+* remove GetKinematicSolverInfo
+  GetKinematicSolverInfo.srv has been removed from moveit_msgs by https://github.com/ros-planning/moveit_msgs/issues/3,
+  since I'm not sure what is the best way to re-write code without this service, but to write the list of joint names directory
+* Merge pull request `#34 <https://github.com/pr2/pr2_apps/issues/34>`_ from PR2/k-okada-patch-1
+  remove bullet depend from package.xml
+* remove bullet depend from package.xml
+  emove depend to bullet, it already removed from code long time ago https://github.com/PR2/pr2_apps/pull/8/commits/64b60278bc02e83b1826f6f122b573e298476285
+* Merge pull request `#32 <https://github.com/pr2/pr2_apps/issues/32>`_ from k-okada/fix_cmake_teleop
+  fix cmake of pr2_teleop_general
+* fix cmake of pr2_teleop_general
+  - remove depend to bullet, it already removed from code long time ago https://github.com/PR2/pr2_apps/pull/8/commits/64b60278bc02e83b1826f6f122b573e298476285
+  - use  ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}, instead of *msgs_gencpp
+* Merge pull request `#31 <https://github.com/pr2/pr2_apps/issues/31>`_ from k-okada/19
+  add pr2_mannequin_mode as run_depend for pr2_teleop_general.
+* add pr2_mannequin_mode as run_depend for pr2_teleop_general.
+* Merge pull request `#29 <https://github.com/pr2/pr2_apps/issues/29>`_ from k-okada/kinetic-devel
+  Kinetic devel
+* Merge pull request `#30 <https://github.com/pr2/pr2_apps/issues/30>`_ from k-okada/orph
+  change maintainer to ROS orphaned package maintainer
+* change maintainer to ROS orphaned package maintainer
+* Merge branch 'hydro-devel' into kinetic-devel
+* Contributors: Christian Dornhege, Kei Okada
+
 0.5.20 (2015-05-05)
 -------------------
 

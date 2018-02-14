@@ -2,6 +2,39 @@
 Changelog for package pr2_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#26 <https://github.com/pr2/pr2_apps/issues/26>`_ from TAMS-Group/pr-indigo-stop-spamming-on-slight-delays
+  Only warn the user on outdated repeated messages
+* Merge pull request `#27 <https://github.com/pr2/pr2_apps/issues/27>`_ from TAMS-Group/head_fix
+  Using state controller feedback to update pan and tilt values of the head
+* Merge pull request `#29 <https://github.com/pr2/pr2_apps/issues/29>`_ from k-okada/kinetic-devel
+  Kinetic devel
+* Merge pull request `#30 <https://github.com/pr2/pr2_apps/issues/30>`_ from k-okada/orph
+  change maintainer to ROS orphaned package maintainer
+* change maintainer to ROS orphaned package maintainer
+* Merge branch 'hydro-devel' into kinetic-devel
+* Only warn the user on outdated repeated messages
+  dornhege's commit recently added a safety mechanism to ensure
+  a properly working dead-man switch with the PS2 controller.
+  However, in some setups this problem appears during normal operation
+  but does not persist for long. In order to avoid spamming the log
+  console, we warn the user only if the received messages are additionally
+  out of date.
+  The overall safety mechanism still triggers, this only affects the log.
+* use desired position for head feedback
+  With the actual position the head tilts down because of gravity
+  when the controller is idle and head movements are less responsive.
+* Pan and tilt values updated via state controller
+  When controlling the head with a different controller, the head moved with a very high speed, which can be harmful to the hardware.
+  It was assumed that the head was only moved via teleop, thus the position was not updated when the head was moved with a different controller.
+  This was fixed by reading the actual values for pan and tilt from the state controller.
+* Merge pull request `#25 <https://github.com/pr2/pr2_apps/issues/25>`_ from dornhege/indigo-devel
+  Do not process the same joystick message twice.
+* Do not process the same joystick message twice.
+  Happens if joystick hangs on old command.
+* Contributors: 2scholz, Christian Dornhege, Devon Ash, Kei Okada, v4hn
+
 0.5.20 (2015-05-05)
 -------------------
 

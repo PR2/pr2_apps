@@ -2,6 +2,19 @@
 Changelog for package pr2_app_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#15 <https://github.com/pr2/pr2_apps/issues/15>`_ from k-okada/remove_build_depend
+  we do not need any package during build process
+* Merge pull request `#29 <https://github.com/pr2/pr2_apps/issues/29>`_ from k-okada/kinetic-devel
+  Kinetic devel
+* Merge pull request `#30 <https://github.com/pr2/pr2_apps/issues/30>`_ from k-okada/orph
+  change maintainer to ROS orphaned package maintainer
+* change maintainer to ROS orphaned package maintainer
+* Merge branch 'hydro-devel' into kinetic-devel
+* we do not need any package during build process
+* Contributors: Kei Okada
+
 0.5.20 (2015-05-05)
 -------------------
 

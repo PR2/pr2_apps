@@ -2,6 +2,23 @@
 Changelog for package pr2_mannequin_mode
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#23 <https://github.com/pr2/pr2_apps/issues/23>`_ from 23pointsNorth/patch-2
+  Add queue size to trajectory_lock script
+* Merge pull request `#29 <https://github.com/pr2/pr2_apps/issues/29>`_ from k-okada/kinetic-devel
+  Kinetic devel
+* Merge pull request `#30 <https://github.com/pr2/pr2_apps/issues/30>`_ from k-okada/orph
+  change maintainer to ROS orphaned package maintainer
+* change maintainer to ROS orphaned package maintainer
+* Merge branch 'hydro-devel' into kinetic-devel
+* Add queue size to trajectory_lock script
+  Add queue_size as to remove following error:
+  `/opt/ros/indigo/share/pr2_mannequin_mode/scripts/trajectory_lock.py:77: SyntaxWarning: The publisher should be created with an explicit keyword argument 'queue_size'. Please see http://wiki.ros.org/rospy/Overview/Publishers%20and%20Subscribers for more information.
+  pub = rospy.Publisher("command", trajectory_msgs.msg.JointTrajectory)`
+  Size of 10 was selected arbitrary as working.
+* Contributors: Daniel Angelov, Kei Okada
+
 0.5.20 (2015-05-05)
 -------------------
 

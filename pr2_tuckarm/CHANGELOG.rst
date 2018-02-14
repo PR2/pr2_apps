@@ -2,6 +2,24 @@
 Changelog for package pr2_tuckarm
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#33 <https://github.com/pr2/pr2_apps/issues/33>`_ from k-okada/add_tuckle_arm
+  fix tuck arm client code back to tuck_arm_main.py
+* fix tuck arm client code back to tuck_arm_main.py
+  at this moment, pr2_tuckarm tuck_arms.py just start action server, but we expect to run client code see http://wiki.ros.org/pr2_tuckarm
+  c.f. https://github.com/PR2/pr2_common_actions/pull/33
+* Merge pull request `#15 <https://github.com/pr2/pr2_apps/issues/15>`_ from k-okada/remove_build_depend
+  we do not need any package during build process
+* Merge pull request `#29 <https://github.com/pr2/pr2_apps/issues/29>`_ from k-okada/kinetic-devel
+  Kinetic devel
+* Merge pull request `#30 <https://github.com/pr2/pr2_apps/issues/30>`_ from k-okada/orph
+  change maintainer to ROS orphaned package maintainer
+* change maintainer to ROS orphaned package maintainer
+* Merge branch 'hydro-devel' into kinetic-devel
+* we do not need any package during build process
+* Contributors: Kei Okada
+
 0.5.20 (2015-05-05)
 -------------------
 
