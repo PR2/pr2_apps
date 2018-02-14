@@ -83,6 +83,7 @@ class TeleopPR2
   ros::Publisher torso_pub_;
   ros::Subscriber joy_sub_;
   ros::Subscriber torso_state_sub_;
+  ros::Subscriber head_state_sub_;
   ros::ServiceClient mux_client_;
 
   TeleopPR2(bool deadman_no_publish = false) :
@@ -194,6 +195,7 @@ class TeleopPR2
 
         joy_sub_ = n_.subscribe("joy", 10, &TeleopPR2::joy_cb, this);
         torso_state_sub_ = n_.subscribe("torso_controller/state", 1, &TeleopPR2::torsoCB, this);
+        head_state_sub_ = n_.subscribe("head_traj_controller/state", 1, &TeleopPR2::headCB, this);
 
         //if we're going to use the mux, then we'll subscribe to state changes on the mux
         if(use_mux_){
@@ -341,12 +343,6 @@ class TeleopPR2
         traj.points[0].velocities.push_back(req_tilt_vel);
         traj.points[0].time_from_start = ros::Duration(horizon);
         head_pub_.publish(traj);
-
-        // Updates the current positions
-        req_pan += req_pan_vel * dt;
-        req_pan = max(min(req_pan, max_pan), -max_pan);
-        req_tilt += req_tilt_vel * dt;
-        req_tilt = max(min(req_tilt, max_tilt), min_tilt);
       }
 
       if (req_torso != 0)
@@ -391,6 +387,15 @@ class TeleopPR2
     {
       req_torso = min(max(msg->actual.positions[0] - A, xd), msg->actual.positions[0] + A);
     }
+  }
+
+  void headCB(const pr2_controllers_msgs::JointTrajectoryControllerState::ConstPtr &msg)
+  {
+    // Updates the current positions
+    req_pan = msg->desired.positions[0];
+    req_pan = max(min(req_pan, max_pan), -max_pan);
+    req_tilt = msg->desired.positions[1];
+    req_tilt = max(min(req_tilt, max_tilt), min_tilt);
   }
 };
 
