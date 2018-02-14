@@ -2,7 +2,7 @@
   <name>pr2_apps</name>
   <version>0.5.20</version>
   <description>Basic applications for the PR2 robot</description>
-  <maintainer email="dash@clearpathrobotics.com">Devon Ash</maintainer>
+  <maintainer email="ros-orphaned-packages@googlegroups.com">ROS Orphaned Package Maintainers</maintainer>
 
   <license>BSD</license>
 

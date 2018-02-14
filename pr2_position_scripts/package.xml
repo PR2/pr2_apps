@@ -2,7 +2,7 @@
   <name>pr2_position_scripts</name>
   <version>0.5.20</version>
   <description>This package contains a number of scripts to set various components of the PR2. They are used in the apps to improve usablity.</description>
-  <maintainer email="dash@clearpathrobotics.com">Devon Ash</maintainer>
+  <maintainer email="ros-orphaned-packages@googlegroups.com">ROS Orphaned Package Maintainers</maintainer>
 
   <license>BSD</license>
 
