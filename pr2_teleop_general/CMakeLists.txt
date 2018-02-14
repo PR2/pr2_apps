@@ -8,7 +8,6 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 catkin_package(
     CATKIN_DEPENDS roscpp actionlib actionlib_msgs geometry_msgs sensor_msgs pr2_msgs pr2_controllers_msgs pr2_controller_manager pr2_mechanism_msgs angles urdf ps3joy pr2_common_action_msgs polled_camera moveit_msgs tf 
     INCLUDE_DIRS include
-    DEPENDS  bullet
     LIBRARIES pr2_teleop_general_commander
 )
 
@@ -20,13 +19,11 @@ target_link_libraries(pr2_teleop_general_keyboard  ${catkin_LIBRARIES} pr2_teleo
 
 
 add_library(pr2_teleop_general_commander src/pr2_teleop_general_commander.cpp)
-add_dependencies(pr2_teleop_general_commander pr2_common_action_msgs_gencpp)
+add_dependencies(pr2_teleop_general_commander ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 
 target_link_libraries(pr2_teleop_general_commander  ${catkin_LIBRARIES})
-add_dependencies(pr2_teleop_general_commander gencpp ${PROJECT_NAME}_gencpp tf_gencpp)
-
-add_dependencies(pr2_teleop_general_commander kinematics_msgs_gencpp)
+add_dependencies(pr2_teleop_general_commander ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 install(TARGETS pr2_teleop_general_joystick pr2_teleop_general_keyboard pr2_teleop_general_commander
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
