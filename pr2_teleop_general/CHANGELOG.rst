@@ -2,8 +2,8 @@
 Changelog for package pr2_teleop_general
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.6.0 (2018-02-14)
+------------------
 * Merge pull request `#35 <https://github.com/pr2/pr2_apps/issues/35>`_ from k-okada/remove_GetKinematicSolverInfo
   remove GetKinematicSolverInfo
 * remove GetKinematicSolverInfo

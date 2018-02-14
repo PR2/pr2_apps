@@ -2,8 +2,8 @@
 Changelog for package pr2_mannequin_mode
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.6.0 (2018-02-14)
+------------------
 * Merge pull request `#23 <https://github.com/pr2/pr2_apps/issues/23>`_ from 23pointsNorth/patch-2
   Add queue size to trajectory_lock script
 * Merge pull request `#29 <https://github.com/pr2/pr2_apps/issues/29>`_ from k-okada/kinetic-devel

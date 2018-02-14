@@ -2,8 +2,8 @@
 Changelog for package pr2_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.6.0 (2018-02-14)
+------------------
 * Merge pull request `#26 <https://github.com/pr2/pr2_apps/issues/26>`_ from TAMS-Group/pr-indigo-stop-spamming-on-slight-delays
   Only warn the user on outdated repeated messages
 * Merge pull request `#27 <https://github.com/pr2/pr2_apps/issues/27>`_ from TAMS-Group/head_fix
