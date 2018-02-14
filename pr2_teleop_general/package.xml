@@ -26,7 +26,6 @@
   <build_depend>ps3joy</build_depend>
   <build_depend>pr2_common_action_msgs</build_depend>
   <build_depend>polled_camera</build_depend>
-  <build_depend>bullet</build_depend>
   <build_depend>moveit_msgs</build_depend>
   <build_depend>tf</build_depend>
  
@@ -46,7 +45,6 @@
   <run_depend>ps3joy</run_depend>
   <run_depend>pr2_common_action_msgs</run_depend>
   <run_depend>polled_camera</run_depend>
-  <run_depend>bullet</run_depend>
   <run_depend>pr2_tuck_arms_action</run_depend>
   <run_depend>pr2_arm_kinematics</run_depend>
   <run_depend>pr2_mannequin_mode</run_depend>
