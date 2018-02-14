@@ -49,7 +49,7 @@
   <run_depend>bullet</run_depend>
   <run_depend>pr2_tuck_arms_action</run_depend>
   <run_depend>pr2_arm_kinematics</run_depend>
-
+  <run_depend>pr2_mannequin_mode</run_depend>
 
   <!-- <test_depend>roscpp</test_depend> -->
   <!-- <test_depend>actionlib</test_depend> -->
