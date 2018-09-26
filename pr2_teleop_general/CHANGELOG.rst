@@ -2,6 +2,13 @@
 Changelog for package pr2_teleop_general
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#36 <https://github.com/pr2/pr2_apps/issues/36>`_ from k-okada/add_travis
+  update travis.yml
+* fix urdf::JointConstSharedPtr for melodic
+* Contributors: Kei Okada
+
 0.6.0 (2018-02-14)
 ------------------
 * Merge pull request `#35 <https://github.com/pr2/pr2_apps/issues/35>`_ from k-okada/remove_GetKinematicSolverInfo

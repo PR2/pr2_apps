@@ -2,6 +2,9 @@
 Changelog for package pr2_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.6.0 (2018-02-14)
 ------------------
 * Merge pull request `#26 <https://github.com/pr2/pr2_apps/issues/26>`_ from TAMS-Group/pr-indigo-stop-spamming-on-slight-delays

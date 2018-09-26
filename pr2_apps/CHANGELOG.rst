@@ -2,6 +2,9 @@
 Changelog for package pr2_apps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.6.0 (2018-02-14)
 ------------------
 * Merge pull request `#29 <https://github.com/pr2/pr2_apps/issues/29>`_ from k-okada/kinetic-devel

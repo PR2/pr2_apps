@@ -2,6 +2,9 @@
 Changelog for package pr2_tuckarm
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.6.0 (2018-02-14)
 ------------------
 * Merge pull request `#33 <https://github.com/pr2/pr2_apps/issues/33>`_ from k-okada/add_tuckle_arm
