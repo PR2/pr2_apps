@@ -1,6 +1,6 @@
 <package>
   <name>pr2_apps</name>
-  <version>0.6.0</version>
+  <version>0.6.1</version>
   <description>Basic applications for the PR2 robot</description>
   <maintainer email="ros-orphaned-packages@googlegroups.com">ROS Orphaned Package Maintainers</maintainer>
 

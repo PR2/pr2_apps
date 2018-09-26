@@ -1,6 +1,6 @@
 <package>
   <name>pr2_app_manager</name>
-  <version>0.6.0</version>
+  <version>0.6.1</version>
   <description>Scripts and tools for running the application manager on the PR2.</description>
   <maintainer email="ros-orphaned-packages@googlegroups.com">ROS Orphaned Package Maintainers</maintainer>
 

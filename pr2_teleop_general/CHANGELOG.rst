@@ -2,8 +2,8 @@
 Changelog for package pr2_teleop_general
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.6.1 (2018-09-26)
+------------------
 * Merge pull request `#36 <https://github.com/pr2/pr2_apps/issues/36>`_ from k-okada/add_travis
   update travis.yml
 * fix urdf::JointConstSharedPtr for melodic

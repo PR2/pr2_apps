@@ -1,6 +1,6 @@
 <package>
   <name>pr2_position_scripts</name>
-  <version>0.6.0</version>
+  <version>0.6.1</version>
   <description>This package contains a number of scripts to set various components of the PR2. They are used in the apps to improve usablity.</description>
   <maintainer email="ros-orphaned-packages@googlegroups.com">ROS Orphaned Package Maintainers</maintainer>
 

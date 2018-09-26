@@ -1,6 +1,6 @@
 <package>
   <name>pr2_teleop_general</name>
-  <version>0.6.0</version>
+  <version>0.6.1</version>
   <description>pr2_teleop_general</description>
   <maintainer email="ros-orphaned-packages@googlegroups.com">ROS Orphaned Package Maintainers</maintainer>
 
