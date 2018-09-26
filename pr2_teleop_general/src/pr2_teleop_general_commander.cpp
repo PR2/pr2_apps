@@ -861,7 +861,11 @@ void GeneralCommander::unnormalizeTrajectory(trajectory_msgs::JointTrajectory& t
     //first waypoint is unnormalized relative to current joint states
     current_values.push_back(pos);
     
+#if URDFDOM_1_0_0_API
+    urdf::JointConstSharedPtr joint = robot_model_.getJoint(name);
+#else
     boost::shared_ptr<const urdf::Joint> joint = robot_model_.getJoint(name);
+#endif
     if (joint.get() == NULL)
     {
       ROS_ERROR("Joint name %s not found in urdf model", name.c_str());

@@ -11,6 +11,13 @@ catkin_package(
     LIBRARIES pr2_teleop_general_commander
 )
 
+find_package(PkgConfig)
+pkg_check_modules(URDFDOM REQUIRED urdfdom)
+message(STATUS "Find URDFDOM ${URDFDOM_VERSION}")
+if ("${URDFDOM_VERSION}" VERSION_EQUAL "1.0.0" OR "${URDFDOM_VERSION}" VERSION_GREATER "1.0.0")
+  add_definitions(-DURDFDOM_1_0_0_API)
+endif()
+
 add_executable(pr2_teleop_general_joystick src/pr2_teleop_general_joystick.cpp)
 target_link_libraries(pr2_teleop_general_joystick  ${catkin_LIBRARIES} pr2_teleop_general_commander)
 
