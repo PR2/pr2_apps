@@ -13,3 +13,14 @@ catkin_package(
 
 
 install(PROGRAMS scripts/head_down.py scripts/head_up.py scripts/torso_down.py scripts/torso_up.py DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+# test
+if(CATKIN_ENABLE_TESTING)
+  find_package(roslaunch REQUIRED)
+  find_package(rostest REQUIRED)
+  file(GLOB LAUNCH_FILES launch/*.launch)
+  foreach(LAUNCH_FILE ${LAUNCH_FILES})
+    message(STATUS "Testing ${LAUNCH_FILE}")
+    roslaunch_add_file_check(${LAUNCH_FILE})
+  endforeach()
+endif()

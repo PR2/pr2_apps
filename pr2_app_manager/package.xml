@@ -20,6 +20,9 @@
   <run_depend>app_manager</run_depend>
   <run_depend>willow_maps</run_depend>
 
+  <test_depend>rostest</test_depend>
+  <test_depend>roslaunch</test_depend>
+
   <!-- Dependencies needed only for running tests. -->
   <!-- <test_depend>app_manager</test_depend> -->
   <!-- <test_depend>willow_maps</test_depend> -->
