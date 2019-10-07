@@ -57,6 +57,8 @@
   <run_depend>tf</run_depend>
   <run_depend>topic_tools</run_depend>
 
+  <test_depend>rostest</test_depend>
+  <test_depend>roslaunch</test_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

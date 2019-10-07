@@ -19,6 +19,9 @@
   <run_depend>pr2_mannequin_mode</run_depend>
   <run_depend>pr2_kinematics</run_depend>
 
+  <test_depend>rostest</test_depend>
+  <test_depend>roslaunch</test_depend>
+
   <export>
     <metapackage/>
   </export>

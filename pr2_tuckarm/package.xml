@@ -18,6 +18,9 @@
   <run_depend>pr2_mechanism_msgs</run_depend>
   <run_depend>pr2_tuck_arms_action</run_depend>
 
+  <test_depend>rostest</test_depend>
+  <test_depend>roslaunch</test_depend>
+
   <!-- <test_depend>rospy</test_depend> -->
   <!-- <test_depend>trajectory_msgs</test_depend> -->
   <!-- <test_depend>pr2_mechanism_msgs</test_depend> -->
