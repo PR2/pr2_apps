@@ -1,0 +1,21 @@
+<launch>
+
+  <node type="teleop_gripper" pkg="pr2_teleop" name="teleop_gripper_right" output="screen">
+    <param name="open_button" type="int" value="10" />
+    <param name="close_button" type="int" value="11" />
+    <remap from="command" to="r_gripper_controller/command" />
+  </node>
+
+  <node type="teleop_gripper" pkg="pr2_teleop" name="teleop_gripper_left" output="screen">
+    <param name="open_button" type="int" value="0" />
+    <param name="close_button" type="int" value="2" />
+    <remap from="command" to="l_gripper_controller/command" />
+  </node>
+
+  <node type="teleop_pr2" pkg="pr2_teleop" name="pr2_teleop" output="screen">
+    <remap from="cmd_vel" to="base_controller/command" />
+    <rosparam file="$(find pr2_teleop)/config/teleop_ps4.yaml" command="load" />
+  </node>
+
+</launch>
+
