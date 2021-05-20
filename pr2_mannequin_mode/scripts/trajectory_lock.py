@@ -45,7 +45,7 @@ from pr2_controllers_msgs.msg import *
 rospy.init_node("trajectory_lock")
 
 if len(sys.argv) < 2:
-    print "Using default joint bound of .08 per joint"
+    print("Using default joint bound of .08 per joint")
     joint_bounds = [.08]*10
 else:
     joint_bounds = [float(x) for x in rospy.myargv()[1:]]
@@ -57,10 +57,10 @@ def callback(msg):
 
     exceeded = [abs(x) > y for x,y in zip(msg.error.positions, joint_bounds)]
 
-    print "All: %s" % "  ".join(["% .4f" % x for x in msg.error.positions] )
+    print("All: %s" % "  ".join(["% .4f" % x for x in msg.error.positions] ))
 
     if any(exceeded):
-        print "Exceeded: %.4f" % max_error
+        print("Exceeded: %.4f" % max_error)
 
         # Copy our current state into the commanded state
         cmd = trajectory_msgs.msg.JointTrajectory()
@@ -71,7 +71,7 @@ def callback(msg):
         cmd.points[0].positions = msg.actual.positions
         pub.publish(cmd)
     else:
-        print "Small: %.4f" % max_error
+        print("Small: %.4f" % max_error)
 
 global pub
 pub = rospy.Publisher("command", trajectory_msgs.msg.JointTrajectory, queue_size=10)
