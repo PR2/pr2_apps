@@ -24,6 +24,6 @@ client.send_goal(g)
 client.wait_for_result()
 
 if client.get_state() == GoalStatus.SUCCEEDED:
-    print "Succeeded"
+    print("Succeeded")
 else:
-    print "Failed"
+    print("Failed")

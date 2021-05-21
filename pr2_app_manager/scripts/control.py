@@ -11,10 +11,10 @@ cgitb.enable()
 import popen2
 
 
-print "Content-type: text/html"
-print
+print("Content-type: text/html")
+print()
 
-print "RESULT"
+print("RESULT")
 
 ros_distro = "ROS_DISTRO" #This gets overwritten by the install script
 
@@ -42,7 +42,7 @@ def run_as_robot(command):
 
 
 if (message == "GET_STATE"):
-    print "USERS"
+    print("USERS")
     active_user = "(UNKNOWN)"
     dead_users = ""
     message = ""
@@ -59,14 +59,14 @@ if (message == "GET_STATE"):
     #print "MESSAGE:", message
     
     if (active_user == "applications"):
-        print "STATE_VALID"
+        print("STATE_VALID")
     elif (active_user == "" or active_user == "None"):
-        print "STATE_OFF"
+        print("STATE_OFF")
     else:
-        print "STATE_IN_USE"
-        print "USER:", active_user
+        print("STATE_IN_USE")
+        print("USER:", active_user)
         if (message != ""):
-            print "MESSAGE:", message #TODO: no newlines!
+            print("MESSAGE:", message) #TODO: no newlines!
 
     #print "PROCESSES:"
     #processes = ""
@@ -78,16 +78,16 @@ if (message == "GET_STATE"):
     #        else:
     #            print "INVALID:", i.strip()
 
-    print
+    print()
 elif (message == "STOP_ROBOT"):
-    print "STOPPING_ROBOT"
+    print("STOPPING_ROBOT")
     result = run_as_robot("yes | robot claim -m 'stopping the robot' ; yes | robot stop ; yes | robot release")
-    print result
-    print "DONE"
+    print(result)
+    print("DONE")
 elif (message == "START_ROBOT"):
-    print "STARTING_APP_MAN"
-    print run_as_robot("yes | robot claim -m 'running applications platform'")
-    print run_as_robot(". /opt/ros/" + ros_distro + "/setup.bash ; . ~/.bashrc ; export ROS_ENV_LOADER=/opt/ros/" + ros_distro + "/env.sh ; nohup roslaunch pr2_app_manager whole_pr2_apps.launch > ~/run.txt &")
+    print("STARTING_APP_MAN")
+    print(run_as_robot("yes | robot claim -m 'running applications platform'"))
+    print(run_as_robot(". /opt/ros/" + ros_distro + "/setup.bash ; . ~/.bashrc ; export ROS_ENV_LOADER=/opt/ros/" + ros_distro + "/env.sh ; nohup roslaunch pr2_app_manager whole_pr2_apps.launch > ~/run.txt &"))
     # Wait for master to become available
     import socket
     s = socket.socket()
@@ -101,8 +101,8 @@ elif (message == "START_ROBOT"):
         except:
             time.sleep(1)
             connect += 1
-    print "DONE"
+    print("DONE")
 else:
-    print "REJECT_COMMAND"
-    print "action = STOP_ROBOT,START_ROBOT,GET_STATE"
+    print("REJECT_COMMAND")
+    print("action = STOP_ROBOT,START_ROBOT,GET_STATE")
     

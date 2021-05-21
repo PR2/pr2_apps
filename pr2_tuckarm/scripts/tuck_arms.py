@@ -51,7 +51,7 @@ import rospy
 
 
 def usage():
-    print __doc__ % vars()
+    print(__doc__ % vars())
     rospy.signal_shutdown("Help requested")
 
 

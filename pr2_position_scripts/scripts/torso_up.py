@@ -4,12 +4,10 @@ roslib.load_manifest('pr2_position_scripts')
 
 import rospy
 import actionlib
-from pr2_controllers_msgs.msg import SingleJointPositionAction, SingleJointPosi\
-tionGoal
+from pr2_controllers_msgs.msg import SingleJointPositionAction, SingleJointPositionGoal
 
 rospy.init_node('torso_up')
-torso_action_client = actionlib.SimpleActionClient('torso_controller/position_j\
-oint_action', SingleJointPositionAction);
+torso_action_client = actionlib.SimpleActionClient('torso_controller/position_joint_action', SingleJointPositionAction);
 rospy.loginfo("torso_up: waiting for torso action server")
 torso_action_client.wait_for_server()
 rospy.loginfo("torso_up: torso action server found")
