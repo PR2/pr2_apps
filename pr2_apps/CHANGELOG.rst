@@ -2,8 +2,8 @@
 Changelog for package pr2_apps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.6.2 (2021-05-21)
+------------------
 * remove superfluous test_depends
   catkin build complains about these in melodic
 * Merge pull request `#40 <https://github.com/pr2/pr2_apps/issues/40>`_ from k-okada/add_roslaunch_add_file_check

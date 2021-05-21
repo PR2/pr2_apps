@@ -2,8 +2,8 @@
 Changelog for package pr2_mannequin_mode
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.6.2 (2021-05-21)
+------------------
 * Merge pull request `#42 <https://github.com/pr2/pr2_apps/issues/42>`_ from k-okada/fix_travis
 * 2to3 -w -f print .
 * Merge pull request `#40 <https://github.com/pr2/pr2_apps/issues/40>`_ from k-okada/add_roslaunch_add_file_check

@@ -2,8 +2,8 @@
 Changelog for package pr2_position_scripts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.6.2 (2021-05-21)
+------------------
 * Merge pull request `#42 <https://github.com/pr2/pr2_apps/issues/42>`_ from k-okada/fix_travis
 * pr2_position_scripts/scripts/torso_up.py: fix wrong new line
 * 2to3 -w -f print .

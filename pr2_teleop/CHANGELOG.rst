@@ -2,8 +2,8 @@
 Changelog for package pr2_teleop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.6.2 (2021-05-21)
+------------------
 * Merge pull request `#40 <https://github.com/pr2/pr2_apps/issues/40>`_ from k-okada/add_roslaunch_add_file_check
   add test for roslaunch_add_file_check
 * add test for roslaunch_add_file_check
