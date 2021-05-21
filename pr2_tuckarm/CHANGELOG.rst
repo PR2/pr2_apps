@@ -2,6 +2,15 @@
 Changelog for package pr2_tuckarm
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#42 <https://github.com/pr2/pr2_apps/issues/42>`_ from k-okada/fix_travis
+* 2to3 -w -f print .
+* Merge pull request `#40 <https://github.com/pr2/pr2_apps/issues/40>`_ from k-okada/add_roslaunch_add_file_check
+  add test for roslaunch_add_file_check
+* add test for roslaunch_add_file_check
+* Contributors: Kei Okada, Michael Görner
+
 0.6.1 (2018-09-26)
 ------------------
 

@@ -2,6 +2,19 @@
 Changelog for package pr2_app_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#42 <https://github.com/pr2/pr2_apps/issues/42>`_ from k-okada/fix_travis
+* 2to3 -w -f print .
+* Merge pull request `#40 <https://github.com/pr2/pr2_apps/issues/40>`_ from k-okada/add_roslaunch_add_file_check
+  add test for roslaunch_add_file_check
+* disable to run roslaunch_add_file_check
+  pr2_app_manager.launch: /home/applications/robot.yaml does not exist, it is ge\
+  nerated by scripts/install_applications.sh
+  whole_pr2_apps.launch: /etc/ros/robot.yaml only exists in real robot
+* add test for roslaunch_add_file_check
+* Contributors: Kei Okada, Michael Görner
+
 0.6.1 (2018-09-26)
 ------------------
 

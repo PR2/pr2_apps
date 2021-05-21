@@ -2,6 +2,13 @@
 Changelog for package pr2_teleop_general
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#40 <https://github.com/pr2/pr2_apps/issues/40>`_ from k-okada/add_roslaunch_add_file_check
+  add test for roslaunch_add_file_check
+* add test for roslaunch_add_file_check
+* Contributors: Kei Okada, Michael Görner
+
 0.6.1 (2018-09-26)
 ------------------
 * Merge pull request `#36 <https://github.com/pr2/pr2_apps/issues/36>`_ from k-okada/add_travis

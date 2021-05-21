@@ -2,6 +2,16 @@
 Changelog for package pr2_position_scripts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#42 <https://github.com/pr2/pr2_apps/issues/42>`_ from k-okada/fix_travis
+* pr2_position_scripts/scripts/torso_up.py: fix wrong new line
+* 2to3 -w -f print .
+* Merge pull request `#40 <https://github.com/pr2/pr2_apps/issues/40>`_ from k-okada/add_roslaunch_add_file_check
+  add test for roslaunch_add_file_check
+* add test for roslaunch_add_file_check
+* Contributors: Kei Okada, Michael Görner
+
 0.6.1 (2018-09-26)
 ------------------
 
