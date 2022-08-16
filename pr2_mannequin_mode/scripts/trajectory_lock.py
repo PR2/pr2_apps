@@ -57,10 +57,10 @@ def callback(msg):
 
     exceeded = [abs(x) > y for x,y in zip(msg.error.positions, joint_bounds)]
 
-    print("All: %s" % "  ".join(["% .4f" % x for x in msg.error.positions] ))
+    rospy.logdebug("All: %s" % "  ".join(["% .4f" % x for x in msg.error.positions] ))
 
     if any(exceeded):
-        print("Exceeded: %.4f" % max_error)
+        rospy.logdebug("Exceeded: %.4f" % max_error)
 
         # Copy our current state into the commanded state
         cmd = trajectory_msgs.msg.JointTrajectory()
